@@ -6,7 +6,7 @@ services:
       - .env
     restart: unless-stopped
     ports:
-      - "${LOCAL_PORT}:8000"
+      - "${LOCAL_PORT:-8000}:8000"
     depends_on:
       - db
   mqtt:
@@ -15,19 +15,19 @@ services:
       - .env
     restart: unless-stopped
     ports:
-      - "${MQTT_PORT}:8001"
+      - "${MQTT_PORT-8000}:8001"
   db:
     image: postgres:12.8
     volumes:
       - postgres_data156513:/var/lib/postgresql/data
     restart: unless-stopped
     environment:
-      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_DB: ${DB_NAME:-postgres}
       POSTGRES_USER: ${DB_USERNAME}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
-      PGPORT: ${DB_PORT}
+      PGPORT: ${DB_PORT:-5432}
     ports:
-      - "${DB_PORT}:${DB_PORT}"
+      - "${DB_PORT:-5432}:${DB_PORT:-5432}"
 
 volumes:
   postgres_data156513:
