@@ -84,3 +84,13 @@ wsl-builder/prepare-build/prepare-build
 **/*Zone.Identifier
 *.Identifier
 Linux
+# ----------------------------------------------------------------------
+##### dotenv
+# Comment out this rule if environment variables can be committed
+.env
+!template.env
+!example.env
+.pem
+*.pem
+.key
+*.key
