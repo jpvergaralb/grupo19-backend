@@ -36,3 +36,51 @@ jspm_packages
 
 # Optional REPL history
 .node_repl_history
+
+# ----------------------------------------------------------------------
+##### OS
+### Linux
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+.nfs*
+.hidden
+*.swp
+
+### Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+*.stackdump
+[Dd]esktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+*.lnk
+*.dll
+*.exe
+*.ink
+
+### WSL
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.userprefs
+artifacts/
+**/Properties/launchSettings.json
+$tf/
+AppPackages/
+BundleArtifacts/
+_pkginfo.txt
+wsl-builder/prepare-assets/prepare-assets
+wsl-builder/prepare-build/prepare-build
+*Zone.Identifier
+**/*Zone.Identifier
+*.Identifier
+Linux
