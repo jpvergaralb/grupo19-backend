@@ -94,3 +94,22 @@ Linux
 *.pem
 .key
 *.key
+
+### Temporal
+**/[Tt]mp/
+**/[Tt]emp/*
+*.tmp
+*.temp
+
+### Antiguo
+*.old
+*.sav
+*.bak
+*.bk
+
+### Comprimidos
+*.zip
+*.tar.gz
+*.rar
+*.paq
+*.7z
