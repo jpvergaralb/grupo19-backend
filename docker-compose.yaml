@@ -4,7 +4,7 @@ services:
     build: ./API
     env_file:
       - .env
-    restart: always
+    restart: unless-stopped
     ports:
       - "${LOCAL_PORT}:8000"
     depends_on:
@@ -13,14 +13,14 @@ services:
     build: ./MQTT
     env_file:
       - .env
-    restart: always
+    restart: unless-stopped
     ports:
       - "${MQTT_PORT}:8001"
   db:
     image: postgres:12.8
     volumes:
       - postgres_data156513:/var/lib/postgresql/data
-    restart: always
+    restart: unless-stopped
     environment:
       POSTGRES_DB: ${DB_NAME}
       POSTGRES_USER: ${DB_USERNAME}
