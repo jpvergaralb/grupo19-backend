@@ -1,5 +1,6 @@
 const sequelize = require('../db/db')
 const { Model, DataTypes } = require('sequelize')
+const bcrypt = require('bcrypt')
 
 class User extends Model {}
 
@@ -11,6 +12,10 @@ User.init({
     },
     username: {
         type: DataTypes.STRING,
+        unique: {
+            args: true,
+            msg: "Username already exists"
+        },
         allowNull: false,
         validate: {
             notEmpty: {
@@ -33,6 +38,10 @@ User.init({
       },
     email: {
         type: DataTypes.STRING,
+        unique: {
+            args: true,
+            msg: "Email already exists"
+        },
         allowNull: false,
         validate: {
             isEmail: {
@@ -76,6 +85,17 @@ User.init({
                 msg: "Phone number must be 10 digits long"
             }
         }
+    },
+    cash: {
+        type: DataTypes.DECIMAL(10, 2),
+        allowNull: false,
+        defaultValue: 5000.00,
+        validate: {
+            min: {
+                args: [0.00],
+                msg: "Cash must be a positive number"
+            }
+        }
     }
 }, 
     {
@@ -85,5 +105,18 @@ User.init({
         timestamps: true
     }
 )
+
+User.addHook('beforeCreate', async (user, options) => {
+    const hashedPassword = await bcrypt.hash(user.password, 10)
+    user.password = hashedPassword
+  })
+
+User.prototype.isPasswordValid = async function(password) {
+    try {
+        return await bcrypt.compare(password, this.password)
+    } catch (error) {
+        console.log(error)
+    }
+}
 
 module.exports = User
