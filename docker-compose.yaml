@@ -15,7 +15,7 @@ services:
       - .env
     restart: unless-stopped
     ports:
-      - "${MQTT_PORT-8000}:8001"
+      - "${MQTT_PORT:-8001}:8001"
   db:
     image: postgres:12.8
     volumes:
