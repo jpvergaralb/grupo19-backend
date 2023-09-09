@@ -1,5 +1,6 @@
 const express = require('express')
 const stockRoutes = require('./routes/stock.routes')
+const userRoutes = require('./routes/user.routes')
 const sequelize = require('./db/db')
 require('dotenv').config()
 
@@ -19,6 +20,7 @@ syncDatabase()
 
 app.use(express.json()) 
 app.use('/stocks', stockRoutes)
+app.use('/users', userRoutes)
 
 app.listen(port, () => {
   console.log(`Listening in port ${port}`)
