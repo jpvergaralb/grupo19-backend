@@ -103,58 +103,42 @@ const getRequestsBySeller = async (req, res) => {
 
 const postRequests = async (req, res) => {
   try {
-    const { message } = req.body;
-    if (!message) {
-      return res.status(400).json({ message: "Message field is missing" });
+    const request = req.body;
+    
+    if (!request) {
+      return res.status(400).json({ message: "Request body is missing" });
     }
     
-    const data = JSON.parse(message);
-    if (!data.requests) {
-      return res.status(400).json({ message: "Requests field is missing" });
+    const { request_id, group_id, symbol, datetime, deposit_token, quantity, seller } = request;
+    
+    if (
+      !request_id ||
+      !group_id ||
+      !symbol ||
+      !datetime ||
+      deposit_token === undefined ||
+      !quantity ||
+      seller === undefined
+    ) {
+      return res.status(400).json({ message: "Missing required fields" });
     }
     
-    const requests = data;
-    const results = [];
+    await Request.create({
+      request_id,
+      group_id,
+      symbol,
+      datetime,
+      deposit_token,
+      quantity,
+      seller,
+    });
     
-    for (const request of requests) {
-      const { request_id, group_id, symbol, datetime, deposit_token, quantity, seller } = request;
-      
-      if (
-        !request_id ||
-        !group_id ||
-        !symbol ||
-        !datetime ||
-        !deposit_token ||
-        !quantity ||
-        !seller
-      ) {
-        results.push({ message: `Missing fields for stock ${request_id || ''}` });
-        continue;
-      }
-      
-      try {
-        await Request.create({
-          request_id,
-          group_id,
-          symbol,
-          datetime,
-          deposit_token,
-          quantity,
-          seller,
-        });
-        
-        results.push({ message: `Request ${request_id} @ ${datetime}` });
-        
-      } catch (error) {
-        results.push({ message: `Error creating request ${request_id}`, error: error.message });
-      }
-    }
-    
-    res.status(201).json({ results });
+    res.status(201).json({ message: `Request ${request_id} @ ${datetime} created successfully` });
   } catch (error) {
-    res.status(400).json({ message: "Bad Request", error: error.message });
+    res.status(500).json({ message: "Internal Server Error", error: error.message });
   }
 };
+
 
 
 

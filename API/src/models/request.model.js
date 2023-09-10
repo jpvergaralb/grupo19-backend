@@ -14,9 +14,9 @@ Request.init(
         },
         notNull: {
           msg: "Request ID cannot be null"
-        },
-        isUUID: {
-          msg: "Request ID must be a UUID"
+        // },
+        // isUUID: {
+        //   msg: "Request ID must be a UUID"
         }
       }
     },
@@ -57,11 +57,6 @@ Request.init(
       type: DataTypes.STRING,
       defaultValue: "",
       allowNull: false,
-      validate: {
-        isString: {
-          msg: "Deposit token must be a string"
-        }
-      }
     },
     quantity: {
       type: DataTypes.INTEGER,

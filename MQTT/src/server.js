@@ -17,6 +17,10 @@ app.listen(process.env.MQTT_PORT, () => {
     console.log(`Server running on port ${process.env.MQTT_PORT}`)
 })
 
-publishDataMQTT(client)
+// publishDataMQTT(client)
+
+// setTimeout(function() {
+//     publishDataMQTT(client);
+// }, 5000);
 
 console.log("llegué al final")

@@ -39,6 +39,10 @@ module.exports = function (client) {
     const data = { message: msg };
     
     try {
+      console.log("🛂🛂🛂🛂🛂🛂🛂🛂🛂🛂🛂")
+      console.log(`Posting to ${url}`);
+      console.log(data);
+      console.log("🛂🛂🛂🛂🛂🛂🛂🛂🛂🛂🛂")
       const response = await axios.post(url, data);
       console.log(response.data);
     } catch (error) {

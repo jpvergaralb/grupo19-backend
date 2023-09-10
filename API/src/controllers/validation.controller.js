@@ -131,7 +131,7 @@ const postValidation = async (req, res) => {
     }
     
     const data = JSON.parse(message);
-    if (!data.validations) {
+    if (!data.request_id) {
       return res.status(400).json({ message: "Validations field is missing" });
     }
     
