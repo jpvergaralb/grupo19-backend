@@ -1,127 +1,129 @@
-const Stock = require('../models/validation.model')
+const Validation = require('../models/validation.model')
 
 const getValidations = async (req, res) => {
-  const page = Math.max(1, req.query.page) || 1
-  const size = Math.max(1, req.query.size) || 25
-  const offset = (page - 1) * size
+  const page = Math.max(1, req.query.page) || 1;
+  const size = Math.max(1, req.query.size) || 25;
+  const offset = (page - 1) * size;
   
   try {
-    const stocks = await Stock.findAll({
+    const validations = await Validation.findAll({
       limit: size,
       offset: offset,
-    })
+    });
     
-    if (stocks.length > 0) {
-      res.status(200).json({stocks})
+    if (validations.length > 0) {
+      res.status(200).json({validations});
       
     } else {
-      res.status(404).json({message: "No validation found"})
+      res.status(404).json({message: "No validations found"});
     }
     
   } catch (error) {
-    res.status(500).json({error})
+    res.status(500).json({error});
   }
 }
 
 const getValidationsByGroup = async (req, res) => {
-  const page = Math.max(1, req.query.page) || 1
-  const size = Math.min(1, req.query.size) || 25
-  const offset = (page - 1) * size
+  const page = Math.max(1, req.query.page) || 1;
+  const size = Math.min(1, req.query.size) || 25;
+  const offset = (page - 1) * size;
   
   try {
-    const { group } = req.params
-    const stock = await Stock.findAll({
+    const { group } = req.params;
+    const validations = await Validation.findAll({
       where: {
         group_id: group
       },
       limit: size,
       offset: offset,
-    })
+    });
     
-    if (stock.length > 0) {
-      res.status(200).json({stock})
+    if (validations.length > 0) {
+      res.status(200).json({validations});
       
     } else {
-      res.status(404).json({message: "No stocks found"})
+      res.status(404).json({message: "No validations found"});
     }
     
   } catch (error) {
-    res.status(500).json({error})
+    res.status(500).json({error});
   }
 }
 
 const getValidationsBySeller = async (req, res) => {
-  const page = Math.max(1, req.query.page) || 1
-  const size = Math.min(1, req.query.size) || 25
-  const offset = (page - 1) * size
+  const page = Math.max(1, req.query.page) || 1;
+  const size = Math.min(1, req.query.size) || 25;
+  const offset = (page - 1) * size;
   
   try {
-    const { seller } = req.params
+    const { seller } = req.params;
     
-    const stock = await Stock.findAll({
+    const validations = await Validation.findAll({
       where: {
         seller: parseInt(seller)
       },
       limit: size,
       offset: offset,
-    })
+    });
     
-    if (stock.length > 0) {
-      res.status(200).json({stock})
+    if (validations.length > 0) {
+      res.status(200).json({validations});
       
     } else {
-      res.status(404).json({message: "No stocks found"})
+      res.status(404).json({message: "No validations found"});
     }
     
   } catch (error) {
-    res.status(500).json({error})
+    res.status(500).json({error});
   }
 }
 
 const getValidationsByValid = async (req, res) => {
   // http(s)://host:port/is_valid=<true/false>
-  const page = Math.max(1, req.query.page) || 1
-  const size = Math.min(1, req.query.size) || 25
+  const page = Math.max(1, req.query.page) || 1;
+  const size = Math.min(1, req.query.size) || 25;
   const offset = (page - 1) * size
   
   try {
     const { is_valid } = req.params
     
+    let validations = [];
+    
     if (is_valid.toLowerCase() !== 'true' || is_valid.toLowerCase() !== 'false') {
-      res.status(400).json({message: "Invalid value for is_valid. Must be 'true' or 'false'"})
+      res.status(400).json({message: "Invalid value for is_valid. Must be 'true' or 'false'"});
       
     } else if (is_valid.toLowerCase() === 'true') {
-      const stock = await Stock.findAll({
+      validations = await Validation.findAll({
         where: {
           valid: true
         },
         limit: size,
         offset: offset,
-      })
+      });
       
     } else {
-      const stock = await Stock.findAll({
+      validations = await Validation.findAll({
         where: {
           valid: false
         },
         limit: size,
         offset: offset,
-      })
+      });
     }
     
-    if (stock.length > 0) {
-      res.status(200).json({stock})
+    if (validations.length > 0) {
+      res.status(200).json({validations});
       
     } else {
-      res.status(404).json({message: "No stocks found"})
+      res.status(404).json({message: "No validations found"});
     }
     
   } catch (error) {
-    res.status(500).json({error})
+    res.status(500).json({error});
   }
 }
 
-const postStock = async (req, res) => {
+const postValidation = async (req, res) => {
   try {
     const { message } = req.body;
     if (!message) {
@@ -129,8 +131,8 @@ const postStock = async (req, res) => {
     }
     
     const data = JSON.parse(message);
-    if (!data.stocks) {
-      return res.status(400).json({ message: "Stocks field is missing" });
+    if (!data.validations) {
+      return res.status(400).json({ message: "Validations field is missing" });
     }
     
     const stocks = JSON.parse(data.stocks);
