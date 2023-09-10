@@ -171,7 +171,9 @@ const postValidation = async (req, res) => {
 
 
 module.exports = {
-  getStocks,
-  postStock,
-  getStocksByName
+  getValidations,
+  getValidationsByGroup,
+  getValidationsBySeller,
+  getValidationsByValid,
+  postValidation
 }
