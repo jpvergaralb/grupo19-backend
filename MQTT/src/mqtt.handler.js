@@ -30,26 +30,28 @@ module.exports = function (client) {
   client.on('message', async (topic, message) => {
     const msg = message.toString()
     
+    let url = ""
+    let data = {message: ""}
+    
+    
     if (topic === process.env.CHANNEL) {
-      const url = `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.LOCAL_PORT}/stocks`
-      const data = {
+      url = `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.LOCAL_PORT}/stocks`
+      data = {
         message: msg
       }
     } else if (topic === process.env.VALIDATIONS_CHANNEL) {
-      const url = `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.LOCAL_PORT}/validations`
-      const data = {
+      url = `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.LOCAL_PORT}/validations`
+      data = {
         message: msg
       }
     } else if (topic === process.env.REQUESTS_CHANNEL) {
-      const url = `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.LOCAL_PORT}/requests`
-      const data = {
+      url = `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.LOCAL_PORT}/requests`
+      data = {
         message: msg
       }
     } else {
       console.log("F")
       console.log(topic)
-      const url = ""
-      const data = {message: ""}
     }
     
 
