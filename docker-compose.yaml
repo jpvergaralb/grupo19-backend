@@ -3,7 +3,8 @@ services:
   api:
     build:
       context: ./API
-      dockerfile: Dockerfile
+      #dockerfile: API/production.Dockerfile
+      dockerfile: API/development.Dockerfile
       args:
         LOCAL_PORT: ${LOCAL_PORT}
     env_file:
