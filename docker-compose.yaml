@@ -1,7 +1,11 @@
 version: '3'
 services:
   api:
-    build: ./API
+    build:
+      context: ./API
+      dockerfile: Dockerfile
+      args:
+        LOCAL_PORT: ${LOCAL_PORT}
     env_file:
       - .env
     restart: unless-stopped
