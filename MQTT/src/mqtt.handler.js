@@ -29,7 +29,7 @@ module.exports = function (client) {
 
   client.on('message', async (topic, message) => {
     const msg = message.toString()
-    const url = `http://${process.env.API_HOST}:${process.env.LOCAL_PORT}/stocks`
+    const url = `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.LOCAL_PORT}/stocks`
     const data = {
       message: msg
     }
