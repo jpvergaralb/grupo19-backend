@@ -6,7 +6,7 @@ const {
   getValidationsBySeller,
   getValidationsByValid,
   postValidation
-} = require('../controllers/stock.controller')
+} = require('../controllers/validation.controller')
 
 const stockRoutes = express.Router()
 
