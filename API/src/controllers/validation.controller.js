@@ -125,46 +125,35 @@ const getValidationsByValid = async (req, res) => {
 
 const postValidation = async (req, res) => {
   try {
-    const { message } = req.body;
-    if (!message) {
-      return res.status(400).json({ message: "Message field is missing" });
+    const validation = req.body;
+    
+    if (!validation) {
+      return res.status(400).json({ message: "Request body is missing" });
     }
     
-    const data = JSON.parse(message);
-    if (!data.validations) {
-      return res.status(400).json({ message: "Validations field is missing" });
+    const { request_id, group_id, seller, valid } = validation;
+    
+    if (!request_id || !group_id || seller === undefined || valid === undefined) {
+      return res.status(400).json({ message: "Missing required fields" });
     }
     
-    const validations = data;
-    const results = [];
+    const createdValidation = await Validation.create({
+      request_id,
+      group_id,
+      seller,
+      valid,
+    });
     
-    for (const validation of validations) {
-      const { request_id, group_id, seller, valid } = validation;
-      
-      if (!request_id || !group_id || !seller || !valid) {
-        results.push({ message: `Missing fields for stock ${request_id || ''}` });
-        continue;
-      }
-      
-      try {
-        await Validation.create({
-          request_id,
-          group_id,
-          seller,
-          valid,
-        });
-        
-        results.push({ message: `Validation ${request_id} from ${group_id} registered` });
-        
-      } catch (error) {
-        results.push({ message: `Error including validation ${request_id}`, error: error.message });
-      }
+    if (!createdValidation) {
+      console.error("Failed to create validation in the database.");
+      return res.status(500).json({ message: "Failed to register validation." });
     }
     
-    res.status(201).json({ results });
+    res.status(201).json({ message: `Validation ${request_id} from ${group_id} registered` });
     
   } catch (error) {
-    res.status(400).json({ message: "Bad Request", error: error.message });
+    console.error("Error in postValidation:", error);
+    res.status(500).json({ message: "Internal Server Error", error: error.message });
   }
 };
 
