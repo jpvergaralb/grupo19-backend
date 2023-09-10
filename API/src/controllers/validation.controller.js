@@ -135,34 +135,34 @@ const postValidation = async (req, res) => {
       return res.status(400).json({ message: "Validations field is missing" });
     }
     
-    const stocks = JSON.parse(data.stocks);
+    const validations = JSON.parse(data.validations);
     const results = [];
     
-    for (const stock of stocks) {
-      const { symbol, shortName, price, currency, source } = stock;
+    for (const validation of validations) {
+      const { request_id, group_id, seller, valid } = validation;
       
-      if (!symbol || !shortName || !price || !currency || !source) {
-        results.push({ message: `Missing fields for stock ${symbol || ''}` });
+      if (!request_id || !group_id || !seller || !valid) {
+        results.push({ message: `Missing fields for stock ${request_id || ''}` });
         continue;
       }
       
       try {
-        await Stock.create({
-          symbol,
-          shortName,
-          price,
-          currency,
-          source,
+        await Validation.create({
+          request_id,
+          group_id,
+          seller,
+          valid,
         });
         
-        results.push({ message: `Stock ${symbol} created at ${price}` });
+        results.push({ message: `Validation ${request_id} from ${group_id} registered` });
         
       } catch (error) {
-        results.push({ message: `Error listing stock ${symbol}`, error: error.message });
+        results.push({ message: `Error including validation ${request_id}`, error: error.message });
       }
     }
     
     res.status(201).json({ results });
+    
   } catch (error) {
     res.status(400).json({ message: "Bad Request", error: error.message });
   }
