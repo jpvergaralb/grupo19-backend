@@ -23,7 +23,7 @@ const getRequests = async (req, res) => {
   }
 }
 
-const getRequestsById = async (req, res) => {
+const getRequestsByGroupId = async (req, res) => {
   const page = Math.max(1, req.query.page) || 1
   const size = Math.min(1, req.query.size) || 25
   const offset = (page - 1) * size
@@ -161,7 +161,7 @@ const postRequests = async (req, res) => {
 module.exports = {
   getRequests,
   postRequests,
-  getRequestsById,
+  getRequestsByGroupId,
   getRequestsBySymbol,
   getRequestsBySeller
 }
