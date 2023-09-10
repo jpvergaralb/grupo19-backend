@@ -14,13 +14,13 @@ stockRoutes.route('/')
   .get(getValidations)
   .post(postValidation)
 
-stockRoutes.route('/:group')
+stockRoutes.route('/group/:group')
   .get(getValidationsByGroup)
 
-stockRoutes.route('/:seller')
+stockRoutes.route('/seller/:seller')
   .get(getValidationsBySeller)
 
-stockRoutes.route('/:is_valid')
+stockRoutes.route('/is_valid/:is_valid')
   .get(getValidationsByValid)
 
 module.exports = stockRoutes
