@@ -3,6 +3,8 @@ const express = require('express')
 const { client }  = require('./config/mqtt.config')
 const mqttHandler = require('./mqtt.handler')
 
+const { publishDataMQTT } = require('./mqtt.publisher')
+
 const app = express()
 
 mqttHandler(client)
@@ -14,3 +16,7 @@ app.get('/', (req, res) => {
 app.listen(process.env.MQTT_PORT, () => {
     console.log(`Server running on port ${process.env.MQTT_PORT}`)
 })
+
+publishDataMQTT(client)
+
+console.log("llegué al final")
