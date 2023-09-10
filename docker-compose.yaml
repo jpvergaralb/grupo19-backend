@@ -4,7 +4,7 @@ services:
     build:
       context: ./API
       #dockerfile: API/production.Dockerfile
-      dockerfile: API/development.Dockerfile
+      dockerfile: development.Dockerfile
       args:
         LOCAL_PORT: ${LOCAL_PORT}
         NODE_VERSION: 16.13.1
@@ -22,9 +22,13 @@ services:
   mqtt:
     build:
       context: ./MQTT
-      dockerfile: Dockerfile
+      #dockerfile: production.Dockerfile
+      dockerfile: development.Dockerfile
       args:
         MQTT_PORT: ${MQTT_PORT:-8001}
+    # Comentar la siguiente línea para producción:
+    volumes:
+      - ./MQTT:/usr/src/app
     env_file:
       - .env
     restart: unless-stopped
