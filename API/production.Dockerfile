@@ -1,6 +1,8 @@
-FROM node:16.13.1
-
+ARG NODE_VERSION=16.13.1
 ARG LOCAL_PORT=8000
+
+FROM node:${NODE_VERSION} as development
+
 ENV LOCAL_PORT=${LOCAL_PORT}
 
 WORKDIR /usr/src/app
