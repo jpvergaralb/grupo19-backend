@@ -30,7 +30,7 @@ Validation.init(
         notEmpty: {
           msg: "seller cannot be empty"
         },
-        isInteger: {
+        isInt: {
           msg: "seller must be an integer"
         }
       }

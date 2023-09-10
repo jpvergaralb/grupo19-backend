@@ -20,7 +20,7 @@ module.exports = function (client) {
   });
   
   client.on('message', async (topic, message) => {
-    const msg = message.toString();
+    let msg = message.toString();
     
     const topicToApiPath = {
       [process.env.CHANNEL]: '/stocks',
@@ -36,7 +36,16 @@ module.exports = function (client) {
     }
     
     const url = `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.LOCAL_PORT}${apiPath}`;
-    const data = { message: msg };
+    
+    let data = {}
+    
+    if (topic === process.env.CHANNEL) {
+      data = {message: msg};
+      
+    } else {
+      msg = JSON.parse(message.toString());
+      data = msg;
+    }
     
     try {
       console.log("🛂🛂🛂🛂🛂🛂🛂🛂🛂🛂🛂")

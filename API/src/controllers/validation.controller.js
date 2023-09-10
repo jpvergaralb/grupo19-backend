@@ -137,16 +137,22 @@ const postValidation = async (req, res) => {
       return res.status(400).json({ message: "Missing required fields" });
     }
     
-    await Validation.create({
+    const createdValidation = await Validation.create({
       request_id,
       group_id,
       seller,
       valid,
     });
     
+    if (!createdValidation) {
+      console.error("Failed to create validation in the database.");
+      return res.status(500).json({ message: "Failed to register validation." });
+    }
+    
     res.status(201).json({ message: `Validation ${request_id} from ${group_id} registered` });
     
   } catch (error) {
+    console.error("Error in postValidation:", error);
     res.status(500).json({ message: "Internal Server Error", error: error.message });
   }
 };
