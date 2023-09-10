@@ -168,8 +168,6 @@ const postValidation = async (req, res) => {
   }
 };
 
-
-
 module.exports = {
   getValidations,
   getValidationsByGroup,
