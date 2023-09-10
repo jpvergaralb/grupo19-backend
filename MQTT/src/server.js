@@ -8,7 +8,7 @@ const app = express()
 mqttHandler(client)
 
 app.get('/', (req, res) => {
-    res.send('Hello World')
+    res.send('MQTT Server API (backend)')
 })
 
 app.listen(process.env.MQTT_PORT, () => {
