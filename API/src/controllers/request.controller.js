@@ -113,7 +113,7 @@ const postRequests = async (req, res) => {
       return res.status(400).json({ message: "Requests field is missing" });
     }
     
-    const requests = JSON.parse(data.requessts);
+    const requests = data;
     const results = [];
     
     for (const request of requests) {

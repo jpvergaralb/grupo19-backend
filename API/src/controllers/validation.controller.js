@@ -135,7 +135,7 @@ const postValidation = async (req, res) => {
       return res.status(400).json({ message: "Validations field is missing" });
     }
     
-    const validations = JSON.parse(data.validations);
+    const validations = data;
     const results = [];
     
     for (const validation of validations) {
