@@ -9,5 +9,5 @@ WORKDIR /usr/src/app
 
 EXPOSE ${LOCAL_PORT}
 
-CMD [ "npm", "dev" , "--port", "${LOCAL_PORT}" ]
+CMD [ "npm", "run", "dev", "--port", "${LOCAL_PORT}" ]
 

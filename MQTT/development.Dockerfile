@@ -7,5 +7,5 @@ WORKDIR /usr/src/app
 
 EXPOSE ${MQTT_PORT}
 
-CMD [ "npm", "dev" , "--port", "${MQTT_PORT}" ]
+CMD [ "npm", "run", "dev", "--port", "${MQTT_PORT}" ]
 
