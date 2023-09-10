@@ -3,8 +3,6 @@ require('dotenv').config()
 const axios = require('axios')
 
 module.exports = function (client) {
-  
-  
   client.on('error', (err) => {
     console.log('Error connecting to MQTT broker', err)
   })
@@ -27,6 +25,7 @@ module.exports = function (client) {
     try {
       const response = await axios.post(url, data)
       console.log(response.data)
+  
     } catch (error) {
       console.log(error)
     }

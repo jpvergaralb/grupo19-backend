@@ -1,5 +1,6 @@
 const express = require('express')
-const { 
+
+const {
     postUser
 } = require('../controllers/user.controller')
 

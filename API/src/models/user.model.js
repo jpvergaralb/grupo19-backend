@@ -1,6 +1,6 @@
-const sequelize = require('../db/db')
 const { Model, DataTypes } = require('sequelize')
 const bcrypt = require('bcrypt')
+const sequelize = require('../db/db')
 
 class User extends Model {}
 
@@ -25,7 +25,7 @@ User.init({
                 args: [3, 20],
             }
         }
-    }, 
+    },
     password: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -33,7 +33,7 @@ User.init({
           is: {
             args: /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$/,
             msg: 'Password must be at least 8 characters long and contain at least one number, one letter, and one special character.'
-          }          
+          }
         }
       },
     email: {
@@ -74,7 +74,7 @@ User.init({
         }
     },
     phone: {
-        type: DataTypes.STRING, 
+        type: DataTypes.STRING,
         allowNull: false,
         validate: {
             notEmpty: {
@@ -97,7 +97,7 @@ User.init({
             }
         }
     }
-}, 
+},
     {
         sequelize,
         modelName: "User",
