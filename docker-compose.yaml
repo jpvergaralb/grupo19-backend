@@ -6,16 +6,20 @@ services:
       - .env
     restart: unless-stopped
     ports:
-      - "${LOCAL_PORT:-8000}:8000"
+      - "${LOCAL_PORT:-8000}:${LOCAL_PORT:-8000}"
     depends_on:
       - db
   mqtt:
-    build: ./MQTT
+    build:
+      context: ./MQTT
+      dockerfile: Dockerfile
+      args:
+        MQTT_PORT: ${MQTT_PORT:-8001}
     env_file:
       - .env
     restart: unless-stopped
     ports:
-      - "${MQTT_PORT:-8001}:8001"
+      - "${MQTT_PORT:-8001}:${MQTT_PORT:-8001}"
   db:
     image: postgres:12.8
     volumes:
