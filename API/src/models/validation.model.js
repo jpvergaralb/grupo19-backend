@@ -1,5 +1,5 @@
-const { Model, DataTypes } = require('sequelize')
-const sequelize = require('../db/db')
+const { Model, DataTypes } = require('sequelize');
+const sequelize = require('../db/db');
 
 class Validation extends Model {}
 
@@ -54,6 +54,6 @@ Validation.init(
     tableName: "validations",
     timestamps: true
   }
-)
+);
 
 module.exports = Validation;
