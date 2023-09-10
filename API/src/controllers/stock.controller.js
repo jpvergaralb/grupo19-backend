@@ -10,12 +10,14 @@ const getStocks = async (req, res) => {
       limit: size,
       offset: offset,
     })
+    
     if (stocks.length > 0) {
       res.status(200).json({stocks})
-    }
-    else {
+      
+    } else {
       res.status(404).json({message: "No stocks found"})
     }
+    
   } catch (error) {
     res.status(500).json({error})
   }
@@ -23,7 +25,7 @@ const getStocks = async (req, res) => {
 
 const getStocksByName = async (req, res) => {
   const page = Math.max(1, req.query.page) || 1
-  const size = Math.min(25, req.query.size) || 25
+  const size = Math.min(1, req.query.size) || 25
   const offset = (page - 1) * size
 
   try {
@@ -35,12 +37,13 @@ const getStocksByName = async (req, res) => {
       limit: size,
       offset: offset,
     })
+    
     if (stock.length > 0) {
       res.status(200).json({stock})
-    }
-    else {
+    } else {
       res.status(404).json({message: "No stocks found"})
     }
+    
   } catch (error) {
     res.status(500).json({error})
   }
@@ -77,7 +80,9 @@ const postStock = async (req, res) => {
           currency,
           source,
         });
+        
         results.push({ message: `Stock ${symbol} created at ${price}` });
+        
       } catch (error) {
         results.push({ message: `Error listing stock ${symbol}`, error: error.message });
       }

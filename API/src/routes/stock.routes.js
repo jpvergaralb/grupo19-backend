@@ -1,8 +1,9 @@
 const express = require('express')
-const { 
-  getStocks, 
+
+const {
+  getStocks,
   postStock,
-  getStocksByName 
+  getStocksByName
 } = require('../controllers/stock.controller')
 
 const stockRoutes = express.Router()
