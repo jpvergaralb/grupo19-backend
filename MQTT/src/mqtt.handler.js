@@ -48,6 +48,8 @@ module.exports = function (client) {
     } else {
       console.log("F")
       console.log(topic)
+      const url = ""
+      const data = {message: ""}
     }
     
 
