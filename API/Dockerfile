@@ -1,5 +1,8 @@
 FROM node:16.13.1
 
+ARG LOCAL_PORT=8000
+ENV LOCAL_PORT=${LOCAL_PORT}
+
 WORKDIR /usr/src/app
 
 COPY package*.json ./
@@ -8,7 +11,7 @@ RUN npm install
 
 COPY . .
 
-EXPOSE 8000
+EXPOSE ${LOCAL_PORT}
 
-CMD [ "npm", "start" ]
+CMD [ "npm", "start" , "--port", "${LOCAL_PORT}" ]
 

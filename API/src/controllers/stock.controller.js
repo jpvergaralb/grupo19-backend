@@ -2,7 +2,7 @@ const Stock = require('../models/stock.model')
 
 const getStocks = async (req, res) => {
   const page = Math.max(1, req.query.page) || 1
-  const size = Math.max(25, req.query.size) || 25
+  const size = Math.max(1, req.query.size) || 25
   const offset = (page - 1) * size
 
   try {

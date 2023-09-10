@@ -1,32 +1,41 @@
 version: '3'
 services:
   api:
-    build: ./API
+    build:
+      context: ./API
+      dockerfile: Dockerfile
+      args:
+        LOCAL_PORT: ${LOCAL_PORT}
     env_file:
       - .env
-    restart: always
+    restart: unless-stopped
     ports:
-      - "8000:8000"
+      - "${LOCAL_PORT:-8000}:${LOCAL_PORT:-8000}"
     depends_on:
       - db
   mqtt:
-    build: ./MQTT
+    build:
+      context: ./MQTT
+      dockerfile: Dockerfile
+      args:
+        MQTT_PORT: ${MQTT_PORT:-8001}
     env_file:
       - .env
-    restart: always
+    restart: unless-stopped
     ports:
-      - "8001:8001"
+      - "${MQTT_PORT:-8001}:${MQTT_PORT:-8001}"
   db:
     image: postgres:12.8
     volumes:
-      - postgres_data:/var/lib/postgresql/data
-    restart: always
+      - postgres_data156513:/var/lib/postgresql/data
+    restart: unless-stopped
     environment:
-      POSTGRES_DB: postgres
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: ${DB_NAME:-postgres}
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      PGPORT: ${DB_PORT:-5432}
     ports:
-      - "5432:5432"
+      - "${DB_PORT:-5432}:${DB_PORT:-5432}"
 
 volumes:
-  postgres_data:
+  postgres_data156513:
