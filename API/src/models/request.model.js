@@ -65,6 +65,7 @@ Request.init(
     },
     quantity: {
       type: DataTypes.INTEGER,
+      allowNull: false,
       validate: {
         notEmpty: {
           msg: "quantity cannot be empty"
