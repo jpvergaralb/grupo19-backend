@@ -23,6 +23,7 @@ syncDatabase()
 app.use(express.json())
 app.use('/stocks', stockRoutes)
 app.use('/users', userRoutes)
+app.use('/validations', userRoutes)
 
 app.listen(port, () => {
   console.log(`Listening in port ${port}`)
