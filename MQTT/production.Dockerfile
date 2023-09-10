@@ -5,7 +5,13 @@ ENV MQTT_PORT=${MQTT_PORT}
 
 WORKDIR /usr/src/app
 
+COPY package*.json ./
+
+RUN npm install
+
+COPY . .
+
 EXPOSE ${MQTT_PORT}
 
-CMD [ "npm", "dev" , "--port", "${MQTT_PORT}" ]
+CMD [ "npm", "start" , "--port", "${MQTT_PORT}" ]
 

@@ -23,7 +23,7 @@ services:
     build:
       context: ./MQTT
       #dockerfile: production.Dockerfile
-      dockerfile: development.Dockerfile
+      dockerfile: MQTT/development.temp.Dockerfile
       args:
         MQTT_PORT: ${MQTT_PORT:-8001}
     # Comentar la siguiente línea para producción:
