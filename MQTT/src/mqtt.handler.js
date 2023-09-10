@@ -2,7 +2,6 @@ require('dotenv').config();
 const axios = require('axios');
 
 module.exports = function (client) {
-  // 1. Extraer la lógica de suscripción a una función
   const subscribeToChannel = (channel) => {
     client.subscribe(channel, (err) => {
       if (err) {
@@ -23,7 +22,6 @@ module.exports = function (client) {
   client.on('message', async (topic, message) => {
     const msg = message.toString();
     
-    // 2. Usar un objeto de configuración para las URL
     const topicToApiPath = {
       [process.env.CHANNEL]: '/stocks',
       [process.env.VALIDATIONS_CHANNEL]: '/validations',
@@ -40,7 +38,6 @@ module.exports = function (client) {
     const url = `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.LOCAL_PORT}${apiPath}`;
     const data = { message: msg };
     
-    // 3. Manejo de errores mejorado
     try {
       const response = await axios.post(url, data);
       console.log(response.data);
