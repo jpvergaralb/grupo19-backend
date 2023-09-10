@@ -13,6 +13,18 @@ module.exports = function (client) {
         console.log('Error subscribing to channel', err)
       }
     })
+    
+    client.subscribe(process.env.VALIDATIONS_CHANNEL, (err) => {
+      if (err) {
+        console.log('Error subscribing to channel', err)
+      }
+    })
+    
+    client.subscribe(process.env.REQUESTS_CHANNEL, (err) => {
+      if (err) {
+        console.log('Error subscribing to channel', err)
+      }
+    })
   })
 
   client.on('message', async (topic, message) => {
