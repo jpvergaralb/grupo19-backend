@@ -1,66 +1,51 @@
-require('dotenv').config()
-
-const axios = require('axios')
+require('dotenv').config();
+const axios = require('axios');
 
 module.exports = function (client) {
-  client.on('error', (err) => {
-    console.log('Error connecting to MQTT broker', err)
-  })
-
-  client.on('connect', () => {
-    client.subscribe(process.env.CHANNEL, (err) => {
+  // 1. Extraer la lógica de suscripción a una función
+  const subscribeToChannel = (channel) => {
+    client.subscribe(channel, (err) => {
       if (err) {
-        console.log('Error subscribing to channel', err)
+        console.log(`Error subscribing to ${channel}`, err);
       }
-    })
-    
-    client.subscribe(process.env.VALIDATIONS_CHANNEL, (err) => {
-      if (err) {
-        console.log('Error subscribing to channel', err)
-      }
-    })
-    
-    client.subscribe(process.env.REQUESTS_CHANNEL, (err) => {
-      if (err) {
-        console.log('Error subscribing to channel', err)
-      }
-    })
-  })
-
-  client.on('message', async (topic, message) => {
-    const msg = message.toString()
-    
-    let url = ""
-    let data = {message: ""}
-    
-    
-    if (topic === process.env.CHANNEL) {
-      url = `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.LOCAL_PORT}/stocks`
-      data = {
-        message: msg
-      }
-    } else if (topic === process.env.VALIDATIONS_CHANNEL) {
-      url = `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.LOCAL_PORT}/validations`
-      data = {
-        message: msg
-      }
-    } else if (topic === process.env.REQUESTS_CHANNEL) {
-      url = `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.LOCAL_PORT}/requests`
-      data = {
-        message: msg
-      }
-    } else {
-      console.log("F")
-      console.log(topic)
-    }
-    
-
-    try {
-      const response = await axios.post(url, data)
-      console.log(response.data)
+    });
+  };
   
-    } catch (error) {
-      console.log(error)
+  client.on('error', (err) => {
+    console.log('Error connecting to MQTT broker', err);
+  });
+  
+  client.on('connect', () => {
+    // Suscribirse a los canales usando la función
+    [process.env.CHANNEL, process.env.VALIDATIONS_CHANNEL, process.env.REQUESTS_CHANNEL].forEach(subscribeToChannel);
+  });
+  
+  client.on('message', async (topic, message) => {
+    const msg = message.toString();
+    
+    // 2. Usar un objeto de configuración para las URL
+    const topicToApiPath = {
+      [process.env.CHANNEL]: '/stocks',
+      [process.env.VALIDATIONS_CHANNEL]: '/validations',
+      [process.env.REQUESTS_CHANNEL]: '/requests'
+    };
+    
+    const apiPath = topicToApiPath[topic];
+    
+    if (!apiPath) {
+      console.log("Unknown topic:", topic);
+      return;
     }
-  })
-}
+    
+    const url = `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.LOCAL_PORT}${apiPath}`;
+    const data = { message: msg };
+    
+    // 3. Manejo de errores mejorado
+    try {
+      const response = await axios.post(url, data);
+      console.log(response.data);
+    } catch (error) {
+      console.log(`Error posting to ${url}`, error);
+    }
+  });
+};
