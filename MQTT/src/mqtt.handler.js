@@ -37,7 +37,7 @@ module.exports = function (client) {
     const apiPath = topicToApiPath[topic];
     
     if (!apiPath) {
-      console.log("Unknown topic:", topic);
+      console.log("🤷 | Tópico desconocido:", topic);
       return;
     }
     
