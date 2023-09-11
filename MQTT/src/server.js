@@ -17,6 +17,8 @@ app.listen(process.env.MQTT_PORT, () => {
     console.log(`▶️| Servidor MQTT Listener corriendo en puerto ${process.env.MQTT_PORT}`)
 })
 
+
+
 //// Para testear la interacción con el broke MQTT
 // setTimeout(function() {
 //     publishDataMQTT(client);

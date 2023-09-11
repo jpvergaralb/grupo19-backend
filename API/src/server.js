@@ -32,6 +32,6 @@ app.use('/validations', validationRoutes)
 app.use('/requests', requestRoutes)
 
 app.listen(port, () => {
-  console.log(`Listening in port ${port}`)
+  console.log(`👂| Escuchando en puerto ${port}`)
 })
 

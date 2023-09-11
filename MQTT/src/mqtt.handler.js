@@ -64,7 +64,7 @@ module.exports = function (client) {
       const response = await axios.post(url, data);
       console.log("📫| Se recibió respuesta", response.data);
     } catch (error) {
-      console.log(`⛔| Error enviando datos a ${url}`);
+      console.log(`⛔ | Error enviando datos a ${url}`);
       console.log(error);
     }
   });

@@ -4,7 +4,7 @@ const { url, options } = require('../config/mqtt.config')
 
 let client = null;
 
-console.log("⌛| Iniciando la conexión con el broker MQTT");
+console.log("⌛ | Iniciando la conexión con el broker MQTT");
 
 try {
   client = mqtt.connect(url, options)
