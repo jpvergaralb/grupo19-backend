@@ -14,7 +14,7 @@ app.get('/', (req, res) => {
 })
 
 app.listen(process.env.MQTT_PORT, () => {
-    console.log(`Server running on port ${process.env.MQTT_PORT}`)
+    console.log(`▶️ | Server running on port ${process.env.MQTT_PORT}`)
 })
 
 //// Para testear la interacción con el broke MQTT
@@ -22,4 +22,3 @@ app.listen(process.env.MQTT_PORT, () => {
 //     publishDataMQTT(client);
 // }, 5000);
 
-console.log("llegué al final")
