@@ -1,4 +1,3 @@
-
 const postRequests = async (req, res) => {
   console.log("📠| POST request recibida a /requests")
   
@@ -40,9 +39,6 @@ const postRequests = async (req, res) => {
   
   console.log("📞| Fin del mensaje a /requests")
 };
-
-
-
 
 module.exports = {
   postRequests,
