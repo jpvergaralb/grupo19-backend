@@ -11,8 +11,10 @@ const my_dictionary = {
 }
 
 function publishDataMQTT(client) {
+  console.log("🧪| Testeando publicación de datos al broker MQTT...");
   client.publish(process.env.MQTT_API_REQUEST_CHANNEL,
     JSON.stringify(my_dictionary))
+  console.log("🧑‍🔬️| Publicación de datos al broker MQTT finalizada...");
 }
 
 module.exports = {

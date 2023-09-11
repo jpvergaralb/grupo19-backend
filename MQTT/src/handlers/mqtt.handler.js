@@ -2,6 +2,10 @@ require('dotenv').config();
 const axios = require('axios');
 
 module.exports = function (client) {
+  console.log("🖐 | Entrando al handler de MQTT")
+  
+  let connectionTimeout;
+  
   const subscribeToChannel = (channel) => {
     console.log('⌛ | Suscribiéndose a', channel);
     
