@@ -9,7 +9,7 @@ module.exports = function (client) {
         console.log(err);
       }
       else {
-        console.log(`✅| Suscrito a ${channel}`)
+        console.log(`✅ | Suscrito a ${channel}`)
       }
     });
   };
