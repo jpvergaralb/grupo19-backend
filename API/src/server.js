@@ -20,7 +20,7 @@ const syncDatabase = async () => {
   }
 }
 
-syncDatabase()
+syncDatabase().then(r => console.log('Database synced'))
 
 app.use(express.json())
 app.use('/stocks', stockRoutes)
