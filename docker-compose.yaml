@@ -7,7 +7,7 @@ services:
       dockerfile: development.Dockerfile
       args:
         LOCAL_PORT: ${LOCAL_PORT}
-        NODE_VERSION: 16.13.1
+        NODE_VERSION: ${API_NODE_VERSION:-16}
     env_file:
       - .env
     restart: unless-stopped
@@ -26,6 +26,7 @@ services:
       dockerfile: development.Dockerfile
       args:
         MQTT_PORT: ${MQTT_PORT:-8001}
+        NODE_VERSION: ${MQTT_NODE_VERSION:-16}
     # Comentar la siguiente línea para producción:
     volumes:
       - ./MQTT:/usr/src/app
