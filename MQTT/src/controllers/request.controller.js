@@ -1,8 +1,20 @@
+function publishDataMQTT(client, request) {
+  console.log("🧪| Testeando publicación de datos al broker MQTT...");
+  client.publish(process.env.MQTT_API_REQUEST_CHANNEL,
+    JSON.stringify(request))
+  console.log("🧑‍🔬️| Publicación de datos al broker MQTT finalizada...");
+}
+
+
 const postRequests = async (req, res) => {
   console.log("📠| POST request recibida a /requests")
   
   try {
     const request = req.body;
+    
+    console.log("--------------------------------------------")
+    console.log(request)
+    console.log("--------------------------------------------")
     
     if (!request) {
       return res.status(400).json({ message: "Request body is missing" });
@@ -22,15 +34,7 @@ const postRequests = async (req, res) => {
       return res.status(400).json({ message: "Missing required fields" });
     }
     
-    await Request.create({
-      request_id,
-      group_id,
-      symbol,
-      datetime,
-      deposit_token,
-      quantity,
-      seller,
-    });
+    publishDataMQTT(client, zrequest);
     
     res.status(201).json({ message: `Request ${request_id} @ ${datetime} created successfully` });
   } catch (error) {
