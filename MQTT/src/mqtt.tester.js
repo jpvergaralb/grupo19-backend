@@ -13,13 +13,9 @@ const my_dictionary = {
   seller: 0
 }
 
-console.log("variable definida")
-
 function publishDataMQTT(client) {
-  console.log("entrando a función")
   client.publish(process.env.REQUESTS_CHANNEL,
     JSON.stringify(my_dictionary))
-  console.log("su publish loco")
 }
 
 module.exports = {
