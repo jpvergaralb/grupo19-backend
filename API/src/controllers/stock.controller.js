@@ -1,6 +1,8 @@
 const Stock = require('../models/stock.model')
 
 const getStocks = async (req, res) => {
+  console.log("📠 | GET request recibida a /stocks")
+  
   const page = Math.max(1, req.query.page) || 1
   const size = Math.max(1, req.query.size) || 25
   const offset = (page - 1) * size
@@ -24,6 +26,8 @@ const getStocks = async (req, res) => {
 }
 
 const getStocksByName = async (req, res) => {
+  console.log("📠 | GET request recibida a /stocks/:name")
+  
   const page = Math.max(1, req.query.page) || 1
   const size = Math.min(1, req.query.size) || 25
   const offset = (page - 1) * size
@@ -50,6 +54,8 @@ const getStocksByName = async (req, res) => {
 }
 
 const postStock = async (req, res) => {
+  console.log("📠 | POST request recibida a /stocks")
+  
   try {
     const { message } = req.body;
     if (!message) {

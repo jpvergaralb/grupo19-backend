@@ -1,6 +1,8 @@
 const Validation = require('../models/validation.model')
 
 const getValidations = async (req, res) => {
+  console.log("📠 | GET request recibida a /validations")
+  
   const page = Math.max(1, req.query.page) || 1;
   const size = Math.max(1, req.query.size) || 25;
   const offset = (page - 1) * size;
@@ -24,6 +26,8 @@ const getValidations = async (req, res) => {
 }
 
 const getValidationsByGroup = async (req, res) => {
+  console.log("📠 | GET request recibida a /validations/group/:group")
+  
   const page = Math.max(1, req.query.page) || 1;
   const size = Math.min(1, req.query.size) || 25;
   const offset = (page - 1) * size;
@@ -51,6 +55,8 @@ const getValidationsByGroup = async (req, res) => {
 }
 
 const getValidationsBySeller = async (req, res) => {
+  console.log("📠 | GET request recibida a /validations/seller/:seller")
+  
   const page = Math.max(1, req.query.page) || 1;
   const size = Math.min(1, req.query.size) || 25;
   const offset = (page - 1) * size;
@@ -79,6 +85,8 @@ const getValidationsBySeller = async (req, res) => {
 }
 
 const getValidationsByValid = async (req, res) => {
+  console.log("📠 | GET request recibida a /validations/validation/:is_valid")
+  
   // http(s)://host:port/is_valid=<true/false>
   const page = Math.max(1, req.query.page) || 1;
   const size = Math.min(1, req.query.size) || 25;
@@ -124,6 +132,7 @@ const getValidationsByValid = async (req, res) => {
 }
 
 const postValidation = async (req, res) => {
+  console.log("📠 | POST request recibida a /validations")
   try {
     const validation = req.body;
     

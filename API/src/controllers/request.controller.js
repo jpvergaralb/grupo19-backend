@@ -1,6 +1,8 @@
 const Request = require('../models/request.model')
 
 const getRequests = async (req, res) => {
+  console.log("📠 | GET request recibida a /requests")
+  
   const page = Math.max(1, req.query.page) || 1
   const size = Math.max(1, req.query.size) || 25
   const offset = (page - 1) * size
@@ -24,6 +26,8 @@ const getRequests = async (req, res) => {
 }
 
 const getRequestsByGroupId = async (req, res) => {
+  console.log("📠 | GET request recibida a /requests/group/:group_id")
+  
   const page = Math.max(1, req.query.page) || 1
   const size = Math.min(1, req.query.size) || 25
   const offset = (page - 1) * size
@@ -50,6 +54,8 @@ const getRequestsByGroupId = async (req, res) => {
 }
 
 const getRequestsBySymbol = async (req, res) => {
+  console.log("📠 | GET request recibida a /requests/symbol/:symbol")
+  
   const page = Math.max(1, req.query.page) || 1
   const size = Math.min(1, req.query.size) || 25
   const offset = (page - 1) * size
@@ -76,6 +82,8 @@ const getRequestsBySymbol = async (req, res) => {
 }
 
 const getRequestsBySeller = async (req, res) => {
+  console.log("📠 | GET request recibida a /requests/seller/:seller")
+  
   const page = Math.max(1, req.query.page) || 1
   const size = Math.min(1, req.query.size) || 25
   const offset = (page - 1) * size
@@ -102,6 +110,8 @@ const getRequestsBySeller = async (req, res) => {
 }
 
 const postRequests = async (req, res) => {
+  console.log("📠 | POST request recibida a /requests")
+  
   try {
     const request = req.body;
     
