@@ -1,5 +1,5 @@
 require('dotenv').config();
-const { newUUID } = require('../utils/random');
+const { newUUID, randInt } = require('../utils/random');
 
 const my_dictionary = {
   request_id: newUUID(),
@@ -7,7 +7,7 @@ const my_dictionary = {
   symbol: "AAPL",
   datetime: new Date(),
   deposit_token: '',
-  quantity: 1,
+  quantity: randInt(1, 10),
   seller: 0
 }
 
