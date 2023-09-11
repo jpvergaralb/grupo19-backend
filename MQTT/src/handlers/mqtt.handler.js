@@ -3,6 +3,8 @@ const axios = require('axios');
 
 module.exports = function (client) {
   const subscribeToChannel = (channel) => {
+    console.log('⌛ | Suscribiéndose a', channel);
+    
     client.subscribe(channel, (err) => {
       if (err) {
         console.log(`💢| Error suscribiéndose a ${channel}`);
@@ -23,7 +25,9 @@ module.exports = function (client) {
     console.log("🔗| Conexión al broker MQTT activa");
     
     // Suscribirse a los canales usando la función
-    [process.env.MQTT_API_INFO_CHANNEL, process.env.MQTT_API_VALIDATION_CHANNEL, process.env.MQTT_API_REQUEST_CHANNEL].forEach(subscribeToChannel);
+    [process.env.MQTT_API_INFO_CHANNEL,
+      process.env.MQTT_API_VALIDATION_CHANNEL,
+      process.env.MQTT_API_REQUEST_CHANNEL].forEach(subscribeToChannel);
   });
   
   client.on('message', async (topic, message) => {
