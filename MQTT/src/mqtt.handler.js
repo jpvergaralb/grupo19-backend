@@ -5,13 +5,13 @@ module.exports = function (client) {
   const subscribeToChannel = (channel) => {
     client.subscribe(channel, (err) => {
       if (err) {
-        console.log(`Error subscribing to ${channel}`, err);
+        console.log(`💢 | Error subscribing to ${channel}`, err);
       }
     });
   };
   
   client.on('error', (err) => {
-    console.log('Error connecting to MQTT broker', err);
+    console.log('💢 | Error connecting to MQTT broker', err);
   });
   
   client.on('connect', () => {
