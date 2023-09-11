@@ -1,9 +1,9 @@
 ARG NODE_VERSION=16.13.1
-ARG LOCAL_PORT=8000
+ARG API_PORT=8000
 
 FROM node:${NODE_VERSION} as development
 
-ENV LOCAL_PORT=${LOCAL_PORT}
+ENV LOCAL_PORT=${API_PORT}
 
 WORKDIR /usr/src/app
 
@@ -13,7 +13,7 @@ RUN npm install
 
 COPY . .
 
-EXPOSE ${LOCAL_PORT}
+EXPOSE ${API_PORT}
 
 CMD [ "npm", "start" , "--port", "${LOCAL_PORT}" ]
 

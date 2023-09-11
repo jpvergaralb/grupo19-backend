@@ -43,7 +43,7 @@ module.exports = function (client) {
       return;
     }
     
-    const url = `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.LOCAL_PORT}${apiPath}`;
+    const url = `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.API_PORT}${apiPath}`;
     
     let data = {}
     
