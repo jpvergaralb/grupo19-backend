@@ -23,7 +23,7 @@ module.exports = function (client) {
     console.log("🔗| Conexión al broker MQTT activa");
     
     // Suscribirse a los canales usando la función
-    [process.env.CHANNEL, process.env.VALIDATIONS_CHANNEL, process.env.REQUESTS_CHANNEL].forEach(subscribeToChannel);
+    [process.env.MQTT_API_INFO_CHANNEL, process.env.MQTT_API_VALIDATION_CHANNEL, process.env.MQTT_API_REQUEST_CHANNEL].forEach(subscribeToChannel);
   });
   
   client.on('message', async (topic, message) => {
@@ -31,9 +31,9 @@ module.exports = function (client) {
     
     // Dirigir el post en función de canal al que se suscribió
     const topicToApiPath = {
-      [process.env.CHANNEL]: '/stocks',
-      [process.env.VALIDATIONS_CHANNEL]: '/validations',
-      [process.env.REQUESTS_CHANNEL]: '/requests'
+      [process.env.MQTT_API_INFO_CHANNEL]: '/stocks',
+      [process.env.MQTT_API_VALIDATION_CHANNEL]: '/validations',
+      [process.env.MQTT_API_REQUEST_CHANNEL]: '/requests'
     };
     
     const apiPath = topicToApiPath[topic];
@@ -43,11 +43,11 @@ module.exports = function (client) {
       return;
     }
     
-    const url = `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.LOCAL_PORT}${apiPath}`;
+    const url = `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.API_PORT}${apiPath}`;
     
     let data = {}
     
-    if (topic === process.env.CHANNEL) {
+    if (topic === process.env.MQTT_API_INFO_CHANNEL) {
       // Si es de stocks/info debe ir con message.
       // ... está hardcodeado
       data = {message: msg};

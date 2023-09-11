@@ -1,9 +1,9 @@
 require('dotenv').config()
 const express = require('express')
-const { client }  = require('./connector/mqtt.connector')
-const mqttHandler = require('./mqtt.handler')
+const { client }  = require('./connectors/mqtt.connector')
+const mqttHandler = require('./handlers/mqtt.handler')
 
-// const { publishDataMQTT } = require('./mqtt.tester')
+// const { publishDataMQTT } = require('./mqtt.testers')
 
 const app = express()
 
@@ -13,8 +13,8 @@ app.get('/', (req, res) => {
     res.send('MQTT Server API (backend)')
 })
 
-app.listen(process.env.MQTT_PORT, () => {
-    console.log(`▶️| Servidor MQTT Listener corriendo en puerto ${process.env.MQTT_PORT}`)
+app.listen(process.env.MQTT_API_PORT, () => {
+    console.log(`▶️| Servidor MQTT Listener corriendo en puerto ${process.env.MQTT_API_PORT}`)
 })
 
 
