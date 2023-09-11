@@ -12,15 +12,18 @@ const port = process.env.LOCAL_PORT || 8000
 const syncDatabase = async () => {
   try {
     await sequelize.sync({alter: true})
-    console.log('Connection has been established successfully.');
+    console.log('😄| Conexión a la base de datos exitosa.');
     
   } catch (error) {
-    console.error('Unable to connect to the database:', error)
+    console.log('😡| No se pudo conectar a la base de datos.')
+    console.error(error)
     process.exit(1)
   }
 }
 
-syncDatabase().then(r => console.log('Database synced'))
+syncDatabase().then(
+  () => console.log('🗃| Base de datos sincronizada.')
+)
 
 app.use(express.json())
 app.use('/stocks', stockRoutes)
