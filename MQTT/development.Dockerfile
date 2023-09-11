@@ -2,12 +2,12 @@ ARG NODE_VERSION=16.13.1
 
 FROM node:${NODE_VERSION}
 
-ARG MQTT_PORT=8001
-ENV MQTT_PORT=${MQTT_PORT}
+ARG MQTT_API_PORT=8001
+ENV MQTT_API_PORT=${MQTT_API_PORT}
 
 WORKDIR /usr/src/app
 
-EXPOSE ${MQTT_PORT}
+EXPOSE ${MQTT_API_PORT}
 
-CMD [ "npm", "run", "dev", "--port", "${MQTT_PORT}" ]
+CMD [ "npm", "run", "dev", "--port", "${MQTT_API_PORT}" ]
 

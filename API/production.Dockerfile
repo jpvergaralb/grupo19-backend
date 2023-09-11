@@ -3,7 +3,7 @@ ARG API_PORT=8000
 
 FROM node:${NODE_VERSION} as development
 
-ENV LOCAL_PORT=${API_PORT}
+ENV API_PORT=${API_PORT}
 
 WORKDIR /usr/src/app
 
@@ -15,5 +15,5 @@ COPY . .
 
 EXPOSE ${API_PORT}
 
-CMD [ "npm", "start" , "--port", "${LOCAL_PORT}" ]
+CMD [ "npm", "start" , "--port", "${API_PORT}" ]
 

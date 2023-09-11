@@ -13,8 +13,8 @@ app.get('/', (req, res) => {
     res.send('MQTT Server API (backend)')
 })
 
-app.listen(process.env.MQTT_PORT, () => {
-    console.log(`▶️| Servidor MQTT Listener corriendo en puerto ${process.env.MQTT_PORT}`)
+app.listen(process.env.MQTT_API_PORT, () => {
+    console.log(`▶️| Servidor MQTT Listener corriendo en puerto ${process.env.MQTT_API_PORT}`)
 })
 
 

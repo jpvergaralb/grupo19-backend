@@ -6,7 +6,7 @@ services:
       #dockerfile: production.Dockerfile
       dockerfile: development.Dockerfile
       args:
-        LOCAL_PORT: ${API_PORT}
+        API_PORT: ${API_PORT}
         NODE_VERSION: ${API_NODE_VERSION:-16}
     env_file:
       - .env
@@ -25,7 +25,7 @@ services:
       #dockerfile: production.Dockerfile
       dockerfile: development.Dockerfile
       args:
-        MQTT_PORT: ${MQTT_PORT:-8001}
+        MQTT_API_PORT: ${MQTT_API_PORT:-8001}
         NODE_VERSION: ${MQTT_API_NODE_VERSION:-16}
     # Comentar la siguiente línea para producción:
     volumes:
@@ -34,7 +34,7 @@ services:
       - .env
     restart: unless-stopped
     ports:
-      - "${MQTT_PORT:-8001}:${MQTT_PORT:-8001}"
+      - "${MQTT_API_PORT:-8001}:${MQTT_API_PORT:-8001}"
 
   db:
     image: postgres:12.8
