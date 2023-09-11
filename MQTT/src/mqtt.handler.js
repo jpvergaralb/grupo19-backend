@@ -46,17 +46,21 @@ module.exports = function (client) {
     let data = {}
     
     if (topic === process.env.CHANNEL) {
+      // Si es de stocks/info debe ir con message.
+      // ... está hardcodeado
       data = {message: msg};
       
     } else {
+      // ... caso contraro, va como JSON.
+      // ... caso genérico
       msg = JSON.parse(message.toString());
       data = msg;
     }
     
     try {
-      console.log(`📨 | Posting to ${url}`);
+      console.log(`📨 | Enviando datos a ${url}`);
       const response = await axios.post(url, data);
-      console.log(response.data);
+      console.log("📫 | Se recibió respuesta", response.data);
     } catch (error) {
       console.log(`⛔ | Error posting to ${url}`, error);
     }
