@@ -17,8 +17,6 @@ app.listen(process.env.MQTT_API_PORT, () => {
     console.log(`▶️| Servidor MQTT Listener corriendo en puerto ${process.env.MQTT_API_PORT}`)
 })
 
-
-
 // Para testear la interacción con el broker MQTT
 setTimeout(function() {
     publishDataMQTT(client);
