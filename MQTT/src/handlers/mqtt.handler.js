@@ -27,12 +27,21 @@ module.exports = function (client) {
   
   client.on('connect', () => {
     console.log("🔗| Conexión al broker MQTT activa");
+    // Cancelar el timeout, ya que el cliente se ha conectado
+    clearTimeout(connectionTimeout);
     
     // Suscribirse a los canales usando la función
     [process.env.MQTT_API_INFO_CHANNEL,
       process.env.MQTT_API_VALIDATION_CHANNEL,
       process.env.MQTT_API_REQUEST_CHANNEL].forEach(subscribeToChannel);
   });
+  
+  // Establecer el timeout para verificar la conexión
+  connectionTimeout = setTimeout(() => {
+    console.log('⏲️| No se pudo conectar al broker MQTT en el tiempo especificado.');
+    console.log('🚪| Saliendo de la aplicación');
+    process.exit(1)
+  }, process.env.MQTT_CONNECTION_TIMEOUT);
   
   client.on('message', async (topic, message) => {
     let msg = message.toString();
