@@ -41,6 +41,7 @@ const getStocksByName = async (req, res) => {
       },
       limit: size,
       offset: offset,
+      order: [['createdAt', 'DESC']]
     })
     
     if (stock.length > 0) {
@@ -103,10 +104,26 @@ const postStock = async (req, res) => {
   console.log("📞| Fin del mensaje a /stocks")
 };
 
-
+const getCompaniesSymbol = async (req, res) => {
+  try {
+    const companiesNames = await Stock.findAll({
+      attributes: ['symbol'],
+      group: ['symbol']
+    })
+    if (companiesNames.length > 0) {
+      res.status(200).json({companiesNames})
+    }
+    else {
+      res.status(404).json({message: "No companies found"})
+    }
+  } catch (error) {
+    res.status(500).json({error})
+  }
+}
 
 module.exports = {
   getStocks,
   postStock,
-  getStocksByName
+  getStocksByName,
+  getCompaniesSymbol
 }
