@@ -1,5 +1,4 @@
 require('dotenv').config();
-const axios = require('axios');
 
 const my_dictionary = {
   request_id: '63fe8daa-4f94-11ee-be56-0242ac120002',
