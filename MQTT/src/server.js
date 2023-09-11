@@ -1,6 +1,6 @@
 require('dotenv').config()
 const express = require('express')
-const { client }  = require('./config/mqtt.config')
+const { client }  = require('./connector/mqtt.connector')
 const mqttHandler = require('./mqtt.handler')
 
 // const { publishDataMQTT } = require('./mqtt.tester')

@@ -5,7 +5,8 @@ module.exports = function (client) {
   const subscribeToChannel = (channel) => {
     client.subscribe(channel, (err) => {
       if (err) {
-        console.log(`💢 | Error suscribiéndose a ${channel}`, err);
+        console.log(`💢 | Error suscribiéndose a ${channel}`);
+        console.log(err);
       }
       else {
         console.log(`✅ | Suscrito a ${channel}`)
@@ -14,11 +15,12 @@ module.exports = function (client) {
   };
   
   client.on('error', (err) => {
-    console.log('💢 | Error conectándose al broker MQTT.', err);
+    console.log('💢 | Error conectándose al broker MQTT.');
+    console.log(err);
   });
   
   client.on('connect', () => {
-    console.log("🔗 | Conectado exitosamente al broker MQTT");
+    console.log("🔗 | Conexión al broker MQTT activa");
     
     // Suscribirse a los canales usando la función
     [process.env.CHANNEL, process.env.VALIDATIONS_CHANNEL, process.env.REQUESTS_CHANNEL].forEach(subscribeToChannel);
@@ -62,7 +64,8 @@ module.exports = function (client) {
       const response = await axios.post(url, data);
       console.log("📫 | Se recibió respuesta", response.data);
     } catch (error) {
-      console.log(`⛔ | Error posting to ${url}`, error);
+      console.log(`⛔ | Error enviando datos a ${url}`);
+      console.log(error);
     }
   });
 };
