@@ -11,7 +11,7 @@ const my_dictionary = {
 }
 
 function publishDataMQTT(client) {
-  client.publish(process.env.MQTT_REQUEST_CHANNEL,
+  client.publish(process.env.MQTT_API_REQUEST_CHANNEL,
     JSON.stringify(my_dictionary))
 }
 
