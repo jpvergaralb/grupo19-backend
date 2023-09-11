@@ -1,6 +1,7 @@
 const express = require('express')
-const { 
-  getStocks, 
+
+const {
+  getStocks,
   postStock,
   getStocksByName,
   getCompaniesSymbol
@@ -17,6 +18,5 @@ stockRoutes.route('/companies')
 
 stockRoutes.route('/:name')
           .get(getStocksByName)
-
 
 module.exports = stockRoutes

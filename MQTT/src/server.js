@@ -1,18 +1,26 @@
-const express = require('express')
-const { client }  = require('./config/mqtt.config')
-
-const mqttHandler = require('./mqtt.handler')
 require('dotenv').config()
+const express = require('express')
+const { client }  = require('./connector/mqtt.connector')
+const mqttHandler = require('./mqtt.handler')
 
+// const { publishDataMQTT } = require('./mqtt.tester')
 
 const app = express()
 
 mqttHandler(client)
 
 app.get('/', (req, res) => {
-    res.send('Hello World')
+    res.send('MQTT Server API (backend)')
 })
 
 app.listen(process.env.MQTT_PORT, () => {
-    console.log(`Server running on port ${process.env.MQTT_PORT}`)
+    console.log(`▶️| Servidor MQTT Listener corriendo en puerto ${process.env.MQTT_PORT}`)
 })
+
+
+
+//// Para testear la interacción con el broker MQTT
+// setTimeout(function() {
+//     publishDataMQTT(client);
+// }, 5000);
+

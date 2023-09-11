@@ -1,6 +1,8 @@
 const Stock = require('../models/stock.model')
 
 const getStocks = async (req, res) => {
+  console.log("📠| GET request recibida a /stocks")
+  
   const page = Math.max(1, req.query.page) || 1
   const size = Math.max(1, req.query.size) || 25
   const offset = (page - 1) * size
@@ -10,20 +12,25 @@ const getStocks = async (req, res) => {
       limit: size,
       offset: offset,
     })
+    
     if (stocks.length > 0) {
       res.status(200).json({stocks})
-    }
-    else {
+      
+    } else {
       res.status(404).json({message: "No stocks found"})
     }
+    
   } catch (error) {
     res.status(500).json({error})
   }
+  console.log("📞| Fin del mensaje a /stocks")
 }
 
 const getStocksByName = async (req, res) => {
+  console.log("📠| GET request recibida a /stocks/:name")
+  
   const page = Math.max(1, req.query.page) || 1
-  const size = Math.min(25, req.query.size) || 25
+  const size = Math.min(1, req.query.size) || 25
   const offset = (page - 1) * size
 
   try {
@@ -36,18 +43,22 @@ const getStocksByName = async (req, res) => {
       offset: offset,
       order: [['createdAt', 'DESC']]
     })
+    
     if (stock.length > 0) {
       res.status(200).json({stock})
-    }
-    else {
+    } else {
       res.status(404).json({message: "No stocks found"})
     }
+    
   } catch (error) {
     res.status(500).json({error})
   }
+  console.log("📞| Fin del mensaje a /stocks/:name")
 }
 
 const postStock = async (req, res) => {
+  console.log("📠| POST request recibida a /stocks")
+  
   try {
     const { message } = req.body;
     if (!message) {
@@ -78,7 +89,9 @@ const postStock = async (req, res) => {
           currency,
           source,
         });
+        
         results.push({ message: `Stock ${symbol} created at ${price}` });
+        
       } catch (error) {
         results.push({ message: `Error listing stock ${symbol}`, error: error.message });
       }
@@ -88,6 +101,7 @@ const postStock = async (req, res) => {
   } catch (error) {
     res.status(400).json({ message: "Bad Request", error: error.message });
   }
+  console.log("📞| Fin del mensaje a /stocks")
 };
 
 const getCompaniesSymbol = async (req, res) => {

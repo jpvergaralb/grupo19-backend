@@ -1,7 +1,7 @@
 // campos: nombre, precio, fecha, simbolo, divisa, ... (ver en el archivo)
+require('dotenv').config();
 const { Sequelize } = require('sequelize');
 const config = require('../config/db.config');
-require('dotenv').config();
 
 const env = process.env.NODE_ENV || 'development';
 const dbConfig = config[env];
