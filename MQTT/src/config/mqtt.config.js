@@ -1,6 +1,6 @@
 require('dotenv').config()
 
-const url = 'mqtt://' + process.env.MQTT_BROKER_ + ':' + process.env.MQTT_BROKER_PORT
+const url = 'mqtt://' + process.env.MQTT_BROKER_HOST + ':' + process.env.MQTT_BROKER_PORT
 const options = {
   username: process.env.MQTT_BROKER_USERNAME,
   password: process.env.MQTT_BROKER_PASSWORD
