@@ -22,6 +22,7 @@ module.exports = function (client) {
   client.on('message', async (topic, message) => {
     let msg = message.toString();
     
+    // Dirigir el post en función de canal al que se suscribió
     const topicToApiPath = {
       [process.env.CHANNEL]: '/stocks',
       [process.env.VALIDATIONS_CHANNEL]: '/validations',
