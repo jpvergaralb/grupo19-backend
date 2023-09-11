@@ -18,8 +18,8 @@ app.listen(process.env.MQTT_PORT, () => {
 })
 
 //// Para testear la interacción con el broke MQTT
-setTimeout(function() {
-    publishDataMQTT(client);
-}, 5000);
+// setTimeout(function() {
+//     publishDataMQTT(client);
+// }, 5000);
 
 console.log("llegué al final")
