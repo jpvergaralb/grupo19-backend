@@ -1,7 +1,7 @@
 const Request = require('../models/request.model')
 
 const getRequests = async (req, res) => {
-  console.log("📠 | GET request recibida a /requests")
+  console.log("📠| GET request recibida a /requests")
   
   const page = Math.max(1, req.query.page) || 1
   const size = Math.max(1, req.query.size) || 25
@@ -23,10 +23,12 @@ const getRequests = async (req, res) => {
   } catch (error) {
     res.status(500).json({error})
   }
+  
+  console.log("📞| Fin del mensaje a /requests")
 }
 
 const getRequestsByGroupId = async (req, res) => {
-  console.log("📠 | GET request recibida a /requests/group/:group_id")
+  console.log("📠| GET request recibida a /requests/group/:group_id")
   
   const page = Math.max(1, req.query.page) || 1
   const size = Math.min(1, req.query.size) || 25
@@ -51,10 +53,12 @@ const getRequestsByGroupId = async (req, res) => {
   } catch (error) {
     res.status(500).json({error})
   }
+  
+  console.log("📞| Fin del mensaje a /requests/group/:group_id")
 }
 
 const getRequestsBySymbol = async (req, res) => {
-  console.log("📠 | GET request recibida a /requests/symbol/:symbol")
+  console.log("📠| GET request recibida a /requests/symbol/:symbol")
   
   const page = Math.max(1, req.query.page) || 1
   const size = Math.min(1, req.query.size) || 25
@@ -79,10 +83,12 @@ const getRequestsBySymbol = async (req, res) => {
   } catch (error) {
     res.status(500).json({error})
   }
+  
+  console.log("📞| Fin del mensaje a /requests/symbol/:symbol")
 }
 
 const getRequestsBySeller = async (req, res) => {
-  console.log("📠 | GET request recibida a /requests/seller/:seller")
+  console.log("📠| GET request recibida a /requests/seller/:seller")
   
   const page = Math.max(1, req.query.page) || 1
   const size = Math.min(1, req.query.size) || 25
@@ -107,10 +113,12 @@ const getRequestsBySeller = async (req, res) => {
   } catch (error) {
     res.status(500).json({error})
   }
+  
+  console.log("📞| Fin del mensaje a /requests/seller/:seller")
 }
 
 const postRequests = async (req, res) => {
-  console.log("📠 | POST request recibida a /requests")
+  console.log("📠| POST request recibida a /requests")
   
   try {
     const request = req.body;
@@ -147,6 +155,8 @@ const postRequests = async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: "Internal Server Error", error: error.message });
   }
+  
+  console.log("📞| Fin del mensaje a /requests")
 };
 
 

@@ -1,7 +1,7 @@
 const Validation = require('../models/validation.model')
 
 const getValidations = async (req, res) => {
-  console.log("📠 | GET request recibida a /validations")
+  console.log("📠| GET request recibida a /validations")
   
   const page = Math.max(1, req.query.page) || 1;
   const size = Math.max(1, req.query.size) || 25;
@@ -23,10 +23,12 @@ const getValidations = async (req, res) => {
   } catch (error) {
     res.status(500).json({error});
   }
+  
+  console.log("📞| Fin del mensaje a /validations")
 }
 
 const getValidationsByGroup = async (req, res) => {
-  console.log("📠 | GET request recibida a /validations/group/:group")
+  console.log("📠| GET request recibida a /validations/group/:group")
   
   const page = Math.max(1, req.query.page) || 1;
   const size = Math.min(1, req.query.size) || 25;
@@ -52,10 +54,12 @@ const getValidationsByGroup = async (req, res) => {
   } catch (error) {
     res.status(500).json({error});
   }
+  
+  console.log("📞| Fin del mensaje a /validations/group/:group")
 }
 
 const getValidationsBySeller = async (req, res) => {
-  console.log("📠 | GET request recibida a /validations/seller/:seller")
+  console.log("📠| GET request recibida a /validations/seller/:seller")
   
   const page = Math.max(1, req.query.page) || 1;
   const size = Math.min(1, req.query.size) || 25;
@@ -82,12 +86,14 @@ const getValidationsBySeller = async (req, res) => {
   } catch (error) {
     res.status(500).json({error});
   }
+  
+  console.log("📞| Fin del mensaje a /validations/seller/:seller")
 }
 
 const getValidationsByValid = async (req, res) => {
-  console.log("📠 | GET request recibida a /validations/validation/:is_valid")
+  console.log("📠| GET request recibida a /validations/valid/:is_valid")
   
-  // http(s)://host:port/is_valid=<true/false>
+  // http(s)://host:port/validation/valid/is_valid=<true/false>
   const page = Math.max(1, req.query.page) || 1;
   const size = Math.min(1, req.query.size) || 25;
   const offset = (page - 1) * size
@@ -129,10 +135,12 @@ const getValidationsByValid = async (req, res) => {
   } catch (error) {
     res.status(500).json({error});
   }
+  
+  console.log("📞| Fin del mensaje a /validations/valid/:is_valid")
 }
 
 const postValidation = async (req, res) => {
-  console.log("📠 | POST request recibida a /validations")
+  console.log("📠| POST request recibida a /validations")
   try {
     const validation = req.body;
     
@@ -164,6 +172,8 @@ const postValidation = async (req, res) => {
     console.error("Error in postValidation:", error);
     res.status(500).json({ message: "Internal Server Error", error: error.message });
   }
+  
+  console.log("📞| Fin del mensaje a /validations/")
 };
 
 module.exports = {

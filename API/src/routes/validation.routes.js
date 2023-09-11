@@ -20,7 +20,7 @@ stockRoutes.route('/group/:group')
 stockRoutes.route('/seller/:seller')
   .get(getValidationsBySeller)
 
-stockRoutes.route('/is_valid/:is_valid')
+stockRoutes.route('/valid/:is_valid')
   .get(getValidationsByValid)
 
 module.exports = stockRoutes

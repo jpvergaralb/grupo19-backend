@@ -19,7 +19,7 @@ app.listen(process.env.MQTT_PORT, () => {
 
 
 
-//// Para testear la interacción con el broke MQTT
+//// Para testear la interacción con el broker MQTT
 // setTimeout(function() {
 //     publishDataMQTT(client);
 // }, 5000);

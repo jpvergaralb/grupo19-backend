@@ -1,7 +1,7 @@
 const Stock = require('../models/stock.model')
 
 const getStocks = async (req, res) => {
-  console.log("📠 | GET request recibida a /stocks")
+  console.log("📠| GET request recibida a /stocks")
   
   const page = Math.max(1, req.query.page) || 1
   const size = Math.max(1, req.query.size) || 25
@@ -23,10 +23,11 @@ const getStocks = async (req, res) => {
   } catch (error) {
     res.status(500).json({error})
   }
+  console.log("📞| Fin del mensaje a /stocks")
 }
 
 const getStocksByName = async (req, res) => {
-  console.log("📠 | GET request recibida a /stocks/:name")
+  console.log("📠| GET request recibida a /stocks/:name")
   
   const page = Math.max(1, req.query.page) || 1
   const size = Math.min(1, req.query.size) || 25
@@ -51,10 +52,11 @@ const getStocksByName = async (req, res) => {
   } catch (error) {
     res.status(500).json({error})
   }
+  console.log("📞| Fin del mensaje a /stocks/:name")
 }
 
 const postStock = async (req, res) => {
-  console.log("📠 | POST request recibida a /stocks")
+  console.log("📠| POST request recibida a /stocks")
   
   try {
     const { message } = req.body;
@@ -98,6 +100,7 @@ const postStock = async (req, res) => {
   } catch (error) {
     res.status(400).json({ message: "Bad Request", error: error.message });
   }
+  console.log("📞| Fin del mensaje a /stocks")
 };
 
 
