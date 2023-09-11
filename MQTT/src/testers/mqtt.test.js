@@ -1,7 +1,8 @@
 require('dotenv').config();
+const { newUUID } = require('../utils/random');
 
 const my_dictionary = {
-  request_id: '63fe8daa-4f94-11ee-be56-0242ac120002',
+  request_id: newUUID(),
   group_id: `${process.env.GROUP_NUMBER}`,
   symbol: "AAPL",
   datetime: new Date(),

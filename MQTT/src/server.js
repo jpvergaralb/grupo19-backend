@@ -3,7 +3,7 @@ const express = require('express')
 const { client }  = require('./connectors/mqtt.connector')
 const mqttHandler = require('./handlers/mqtt.handler')
 
-const { publishDataMQTT } = require('./testers/mqtt.tester')
+const { publishDataMQTT } = require('./testers/mqtt.test')
 
 const app = express()
 
