@@ -1,7 +1,9 @@
-FROM node:16.13.1
+ARG NODE_VERSION=16.13.1
+ARG MQTT_API_PORT=8001
 
-ARG MQTT_PORT=8001
-ENV MQTT_PORT=${MQTT_PORT}
+FROM node:${NODE_VERSION}
+
+ENV MQTT_API_PORT=${MQTT_API_PORT}
 
 WORKDIR /usr/src/app
 
@@ -11,7 +13,7 @@ RUN npm install
 
 COPY . .
 
-EXPOSE ${MQTT_PORT}
+EXPOSE ${MQTT_API_PORT}
 
-CMD [ "npm", "start" , "--port", "${MQTT_PORT}" ]
+CMD [ "npm", "start" , "--port", "${MQTT_API_PORT}" ]
 

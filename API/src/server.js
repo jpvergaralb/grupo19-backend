@@ -7,7 +7,7 @@ const requestRoutes = require('./routes/request.routes')
 const sequelize = require('./db/db')
 
 const app = express()
-const port = process.env.LOCAL_PORT || 8000
+const port = process.env.API_PORT || 8000
 
 const syncDatabase = async () => {
   try {
