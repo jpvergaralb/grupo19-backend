@@ -12,4 +12,6 @@ const syncDatabase = async () => {
   }
 }
 
+syncDatabase()
+
 module.exports = syncDatabase
