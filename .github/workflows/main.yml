@@ -44,6 +44,9 @@ jobs:
     - name: Install dependencies
       run: cd API && npm install
 
+    - name: Sync database
+      run: node API/src/db/syncDatabase.js
+
     - name: Run database seeds
       run: cd API && npx sequelize-cli db:seed:all
 
