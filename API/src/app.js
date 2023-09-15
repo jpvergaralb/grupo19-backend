@@ -4,21 +4,9 @@ const stockRoutes = require('./routes/stock.routes')
 const userRoutes = require('./routes/user.routes')
 const validationRoutes = require('./routes/validation.routes')
 const requestRoutes = require('./routes/request.routes')
-const sequelize = require('./db/db')
+const syncDatabase = require('./db/syncDatabase')
 
 const app = express()
-
-const syncDatabase = async () => {
-  try {
-    await sequelize.sync({alter: true})
-    console.log('😄| Conexión a la base de datos exitosa.');
-    
-  } catch (error) {
-    console.log('😡| No se pudo conectar a la base de datos.')
-    console.error(error)
-    process.exit(1)
-  }
-}
 
 syncDatabase()
 
