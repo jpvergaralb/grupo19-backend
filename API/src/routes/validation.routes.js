@@ -8,19 +8,19 @@ const {
   postValidation
 } = require('../controllers/validation.controller')
 
-const stockRoutes = express.Router()
+const validationRoutes = express.Router()
 
-stockRoutes.route('/')
+validationRoutes.route('/')
   .get(getValidations)
   .post(postValidation)
 
-stockRoutes.route('/group/:group')
+validationRoutes.route('/group/:group')
   .get(getValidationsByGroup)
 
-stockRoutes.route('/seller/:seller')
+validationRoutes.route('/seller/:seller')
   .get(getValidationsBySeller)
 
-stockRoutes.route('/valid/:is_valid')
+validationRoutes.route('/valid/:is_valid')
   .get(getValidationsByValid)
 
-module.exports = stockRoutes
+module.exports = validationRoutes

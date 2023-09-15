@@ -6,7 +6,6 @@ const options = {
   password: process.env.MQTT_BROKER_PASSWORD
 }
 
-
 module.exports = {
   url, options
 }

@@ -8,20 +8,20 @@ const {
   getRequestsBySeller
 } = require('../controllers/request.controller')
 
-const stockRoutes = express.Router()
+const requestRoutes = express.Router()
 
-stockRoutes.route('/')
+requestRoutes.route('/')
   .get(getRequests)
   .post(postRequests)
 
-stockRoutes.route('/group/:group')
+requestRoutes.route('/group/:group')
   .get(getRequestsByGroupId)
 
-stockRoutes.route('/symbol/:symbol')
+requestRoutes.route('/symbol/:symbol')
   .get(getRequestsBySymbol)
 
-stockRoutes.route('/seller/:seller')
+requestRoutes.route('/seller/:seller')
   .get(getRequestsBySeller)
 
 
-module.exports = stockRoutes
+module.exports = requestRoutes

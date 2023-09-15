@@ -1,0 +1,6 @@
+{
+  "events": {
+    "crash": "echo \"\uD83E\uDDF1\uD83D\uDCA5\uD83D\uDE97| La aplicación ha fallado. $(TZ=UTC date +\"%T\"\n)\" UTC",
+  "restartable": "crash"
+  }
+}
