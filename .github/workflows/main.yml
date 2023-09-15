@@ -44,9 +44,6 @@ jobs:
     - name: Install dependencies
       run: cd API && npm install
 
-    - name: Run database migrations
-      run: cd API && npx sequelize-cli db:migrate
-
     - name: Run database seeds
       run: cd API && npx sequelize-cli db:seed:all
 
