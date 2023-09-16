@@ -1,9 +1,11 @@
 'use strict';
 
+const { v4: uuidv4 } = require('uuid');
+
 module.exports = {
   async up (queryInterface, Sequelize) {
     await queryInterface.bulkInsert('requests', [
-      { request_id: '63fe8daa-4f94-11ee-be56-0242ac120002',
+      { id: uuidv4(),
         group_id: '13',
         symbol: "AAPL",
         datetime: new Date(),
@@ -13,7 +15,7 @@ module.exports = {
         createdAt: new Date(),
         updatedAt: new Date() },
       
-      { request_id: 'd976f86a-4f94-11ee-be56-0242ac120002',
+      {  id: uuidv4(),
         group_id: '2',
         symbol: "AMZN",
         datetime: new Date(),
@@ -23,7 +25,7 @@ module.exports = {
         createdAt: new Date(),
         updatedAt: new Date() },
       
-      { request_id: 'dd7dc22c-4f94-11ee-be56-0242ac120002',
+      {  id: uuidv4(),
         group_id: '1',
         symbol: "GOOGL",
         datetime: new Date(),
