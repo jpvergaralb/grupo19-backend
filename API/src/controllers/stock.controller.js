@@ -1,4 +1,5 @@
-const Stock = require('../models/stock.model')
+const db = require('../../models')
+const Stock = db.stock
 
 const getStocks = async (req, res) => {
   console.log("📠| GET request recibida a /stocks")

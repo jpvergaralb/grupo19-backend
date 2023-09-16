@@ -1,0 +1,55 @@
+name: Node.js CI/CD Workflow
+
+on:
+  push:
+    branches:
+      - feat/ci
+  pull_request:
+    branches:
+      - feat/ci
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:12
+        env:
+          POSTGRES_USER: ${{ secrets.DB_USER }}
+          POSTGRES_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          POSTGRES_DB: postgres
+        ports:
+          - 5432:5432
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Setup environment variables
+      run: |
+        echo "DB_HOST=localhost" >> $GITHUB_ENV
+        echo "DB_DIALECT=postgres" >> $GITHUB_ENV
+        echo "DB_NAME=postgres" >> $GITHUB_ENV
+        echo "DB_PORT=5432" >> $GITHUB_ENV
+        echo "DB_USERNAME=${{ secrets.DB_USER }}" >> $GITHUB_ENV
+        echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> $GITHUB_ENV
+
+
+    - name: Setup Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: '16.x'
+        
+    - name: Install dependencies
+      run: cd API && npm install
+
+    - name: Run migrations
+      run: cd API && npx sequelize-cli db:migrate
+
+    - name: Run database seeds
+      run: cd API && npx sequelize-cli db:seed:all
+
+    - name: Run tests
+      run: cd API && npm test

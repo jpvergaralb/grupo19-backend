@@ -1,4 +1,6 @@
-const Request = require('../models/request.model')
+// const Request = require('../models/request.model')
+const db = require('../../models')
+const Request = db.request
 
 const getRequests = async (req, res) => {
   console.log("📠| GET request recibida a /requests")
@@ -95,10 +97,10 @@ const getRequestsBySeller = async (req, res) => {
   const offset = (page - 1) * size
   
   try {
-    const { symbol } = req.params
+    const { seller } = req.params
     const request = await Request.findAll({
       where: {
-        seller: parseInt(symbol)
+        seller: parseInt(seller)
       },
       limit: size,
       offset: offset,
@@ -127,10 +129,9 @@ const postRequests = async (req, res) => {
       return res.status(400).json({ message: "Request body is missing" });
     }
     
-    const { request_id, group_id, symbol, datetime, deposit_token, quantity, seller } = request;
+    const { group_id, symbol, datetime, deposit_token, quantity, seller } = request;
     
     if (
-      !request_id ||
       !group_id ||
       !symbol ||
       !datetime ||
@@ -141,8 +142,7 @@ const postRequests = async (req, res) => {
       return res.status(400).json({ message: "Missing required fields" });
     }
     
-    await Request.create({
-      request_id,
+    const newRequest = await Request.create({
       group_id,
       symbol,
       datetime,
@@ -151,7 +151,7 @@ const postRequests = async (req, res) => {
       seller,
     });
     
-    res.status(201).json({ message: `Request ${request_id} @ ${datetime} created successfully` });
+    res.status(201).json({ message: `Request ${newRequest.id} @ ${datetime} created successfully` });
   } catch (error) {
     res.status(500).json({ message: "Internal Server Error", error: error.message });
   }
