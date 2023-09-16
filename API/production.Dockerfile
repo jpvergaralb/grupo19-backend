@@ -13,7 +13,11 @@ RUN npm install
 
 COPY . .
 
+COPY ./entrypoint.sh /usr/src/app/entrypoint.sh
+RUN chmod +x /usr/src/app/entrypoint.sh
+
 EXPOSE ${API_PORT}
 
+ENTRYPOINT ["/usr/src/app/entrypoint.sh"]
 CMD [ "npm", "start" , "--port", "${API_PORT}" ]
 
