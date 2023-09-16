@@ -38,7 +38,7 @@ const postRequests = async (req, res) => {
     const mqttClient = req.mqttClient;
     
     publishDataMQTT(mqttClient, request);
-    
+
     res.status(201).json({ message: `Request ${request_id} @ ${datetime} created successfully` });
   } catch (error) {
     res.status(500).json({ message: "Internal Server Error", error: error.message });
