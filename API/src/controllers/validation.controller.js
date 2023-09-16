@@ -1,4 +1,5 @@
-const Validation = require('../models/validation.model')
+const db = require('../../models')
+const Validation = db.validation
 
 const getValidations = async (req, res) => {
   console.log("📠| GET request recibida a /validations")
@@ -100,11 +101,10 @@ const getValidationsByValid = async (req, res) => {
   
   try {
     const { is_valid } = req.params
-    
     let validations = [];
     
-    if (is_valid.toLowerCase() !== 'true' || is_valid.toLowerCase() !== 'false') {
-      res.status(400).json({message: "Invalid value for is_valid. Must be 'true' or 'false'"});
+    if (is_valid.toLowerCase() !== 'true' && is_valid.toLowerCase() !== 'false') {
+      return res.status(400).json({message: "Invalid value for is_valid. Must be 'true' or 'false'"});
       
     } else if (is_valid.toLowerCase() === 'true') {
       validations = await Validation.findAll({

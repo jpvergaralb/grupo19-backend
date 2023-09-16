@@ -4,7 +4,7 @@ const stockRoutes = require('./routes/stock.routes')
 const userRoutes = require('./routes/user.routes')
 const validationRoutes = require('./routes/validation.routes')
 const requestRoutes = require('./routes/request.routes')
-const syncDatabase = require('./db/syncDatabase') // 👈🏻
+// const syncDatabase = require('./db/syncDatabase') // 👈🏻
 
 const app = express()
 
