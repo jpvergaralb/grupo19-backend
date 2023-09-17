@@ -25,8 +25,11 @@ const correctMockUser = {
 };
 const incorrectMockUser = {};
 
+const mockUserMoney = 1000.69;
+
 module.exports = {
   mockUserId,
+  mockUserMoney,
   correctMockUser,
   incorrectMockUser,
 };

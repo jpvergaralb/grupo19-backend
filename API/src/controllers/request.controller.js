@@ -126,11 +126,12 @@ const postRequests = async (req, res) => {
     }
 
     const {
-      group_id, symbol, datetime, deposit_token, quantity, seller,
+      user_id, group_id, symbol, datetime, deposit_token, quantity, seller,
     } = request;
 
     if (
-      !group_id
+      !user_id
+      || !group_id
       || !symbol
       || !datetime
       || deposit_token === undefined
@@ -141,6 +142,7 @@ const postRequests = async (req, res) => {
     }
 
     const newRequest = await Request.create({
+      user_id,
       group_id,
       symbol,
       datetime,
@@ -149,7 +151,9 @@ const postRequests = async (req, res) => {
       seller,
     });
 
-    res.status(201).json({ message: `Request ${newRequest.id} @ ${datetime} created successfully` });
+    // const url = `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.API_PORT}${apiPath}`;
+
+    res.status(201).json({ message: `Request ${newRequest.id} from user ${user_id}: @ ${datetime} created successfully` });
   } catch (error) {
     res.status(500).json({ message: 'Internal Server Error', error: error.message });
   }

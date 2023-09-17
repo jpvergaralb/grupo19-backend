@@ -9,6 +9,14 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.UUID
       },
+      user_id: {
+        type: Sequelize.UUID,
+        allowNull: false,
+        references: {
+          model: 'users',
+          key: 'id'
+        },
+      },
       group_id: {
         type: Sequelize.STRING,
         allowNull: false

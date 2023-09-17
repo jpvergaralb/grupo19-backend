@@ -1,7 +1,5 @@
 'use strict';
 
-const { v4: uuidv4 } = require('uuid');
-
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.bulkInsert('users', [
@@ -18,7 +16,7 @@ module.exports = {
         updatedAt: new Date()
       },
       {
-        id: uuidv4(),
+        id: "8a04cb0b-9c2a-4895-8e5c-95626ad9d1f1",
         username: 'JaneDoe',
         password: 'Jane@1234',
         email: 'jane.doe@example.com',
@@ -30,7 +28,7 @@ module.exports = {
         updatedAt: new Date()
       },
       {
-        id: uuidv4(),
+        id: "8a04cb0b-9c2a-4895-8e5c-95626ad9d1f2",
         username: 'BillyBob',
         password: 'Billy@1234',
         email: 'billy.bob@example.com',
@@ -42,7 +40,7 @@ module.exports = {
         updatedAt: new Date()
       },
       {
-        id: uuidv4(),
+        id: "8a04cb0b-9c2a-4895-8e5c-95626ad9d1f3",
         username: 'EmilyRose',
         password: 'Rose@1234',
         email: 'emily.rose@example.com',
@@ -54,7 +52,7 @@ module.exports = {
         updatedAt: new Date()
       },
       {
-        id: uuidv4(),
+        id: "8a04cb0b-9c2a-4895-8e5c-95626ad9d1f4",
         username: 'CharlieBrown',
         password: 'Brown@1234',
         email: 'charlie.brown@example.com',

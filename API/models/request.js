@@ -11,6 +11,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      request.belongsTo(models.user, { foreignKey: 'user_id'});
     }
   }
   request.init(
@@ -21,6 +22,18 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: DataTypes.UUIDV4,
         primaryKey: true
     },
+    user_id: {
+        type: DataTypes.UUID,
+        allowNull: false,
+        validate: {
+          notEmpty: {
+            msg: "User ID cannot be empty"
+          },
+          notNull: {
+            msg: "User ID cannot be null"
+          }
+        }
+      },
       group_id: {
         type: DataTypes.STRING,
         allowNull: false,

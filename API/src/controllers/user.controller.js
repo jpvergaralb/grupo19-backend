@@ -59,40 +59,72 @@ const getUser = async (req, res) => {
   console.log('📞| Fin del mensaje a /users/:id');
 };
 
-const postIncreaseWallet = async (req, res) => {
-  const { amount } = req.body;
+const getUserRequests = async (req, res) => {
+  console.log('📠| GET request recibida a /users/:id/requests');
 
   try {
     const { id } = req.params;
-
     const user = await User.findOne({
       where: {
         id,
       },
     });
 
-    const new_amount = parseFloat(user.cash) + parseFloat(amount);
+    if (user) {
+      const requests = await user.getRequests();
+      res.status(200).json({ requests });
+    } else {
+      res.status(404).json({ message: 'No user found' });
+    }
+  } catch (error) {
+    res.status(500).json({ error });
+  }
 
-    const updatedValues = {
-      cash: new_amount,
-    };
+  console.log('📞| Fin del mensaje a /users/:id/requests');
+};
 
+const postUpdateWallet = async (req, res) => {
+  const { amount } = req.body;
+  const { id } = req.params;
+
+  if (!amount || !id || Number.isNaN(amount)) {
+    return res.status(400).json({ message: 'Missing parameters: either id or amount.' });
+  }
+
+  try {
+    const user = await User.findOne({ where: { id } });
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found.' });
+    }
+
+    let newAmount;
+    try {
+      newAmount = parseFloat(user.cash) + parseFloat(amount);
+    } catch (err) {
+      return res.status(400).json({ message: 'Invalid amount or user cash value.' });
+    }
+
+    if (newAmount < 0) {
+      return res.status(400).json({ message: 'Not enough cash to complete this operation.' });
+    }
+
+    const updatedValues = { cash: newAmount };
     const [, [updatedUser]] = await User.update(updatedValues, {
-      where: {
-        id,
-      },
+      where: { id },
       returning: true,
     });
 
-    res.status(201).send(`Wallet increased to ${updatedUser.cash} to user ${id}`);
+    return res.status(200).send(`Wallet updated from ${user.cash} to ${updatedUser.cash} to user ${id}`);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    return res.status(500).json({ error: error.message });
   }
 };
 
 module.exports = {
   getUsers,
   getUser,
+  getUserRequests,
   postUser,
-  postIncreaseWallet,
+  postUpdateWallet,
 };
