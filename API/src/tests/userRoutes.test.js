@@ -4,6 +4,7 @@ const db = require('../../models');
 const {
   mockUserId,
   correctMockUser,
+  mockUserMoney,
   incorrectMockUser,
 } = require('./utils/userRoutes.util');
 
@@ -17,6 +18,18 @@ describe('Users API - General Cases', () => {
 
   it('should return a user', async () => {
     const res = await request(app).get(`/users/${mockUserId}`);
+    expect(res.statusCode).toEqual(200);
+  });
+
+  it('should return all user\'s requests', async () => {
+    const res = await request(app).get(`/users/requests/${mockUserId}`);
+    expect(res.statusCode).toEqual(200);
+  });
+
+  it('should add money to a user', async () => {
+    const res = await request(app).post(`/users/wallet/${mockUserId}`).send({
+      amount: mockUserMoney,
+    });
     expect(res.statusCode).toEqual(200);
   });
 
@@ -48,5 +61,17 @@ describe('Users API - Error Cases', () => {
   it('should return 500 trying to post a user', async () => {
     const res = await request(app).post('/users').send(incorrectMockUser);
     expect(res.statusCode).toEqual(500);
+  });
+
+  it('should return 500 trying to get a user\'s requests', async () => {
+    const res = await request(app).post('/users').send();
+    expect(res.statusCode).toEqual(500);
+  });
+
+  it('should return 500 trying to add money to a user', async () => {
+    const res = await request(app).post(`/users/wallet/${mockUserId}`).send({
+      cash: mockUserMoney,
+    });
+    expect(res.statusCode).toEqual(400);
   });
 });

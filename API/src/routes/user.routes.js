@@ -3,8 +3,9 @@ const express = require('express');
 const {
   getUsers,
   getUser,
+  getUserRequests,
   postUser,
-  postIncreaseWallet,
+  postUpdateWallet,
 } = require('../controllers/user.controller');
 
 const userRoutes = express.Router();
@@ -13,8 +14,11 @@ userRoutes.route('/')
   .get(getUsers)
   .post(postUser);
 
+userRoutes.route('/requests/:id/')
+  .get(getUserRequests);
+
 userRoutes.route('/wallet/:id')
-  .post(postIncreaseWallet);
+  .post(postUpdateWallet);
 
 userRoutes.route('/:id')
   .get(getUser);
