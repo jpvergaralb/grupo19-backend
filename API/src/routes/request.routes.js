@@ -1,27 +1,26 @@
-const express = require('express')
+const express = require('express');
 
 const {
   getRequests,
   postRequests,
   getRequestsByGroupId,
   getRequestsBySymbol,
-  getRequestsBySeller
-} = require('../controllers/request.controller')
+  getRequestsBySeller,
+} = require('../controllers/request.controller');
 
-const requestRoutes = express.Router()
+const requestRoutes = express.Router();
 
 requestRoutes.route('/')
   .get(getRequests)
-  .post(postRequests)
+  .post(postRequests);
 
 requestRoutes.route('/group/:group')
-  .get(getRequestsByGroupId)
+  .get(getRequestsByGroupId);
 
 requestRoutes.route('/symbol/:symbol')
-  .get(getRequestsBySymbol)
+  .get(getRequestsBySymbol);
 
 requestRoutes.route('/seller/:seller')
-  .get(getRequestsBySeller)
+  .get(getRequestsBySeller);
 
-
-module.exports = requestRoutes
+module.exports = requestRoutes;
