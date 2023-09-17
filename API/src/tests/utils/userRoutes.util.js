@@ -1,0 +1,32 @@
+const { v4: uuidv4 } = require('uuid');
+
+const generateRandomPhone = () => {
+  let phone = '';
+  for (let i = 0; i < 11; i += 1) {
+    phone += Math.floor(Math.random() * 10).toString();
+  }
+  return phone;
+};
+
+const generatePseudoRandomUsername = () => {
+  const random = Math.floor(Math.random() * 10000000);
+  return `jpoezi5${random}`;
+};
+
+const mockUserId = '8a04cb0b-9c2a-4895-8e5c-95626ad9d1f0';
+const correctMockUser = {
+  username: generatePseudoRandomUsername(),
+  password: 'jpoez1i@1213323!',
+  email: `jpezi345${uuidv4()}@gmaiil.com`,
+  firstName: 'Juan Pablo',
+  lastName: 'Vergara Lobos',
+  phone: generateRandomPhone(),
+  cash: 1000000,
+};
+const incorrectMockUser = {};
+
+module.exports = {
+  mockUserId,
+  correctMockUser,
+  incorrectMockUser,
+};

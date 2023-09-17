@@ -102,7 +102,6 @@ module.exports = (sequelize, DataTypes) => {
     cash: {
         type: DataTypes.DECIMAL(10, 2),
         allowNull: false,
-        defaultValue: 5000.00,
         validate: {
             min: {
                 args: [0.00],
