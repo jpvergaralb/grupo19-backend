@@ -13,7 +13,7 @@ const generatePseudoRandomUsername = () => {
   return `jpoezi5${random}`;
 };
 
-const mockUserId = 'bc172425-d18a-4da5-a861-d3ed7cc2c794';
+const mockUserId = '8a04cb0b-9c2a-4895-8e5c-95626ad9d1f0';
 const correctMockUser = {
   username: generatePseudoRandomUsername(),
   password: 'jpoez1i@1213323!',
