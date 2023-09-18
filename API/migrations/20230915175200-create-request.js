@@ -54,6 +54,10 @@ module.exports = {
         defaultValue: 'pending',
         allowNull: false,
       },
+      location: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
