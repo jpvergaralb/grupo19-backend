@@ -170,7 +170,7 @@ const postRequests = async (req, res) => {
       seller,
     });
 
-    const url = `${process.env.MQTT_PROTOCOL}://${process.env.MQTT_HOST}:${process.env.MQTT_PORT}/${process.env.BUY_STOCK_PATH}`;
+    const url = `${process.env.MQTT_PROTOCOL}://${process.env.MQTT_API_HOST}:${process.env.MQTT_API_PORT}/${process.env.MQTT_API_REQUESTS_PATH}`;
     console.log(`Posting to ${url}`);
     const response = await axios.post(url, newRequest);
 
