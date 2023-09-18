@@ -17,31 +17,36 @@ const postRequests = async (req, res) => {
     if (!request) {
       return res.status(400).json({ message: "Request body is missing" });
     }
-    
-    const {
-      request_id, group_id, symbol, datetime,
-      deposit_token, quantity, seller
-    } = request;
-    
+
     if (
-      !request_id ||
-      !group_id ||
-      !symbol ||
-      !datetime ||
-      deposit_token === undefined ||
-      !quantity ||
-      seller === undefined
+      !(request.request_id || request.id) ||
+      !request.group_id ||
+      !request.symbol ||
+      !request.datetime ||
+      request.deposit_token === undefined ||
+      !request.quantity ||
+      request.seller === undefined
     ) {
+      console.log("📠| Missing fields")
       return res.status(400).json({ message: "Missing required fields" });
     }
     
+    const buyRequest = {
+      request_id: request.id || request.request_id,
+      group_id: request.group_id,
+      symbol: request.symbol,
+      datetime: request.datetime,
+      deposit_token: request.deposit_token,
+      quantity: request.quantity,
+      seller: request.seller,
+    }
+
     const mqttClient = req.mqttClient;
     
-    publishDataMQTT(mqttClient, request);
-
-    res.status(201).json({ message: `Request ${request_id} @ ${datetime} created successfully` });
+    publishDataMQTT(mqttClient, buyRequest);
+    res.status(201).json({ message: `Request ${buyRequest.request_id} @ ${buyRequest.datetime} created successfully` });
   } catch (error) {
-    res.status(500).json({ message: "Internal Server Error", error: error.message });
+    res.status(500).json({ message: "Internal Server Error from MQTT", error: error.message });
   }
   
   console.log("📞| Fin del mensaje a /requests")

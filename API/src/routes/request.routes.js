@@ -3,6 +3,7 @@ const express = require('express');
 const {
   getRequests,
   postRequests,
+  updateRequestStatus,
   getRequestsByGroupId,
   getRequestsBySymbol,
   getRequestsBySeller,
@@ -13,6 +14,9 @@ const requestRoutes = express.Router();
 requestRoutes.route('/')
   .get(getRequests)
   .post(postRequests);
+
+requestRoutes.route('/updateRequestStatus')
+  .post(updateRequestStatus);
 
 requestRoutes.route('/group/:group')
   .get(getRequestsByGroupId);
