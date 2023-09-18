@@ -128,12 +128,11 @@ module.exports = (sequelize, DataTypes) => {
     };
 
     User.prototype.processUserLocation = async function (req) {
-        // const userIP = req.connection.remoteAddress || req.ip || req.headers['x-forwarded-for'];
-        const userIP = "2800:300:6713:c9f0::3"
+        const userIP = req.connection.remoteAddress || req.ip || req.headers['x-forwarded-for'];
+        // const userIP = "2800:300:6713:c9f0::3"
         try {
             const ipInfo = await axios.get(`http://ipinfo.io/${userIP}?token=${process.env.IP_INFO_TOKEN}`);
-            const ipData = `${ipInfo?.data?.city}, ${ipInfo?.data?.region}, ${ipInfo?.data?.country}`;
-            return ipData|| 'Unknown';
+            return `${ipInfo?.data?.city || "Unknown"}, ${ipInfo?.data?.region || "Unknown"}, ${ipInfo?.data?.country || "Unknown"}`;
         } catch (error) {
             console.log(error);
             return null;
