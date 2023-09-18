@@ -14,6 +14,7 @@ module.exports = {
         deposit_token: 'rHagzMPLwfJCXDXW2sNJZRxygCaYmaO6',
         quantity: 1,
         seller: 0,
+        location: '-34.603722, -58.381592',
         createdAt: new Date(),
         updatedAt: new Date() },
       
@@ -26,6 +27,7 @@ module.exports = {
         deposit_token: 'wxYOxbeQLHcYCJGj5GdnOKblj1hsrSiW',
         quantity: 3,
         seller: 0,
+        location: '-34.603722, -58.381592',
         createdAt: new Date(),
         updatedAt: new Date() },
       
@@ -38,6 +40,7 @@ module.exports = {
         deposit_token: 'bi33YNacrEHxmiez6NCvhoGd5Xlea95q',
         quantity: 1,
         seller: 0,
+        location: '-34.603722, -58.381592',
         createdAt: new Date(),
         updatedAt: new Date() },
     ], {});

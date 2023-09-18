@@ -122,7 +122,12 @@ module.exports = (sequelize, DataTypes) => {
             msg: "status must be one of the following: pending, filled, cancelled"
           }
         }
-      }
+      },
+      location: {
+        type: DataTypes.STRING,
+        defaultValue: "Unknown",
+        allowNull: false,
+      },
     }, {
     sequelize,
     modelName: 'request',

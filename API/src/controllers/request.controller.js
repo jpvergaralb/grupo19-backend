@@ -158,6 +158,8 @@ const postRequests = async (req, res) => {
       console.log(`🚨🚔 | User ${user.username} cannot afford ${quantity} stocks of ${symbol} at ${lastStock.price}$`);
       return res.status(400).json({ message: `User ${user_id} cannot afford ${quantity} stocks of ${symbol} at ${lastStock.price}$` });
     }
+    const location = await user.processUserLocation(req);
+    console.log(`📍 | User ${user.username} sent a buy request from ${location}`);
 
     const newRequest = await Request.create({
       user_id,
@@ -168,6 +170,7 @@ const postRequests = async (req, res) => {
       deposit_token,
       quantity,
       seller,
+      location,
     });
 
     const url = `${process.env.MQTT_PROTOCOL}://${process.env.MQTT_API_HOST}:${process.env.MQTT_API_PORT}/${process.env.MQTT_API_REQUESTS_PATH}`;

@@ -1,4 +1,7 @@
 'use strict';
+
+const axios = require('axios');
+
 const {
   Model
 } = require('sequelize');
@@ -122,6 +125,17 @@ module.exports = (sequelize, DataTypes) => {
   User.prototype.updateBalance = async function (price, quantity, transaction) {
     const newBalance = this.cash - (price * quantity);
     await this.update({ cash: newBalance }, { transaction });
+    };
+
+    User.prototype.processUserLocation = async function (req) {
+        const userIP = req.connection.remoteAddress || req.ip || req.headers['x-forwarded-for'];
+        try {
+            const ipInfo = await axios.get(`http://ipinfo.io/${userIP}?token=${process.env.IP_INFO_TOKEN}`);
+            return ipInfo?.data?.loc || 'Unknown';
+        } catch (error) {
+            console.log(error);
+            return null;
+        }
     };
 
   return User;
