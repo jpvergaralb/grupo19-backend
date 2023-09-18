@@ -1,7 +1,9 @@
-// const Request = require('../models/request.model')
+const axios = require('axios');
 const db = require('../../models');
 
 const Request = db.request;
+const User = db.user;
+const Stock = db.stock;
 
 const getRequests = async (req, res) => {
   console.log('📠| GET request recibida a /requests');
@@ -116,7 +118,7 @@ const getRequestsBySeller = async (req, res) => {
 };
 
 const postRequests = async (req, res) => {
-  console.log('📠| POST request recibida a /requests');
+  console.log('📠| POST request recibida a /requests en API');
 
   try {
     const request = req.body;
@@ -129,8 +131,7 @@ const postRequests = async (req, res) => {
       user_id, group_id, symbol, datetime, deposit_token, quantity, seller,
     } = request;
 
-    if (
-      !user_id
+    if (!user_id
       || !group_id
       || !symbol
       || !datetime
@@ -141,8 +142,26 @@ const postRequests = async (req, res) => {
       return res.status(400).json({ message: 'Missing required fields' });
     }
 
+    const user = await User.findByPk(user_id);
+    if (!user) {
+      return res.status(404).json({ message: `User ${user_id} not found` });
+    }
+    const lastStock = await Stock.findOne({
+      where: { symbol },
+      order: [['createdAt', 'DESC']],
+    });
+    if (!lastStock) {
+      return res.status(404).json({ message: `Stock ${symbol} not found` });
+    }
+
+    if (await user.CanAffordThisTransaction(quantity, lastStock.price) === false) {
+      console.log(`🚨🚔 | User ${user.username} cannot afford ${quantity} stocks of ${symbol} at ${lastStock.price}$`);
+      return res.status(400).json({ message: `User ${user_id} cannot afford ${quantity} stocks of ${symbol} at ${lastStock.price}$` });
+    }
+
     const newRequest = await Request.create({
       user_id,
+      stock_id: lastStock.id,
       group_id,
       symbol,
       datetime,
@@ -151,20 +170,32 @@ const postRequests = async (req, res) => {
       seller,
     });
 
-    // const url = `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.API_PORT}${apiPath}`;
+    const url = `${process.env.MQTT_PROTOCOL}://${process.env.MQTT_HOST}:${process.env.MQTT_PORT}/${process.env.BUY_STOCK_PATH}`;
+    console.log(`Posting to ${url}`);
+    const response = await axios.post(url, newRequest);
 
-    res.status(201).json({ message: `Request ${newRequest.id} from user ${user_id}: @ ${datetime} created successfully` });
+    if (response.status !== 201) {
+      return res.status(500).json({ message: 'Internal Server Error: couldnt post the buy request.' });
+    }
+    return res.status(201).json({ message: `Request ${newRequest.id} from user ${user_id}: @ ${datetime} created successfully` });
   } catch (error) {
-    res.status(500).json({ message: 'Internal Server Error', error: error.message });
+    res.status(500).json({ message: 'Internal Server Error from API', error });
   }
 
   console.log('📞| Fin del mensaje a /requests');
   return null;
 };
 
+const updateRequestStatus = async (req, res) => {
+  console.log('📠| POST request recibida a /updateRequestStatus en API');
+  console.log(req.body);
+  res.status(200).json({ message: 'Request status updated successfully' });
+};
+
 module.exports = {
   getRequests,
   postRequests,
+  updateRequestStatus,
   getRequestsByGroupId,
   getRequestsBySymbol,
   getRequestsBySeller,

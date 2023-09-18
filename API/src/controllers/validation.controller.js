@@ -1,6 +1,7 @@
 const db = require('../../models');
 
 const Validation = db.validation;
+const { sequelize } = db;
 
 const getValidations = async (req, res) => {
   console.log('📠| GET request recibida a /validations');
@@ -136,11 +137,13 @@ const getValidationsByValid = async (req, res) => {
 
 const postValidation = async (req, res) => {
   console.log('📠| POST request recibida a /validations');
+  const transaction = await sequelize.transaction();
   try {
     const validation = req.body;
 
     if (!validation) {
-      return res.status(400).json({ message: 'Request body is missing' });
+      await transaction.rollback();
+      return res.status(400).json({ message: 'Request body is missing. Rolling back ...' });
     }
 
     const {
@@ -148,7 +151,8 @@ const postValidation = async (req, res) => {
     } = validation;
 
     if (!request_id || !group_id || seller === undefined || valid === undefined) {
-      return res.status(400).json({ message: 'Missing required fields' });
+      await transaction.rollback();
+      return res.status(400).json({ message: 'Missing required fields. Rolling back ...' });
     }
 
     const createdValidation = await Validation.create({
@@ -156,15 +160,41 @@ const postValidation = async (req, res) => {
       group_id,
       seller,
       valid,
-    });
+    }, { transaction });
 
     if (!createdValidation) {
-      console.error('Failed to create validation in the database.');
-      return res.status(500).json({ message: 'Failed to register validation.' });
+      await transaction.rollback();
+      console.error('Failed to create validation in the database. ');
+      return res.status(500).json({ message: 'Failed to register validation. Rolling back ...' });
     }
 
-    res.status(201).json({ message: `Validation ${request_id} from ${group_id} registered` });
+    const validationRequests = await createdValidation.getRequest({ transaction });
+    if (validationRequests) {
+      if (valid) {
+        await validationRequests.update({ status: 'filled' }, { transaction });
+        const requestStock = await validationRequests.getStock({ transaction });
+        const requestUser = await validationRequests.getUser({ transaction });
+        await requestUser.updateBalance(
+          requestStock.price,
+          validationRequests.quantity,
+          transaction,
+        );
+        console.log(`😁 | User ${validationRequests.user_id} bought ${validationRequests.quantity}
+        stocks of ${requestStock.symbol} @ ${requestStock.price}$ 
+        (total: ${validationRequests.quantity * requestStock.price}$)`);
+      } else {
+        await validationRequests.update({ status: 'cancelled' }, { transaction });
+      }
+    } else {
+      console.error('No associated request found.');
+      await transaction.rollback();
+      return res.status(404).json({ message: 'No associated request found.' });
+    }
+
+    await transaction.commit();
+    res.status(201).json({ message: `Validation ${request_id} (group ${group_id}) changed to status: ${validationRequests.status}` });
   } catch (error) {
+    await transaction.rollback();
     console.error('Error in postValidation:', error);
     res.status(500).json({ message: 'Internal Server Error', error: error.message });
   }

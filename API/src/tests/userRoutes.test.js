@@ -68,7 +68,7 @@ describe('Users API - Error Cases', () => {
     expect(res.statusCode).toEqual(500);
   });
 
-  it('should return 500 trying to add money to a user', async () => {
+  it('should return 400 trying trying to spend money the user dont have', async () => {
     const res = await request(app).post(`/users/wallet/${mockUserId}`).send({
       cash: mockUserMoney,
     });

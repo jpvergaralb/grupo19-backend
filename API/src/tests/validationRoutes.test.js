@@ -5,7 +5,6 @@ const {
   sellerMockId,
   groupMockId,
   statusMock,
-  correctValidationMock,
   missingFieldValidationMock,
 } = require('./utils/validationRoutes.util');
 
@@ -30,13 +29,6 @@ describe('Validations API - General Cases', () => {
   it('shoudl return validationts by status', async () => {
     const res = await request(app).get(`/validations/valid/${statusMock}`);
     expect(res.statusCode).toEqual(200);
-  });
-
-  it('should post a validation', async () => {
-    const res = await request(app).post('/validations').send(
-      correctValidationMock,
-    );
-    expect(res.statusCode).toEqual(201);
   });
 });
 

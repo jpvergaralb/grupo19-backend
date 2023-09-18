@@ -32,8 +32,8 @@ module.exports = function (client) {
     
     // Suscribirse a los canales usando la función
     [process.env.MQTT_API_INFO_CHANNEL,
-      process.env.MQTT_API_VALIDATION_CHANNEL,
-      process.env.MQTT_API_REQUEST_CHANNEL].forEach(subscribeToChannel);
+      process.env.MQTT_API_VALIDATION_CHANNEL
+    ].forEach(subscribeToChannel);
   });
   
   // Establecer el timeout para verificar la conexión
@@ -49,8 +49,7 @@ module.exports = function (client) {
     // Dirigir el post en función de canal al que se suscribió
     const topicToApiPath = {
       [process.env.MQTT_API_INFO_CHANNEL]: '/stocks',
-      [process.env.MQTT_API_VALIDATION_CHANNEL]: '/validations',
-      [process.env.MQTT_API_REQUEST_CHANNEL]: '/requests'
+      [process.env.MQTT_API_VALIDATION_CHANNEL]: '/validations'
     };
     
     const apiPath = topicToApiPath[topic];

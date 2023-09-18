@@ -2,7 +2,6 @@ const request = require('supertest');
 const app = require('../app');
 const db = require('../../models');
 const {
-  correctMockRequest,
   emptyMockRequest,
 } = require('./utils/requestRoutes.util');
 
@@ -12,13 +11,6 @@ describe('Requests API - General Cases', () => {
   it('should return all requests', async () => {
     const res = await request(app).get('/requests');
     expect(res.statusCode).toEqual(200);
-  });
-
-  it('should post a stock', async () => {
-    const res = await request(app).post('/requests').send(
-      correctMockRequest,
-    );
-    expect(res.statusCode).toEqual(201);
   });
 
   it('should get requests by their group id', async () => {

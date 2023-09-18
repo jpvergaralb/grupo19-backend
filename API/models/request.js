@@ -12,6 +12,8 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       request.belongsTo(models.user, { foreignKey: 'user_id'});
+      request.hasOne(models.validation, { foreignKey: 'request_id'});
+      request.belongsTo(models.stock, { foreignKey: 'stock_id'})
     }
   }
   request.init(
@@ -31,6 +33,18 @@ module.exports = (sequelize, DataTypes) => {
           },
           notNull: {
             msg: "User ID cannot be null"
+          }
+        }
+      },
+      stock_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        validate: {
+          notEmpty: {
+            msg: "Stock ID cannot be empty"
+          },
+          notNull: {
+            msg: "Stock ID cannot be null"
           }
         }
       },

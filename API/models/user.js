@@ -114,5 +114,15 @@ module.exports = (sequelize, DataTypes) => {
     sequelize,
     modelName: 'user',
   });
+
+  User.prototype.CanAffordThisTransaction = async function (price, quantity) {
+    return this.cash >= price * quantity;
+    };
+
+  User.prototype.updateBalance = async function (price, quantity, transaction) {
+    const newBalance = this.cash - (price * quantity);
+    await this.update({ cash: newBalance }, { transaction });
+    };
+
   return User;
 };
