@@ -31,7 +31,7 @@ services:
   db:
     image: postgres:12.8
     volumes:
-      - postgres_data156513:/var/lib/postgresql/data
+      - postgres_data1256513:/var/lib/postgresql/data
     restart: unless-stopped
     environment:
       POSTGRES_DB: ${DB_NAME:-postgres}
@@ -42,4 +42,4 @@ services:
       - "${DB_PORT:-5432}:${DB_PORT:-5432}"
 
 volumes:
-  postgres_data156513:
+  postgres_data1256513:
