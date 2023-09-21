@@ -135,7 +135,7 @@ const postRequests = async (req, res) => {
       || !group_id
       || !symbol
       || !datetime
-      || deposit_token === undefined
+      || deposit_token !== ''
       || !quantity
       || seller === undefined
     ) {
