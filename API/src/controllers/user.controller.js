@@ -142,8 +142,7 @@ const postUpdateWallet = async (req, res) => {
     return res.status(200).json({
       message: `Wallet updated from ${user.cash} to ${updatedUser.cash} to user ${id}`,
       currentBalance: updatedUser.cash,
-    }
-    );
+    });
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }

@@ -16,7 +16,7 @@ const generatePseudoRandomUsername = () => {
 const mockUserId = '8a04cb0b-9c2a-4895-8e5c-95626ad9d1f0';
 const correctMockUser = {
   username: generatePseudoRandomUsername(),
-  auth0Id: "auth0|6140a0b1e2b9d4006a3f0b1f",
+  auth0Id: 'auth0|6140a0b1e2b9d4006a3f0b1f',
   password: 'jpoez1i@1213323!',
   email: `jpezi345${uuidv4()}@gmaiil.com`,
   firstName: 'Juan Pablo',

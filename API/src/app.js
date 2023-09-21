@@ -1,10 +1,10 @@
 require('dotenv').config();
 const express = require('express');
+const cors = require('cors');
 const stockRoutes = require('./routes/stock.routes');
 const userRoutes = require('./routes/user.routes');
 const validationRoutes = require('./routes/validation.routes');
 const requestRoutes = require('./routes/request.routes');
-const cors = require('cors');
 // const syncDatabase = require('./db/syncDatabase') // 👈🏻
 
 const app = express();
