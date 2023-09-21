@@ -15,7 +15,7 @@ COPY . .
 
 RUN mv -v ./entrypoint.production.sh ./entrypoint.sh && \
     rm -v /usr/src/app/entrypoint.development.sh && \
-    zchmod +x /usr/src/app/entrypoint.sh
+    chmod +x /usr/src/app/entrypoint.sh
 
 EXPOSE ${API_PORT}
 
