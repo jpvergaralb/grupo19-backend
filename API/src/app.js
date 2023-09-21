@@ -6,7 +6,10 @@ const validationRoutes = require('./routes/validation.routes');
 const requestRoutes = require('./routes/request.routes');
 // const syncDatabase = require('./db/syncDatabase') // 👈🏻
 
+const cors = require('cors');
 const app = express();
+
+app.use(cors());
 
 app.use(express.json());
 app.use('/stocks', stockRoutes);
