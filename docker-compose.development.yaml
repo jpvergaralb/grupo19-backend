@@ -1,0 +1,49 @@
+version: '3'
+services:
+  api:
+    build:
+      context: ./API
+      dockerfile: development.Dockerfile
+      args:
+        API_PORT: ${API_PORT}
+        NODE_VERSION: ${API_NODE_VERSION:-16}
+    env_file:
+      - .env
+    restart: unless-stopped
+    volumes:
+      - ./API:/usr/src/app
+    ports:
+      - "${API_PORT:-8000}:${API_PORT:-8000}"
+    depends_on:
+      - db
+
+  mqtt:
+    build:
+      context: ./MQTT
+      dockerfile: development.Dockerfile
+      args:
+        MQTT_API_PORT: ${MQTT_API_PORT:-8001}
+        NODE_VERSION: ${MQTT_API_NODE_VERSION:-16}
+    volumes:
+      - ./MQTT:/usr/src/app
+    env_file:
+      - .env
+    restart: unless-stopped
+    ports:
+      - "${MQTT_API_PORT:-8001}:${MQTT_API_PORT:-8001}"
+
+  db:
+    image: postgres:12.8
+    volumes:
+      - postgres_data156513:/var/lib/postgresql/data
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${DB_NAME:-postgres}
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      PGPORT: ${DB_PORT:-5432}
+    ports:
+      - "${DB_PORT:-5432}:${DB_PORT:-5432}"
+
+volumes:
+  postgres_data156513:
