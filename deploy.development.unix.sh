@@ -7,7 +7,6 @@ while [ $# -gt 0 ]; do
   case $1 in
     --no-daemon)
       NO_DAEMON=true
-      exit 0
       ;;
     *)
       echo "Invalid option: $1" >&2
@@ -20,18 +19,20 @@ done
 
 echo "Construyendo imágenes (sin caché)"
 sleep 1
-docker compose build --no-cache -f ${DOCKER_COMPOSE_FILE}
+docker compose -f ${DOCKER_COMPOSE_FILE} build --no-cache
 
 echo "Descargando imágenes pre-hechas de internet"
 sleep 1
-docker compose pull -f ${DOCKER_COMPOSE_FILE}
+docker compose -f ${DOCKER_COMPOSE_FILE} pull
 
 if ($NO_DAEMON); then
   echo "Levantando contenedores en primer plano"
-  docker compose up -f ${DOCKER_COMPOSE_FILE}
+  docker compose -f ${DOCKER_COMPOSE_FILE} up
 
 else
   echo "Levantando contenedores en segundo plano"
-  docker compose up -f ${DOCKER_COMPOSE_FILE} -d
+  docker compose -f ${DOCKER_COMPOSE_FILE} up -d
 fi
+
+exit 0
 

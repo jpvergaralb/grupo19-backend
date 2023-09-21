@@ -18,16 +18,16 @@ goto loop
 
 echo Construyendo imágenes (sin caché)
 timeout /t 1
-docker compose build --no-cache -f %DOCKER_COMPOSE_FILE%
+docker compose -f %DOCKER_COMPOSE_FILE% build --no-cache
 
 echo Descargando imágenes pre-hechas de internet
 timeout /t 1
-docker compose pull -f %DOCKER_COMPOSE_FILE%
+docker compose -f %DOCKER_COMPOSE_FILE% pull
 
 if "%NO_DAEMON%"=="true" (
     echo Levantando contenedores en primer plano
-    docker compose up -f %DOCKER_COMPOSE_FILE%
+    docker compose -f %DOCKER_COMPOSE_FILE% up
 ) else (
     echo Levantando contenedores en segundo plano
-    docker compose up -f %DOCKER_COMPOSE_FILE% -d
+    docker compose -f %DOCKER_COMPOSE_FILE% up -d
 )
