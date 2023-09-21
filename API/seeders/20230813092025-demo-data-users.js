@@ -5,6 +5,7 @@ module.exports = {
     await queryInterface.bulkInsert('users', [
       {
         id: "8a04cb0b-9c2a-4895-8e5c-95626ad9d1f0",
+        auth0Id: "auth0|6140a0b1e2b9d4006a3f0b1a",
         username: 'JohnDoe',
         password: 'Pass@1234',
         email: 'john.doe@example.com',
@@ -17,6 +18,7 @@ module.exports = {
       },
       {
         id: "8a04cb0b-9c2a-4895-8e5c-95626ad9d1f1",
+        auth0Id: "auth0|6140a0b1e2b9d4006a3f0b1b",
         username: 'JaneDoe',
         password: 'Jane@1234',
         email: 'jane.doe@example.com',
@@ -29,6 +31,7 @@ module.exports = {
       },
       {
         id: "8a04cb0b-9c2a-4895-8e5c-95626ad9d1f2",
+        auth0Id: "auth0|6140a0b1e2b9d4006a3f0b1c",
         username: 'BillyBob',
         password: 'Billy@1234',
         email: 'billy.bob@example.com',
@@ -41,6 +44,7 @@ module.exports = {
       },
       {
         id: "8a04cb0b-9c2a-4895-8e5c-95626ad9d1f3",
+        auth0Id: "auth0|6140a0b1e2b9d4006a3f0b1d",
         username: 'EmilyRose',
         password: 'Rose@1234',
         email: 'emily.rose@example.com',
@@ -53,6 +57,7 @@ module.exports = {
       },
       {
         id: "8a04cb0b-9c2a-4895-8e5c-95626ad9d1f4",
+        auth0Id: "auth0|6140a0b1e2b9d4006a3f0b1e",
         username: 'CharlieBrown',
         password: 'Brown@1234',
         email: 'charlie.brown@example.com',

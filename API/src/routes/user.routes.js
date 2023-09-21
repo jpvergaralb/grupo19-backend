@@ -3,6 +3,7 @@ const express = require('express');
 const {
   getUsers,
   getUser,
+  getUserByAuthId,
   getUserRequests,
   postUser,
   postUpdateWallet,
@@ -16,6 +17,9 @@ userRoutes.route('/')
 
 userRoutes.route('/requests/:id/')
   .get(getUserRequests);
+
+userRoutes.route('/auth/:id')
+  .get(getUserByAuthId);
 
 userRoutes.route('/wallet/:id')
   .post(postUpdateWallet);
