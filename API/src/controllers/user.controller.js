@@ -8,6 +8,7 @@ const postUser = async (req, res) => {
 
     res.status(201).json({ user });
   } catch (error) {
+    console.log(error);
     res.status(500).json({ error: error.message });
   }
 };
@@ -51,6 +52,29 @@ const getUser = async (req, res) => {
       res.status(200).json({ user });
     } else {
       res.status(404).json({ message: 'No user found' });
+    }
+  } catch (error) {
+    res.status(500).json({ error });
+  }
+
+  console.log('📞| Fin del mensaje a /users/:id');
+};
+
+const getUserByAuthId = async (req, res) => {
+  console.log('📠| GET request recibida a /users/auth/:id');
+
+  try {
+    const { id } = req.params;
+    const user = await User.findOne({
+      where: {
+        auth0Id: id,
+      },
+    });
+
+    if (user) {
+      res.status(200).json({ foundUser: true });
+    } else {
+      res.status(200).json({ foundUser: false });
     }
   } catch (error) {
     res.status(500).json({ error });
@@ -115,7 +139,10 @@ const postUpdateWallet = async (req, res) => {
       returning: true,
     });
 
-    return res.status(200).send(`Wallet updated from ${user.cash} to ${updatedUser.cash} to user ${id}`);
+    return res.status(200).json({
+      message: `Wallet updated from ${user.cash} to ${updatedUser.cash} to user ${id}`,
+      currentBalance: updatedUser.cash,
+    });
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }
@@ -124,6 +151,7 @@ const postUpdateWallet = async (req, res) => {
 module.exports = {
   getUsers,
   getUser,
+  getUserByAuthId,
   getUserRequests,
   postUser,
   postUpdateWallet,

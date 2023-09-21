@@ -23,6 +23,14 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: DataTypes.UUIDV4,
         primaryKey: true
     },
+    auth0Id: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: {
+            args: true,
+            msg: "Auth0 ID already exists"
+        },
+    },
     username: {
         type: DataTypes.STRING,
         unique: {
@@ -105,7 +113,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     cash: {
         type: DataTypes.DECIMAL(10, 2),
-        allowNull: false,
+        defaultValue: 0.00,
         validate: {
             min: {
                 args: [0.00],

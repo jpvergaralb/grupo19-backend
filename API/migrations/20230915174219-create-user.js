@@ -9,7 +9,11 @@ module.exports = {
         defaultValue: Sequelize.UUIDV4,
         primaryKey: true,
         type: Sequelize.UUID
-      },
+      },    
+      auth0Id: {
+        type: Sequelize.STRING,
+        allowNull: false,
+    },
       username: {
         type: Sequelize.STRING,
         allowNull: false,
@@ -39,8 +43,7 @@ module.exports = {
       },
       cash: {
         type: Sequelize.DECIMAL,
-        allowNull: false,
-        defaultValue: 5000.00
+        defaultValue: 0.00
       },
       createdAt: {
         allowNull: false,
