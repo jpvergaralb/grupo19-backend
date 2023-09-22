@@ -4,7 +4,7 @@
 
 # Load balancing
 upstream backend_api {
-    server rest-api-0:8000;
+    server api:64563;
 }
 
 server {
