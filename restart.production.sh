@@ -10,4 +10,4 @@ docker compose -f ${DOCKER_COMPOSE_FILE} down
 
 echo "Lanzando contenedores"
 sleep 1
-sh ./deploy.production.unis.sh
+sh ./deploy.production.unix.sh
