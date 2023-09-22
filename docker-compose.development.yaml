@@ -28,6 +28,7 @@ services:
       args:
         API_PORT: ${API_PORT}
         NODE_VERSION: ${API_NODE_VERSION:-16}
+    container_name: api
     env_file:
       - .env
     volumes:
@@ -45,6 +46,7 @@ services:
       args:
         MQTT_API_PORT: ${MQTT_API_PORT:-8001}
         NODE_VERSION: ${MQTT_API_NODE_VERSION:-16}
+    container_name: mqtt
     volumes:
       - ./MQTT:/usr/src/app
     env_file:
@@ -62,6 +64,7 @@ services:
       POSTGRES_USER: ${DB_USERNAME}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       PGPORT: ${DB_PORT:-5432}
+    container_name: db
     ports:
       - "${DB_PORT:-5432}:${DB_PORT:-5432}"
     <<: *container-defaults
