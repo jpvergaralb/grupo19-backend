@@ -72,7 +72,7 @@ const getUserByAuthId = async (req, res) => {
     });
 
     if (user) {
-      res.status(200).json({ foundUser: true });
+      res.status(200).json({ foundUser: true, user });
     } else {
       res.status(200).json({ foundUser: false });
     }
