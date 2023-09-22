@@ -9,5 +9,5 @@ WORKDIR /usr/src/app
 
 EXPOSE ${MQTT_API_PORT}
 
-CMD [ "npm", "run", "dev", "--port", "${MQTT_API_PORT}" ]
+ENTRYPOINT ["/usr/src/app/entrypoint.development.sh"]
 

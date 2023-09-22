@@ -1,21 +1,26 @@
 # Description
 
-Por favor incluyan un resumen de los cambios y que issue fue arreglada (en caso de haberlo). POr favor, incluir contexto del cambio o funcionalidad creada. Listar todas las dependencias que sean requeridas para estos cambios.
+Por favor incluyan un resumen de los cambios y que issue fue arreglada (en caso de haberlo). 
+Por favor, incluir contexto del cambio o funcionalidad creada. 
+Listar todas las dependencias que sean requeridas para estos cambios.
 
-Fixes # (número de issue) <!-- Borrara en caso de que no haya una issue asociada-->
+Borrara en caso de que no haya una issue asociada
+Fixes # (número de issue)
 
 ## Tipo de cambio
 
-<!-- Por favor eliminen las opciones que no aplican. -->
+Por favor eliminen las opciones que no aplican.
 
-- [ ] Bug fix (non-breaking change which fixes an issue)
-- [ ] New feature (non-breaking change which adds functionality)
-- [ ] Breaking change (fix or feature that would cause existing functionality to not work as expected)
-- [ ] This change requires a documentation update
+- Bug fix (non-breaking change which fixes an issue)
+- New feature (non-breaking change which adds functionality)
+- Breaking change (fix or feature that would cause existing functionality to not work as expected)
+- This change requires a documentation update
+- Code Refactoring
+- Documentation
 
 # ¿Cómo revisé mi código?
 
-<!-- Explicar como probaron que la funcinalidad funciona. -->
+Explicar como probaron que la funcinalidad funciona.
 
 # Checklist:
 
@@ -25,14 +30,14 @@ Fixes # (número de issue) <!-- Borrara en caso de que no haya una issue asociad
 - [ ] Mis cambios no generan errores nuevos
 - [ ] Revisé que las funcionalidades funcionan como se espera
 
-# Cambios propuestos en la PR
+<!-- # Cambios propuestos en la PR -->
 
  <!-- Cambiar el REGEX -->
  <!-- Dejar el N/A en caso de que no aplique -->
- N/A
+ <!-- N/A -->
 
-# Visuals
-N/A
+<!-- # Visuals -->
+<!-- N/A -->
  <!-- Dejar el N/A en caso de que no aplique -->
 <!--
 Incluir cualquier cambio relevante en lo visual/UX-flows
