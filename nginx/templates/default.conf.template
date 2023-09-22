@@ -1,0 +1,21 @@
+# Para tráfico HTTP en el puerto 80
+server {
+    listen 80 default_server;
+    server_name _;
+
+    location / {
+        return 307 https://front.arqui.ljg.cl;
+    }
+}
+
+# Para tráfico HTTPS en el puerto 443
+server {
+    listen 443 ssl default_server;
+    server_name _;
+
+    include /etc/nginx/templates/include/wildcard-ssl.conf;
+
+    location / {
+        return 307 https://front.arqui.ljg.cl;
+    }
+}
