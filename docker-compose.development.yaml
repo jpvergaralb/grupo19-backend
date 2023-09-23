@@ -109,17 +109,17 @@ services:
       - EMOJI=true
 
   # Monitoreo
-  dashdot:
-    image: mauricenino/dashdot
-    container_name: dashdot
-    expose:
-      - 3001
-    volumes:
-      - '/:/mnt/host:ro'
-    privileged: true
-    restart: always
-    depends_on:
-      - nginx
+#  dashdot:
+#    image: mauricenino/dashdot
+#    container_name: dashdot
+#    expose:
+#      - 3001
+#    volumes:
+#      - '/:/mnt/host:ro'
+#    privileged: true
+#    restart: always
+#    depends_on:
+#      - nginx
 
 volumes:
   postgres_data1256513:
