@@ -1,0 +1,18 @@
+server {
+    listen 80;
+    server_name status.arqui-sis-sw-2023-2.ljgonzalez.cl;
+
+    include /etc/nginx/templates/include/https-redirect.conf;
+}
+
+server {
+    listen 443 ssl;
+    server_name status.arqui-sis-sw-2023-2.ljgonzalez.cl;
+
+    include /etc/nginx/templates/include/wildcard-ssl.conf;
+
+    location / {
+        proxy_pass http://dashdot:3001;
+        include /etc/nginx/templates/include/proxy.conf;
+    }
+}
