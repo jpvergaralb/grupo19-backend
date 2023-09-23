@@ -1,4 +1,10 @@
 version: '3'
+
+# Común a todos los contenedores
+x-defaults-container: &container-defaults
+  restart: unless-stopped
+  stop_grace_period: 3s
+
 services:
   api:
     build:
@@ -9,13 +15,13 @@ services:
         NODE_VERSION: ${API_NODE_VERSION:-16}
     env_file:
       - .env
-    restart: unless-stopped
     volumes:
       - ./API:/usr/src/app
     ports:
       - "${API_PORT:-8000}:${API_PORT:-8000}"
     depends_on:
       - db
+    <<: *container-defaults
 
   mqtt:
     build:
@@ -28,15 +34,14 @@ services:
       - ./MQTT:/usr/src/app
     env_file:
       - .env
-    restart: unless-stopped
     ports:
       - "${MQTT_API_PORT:-8001}:${MQTT_API_PORT:-8001}"
+    <<: *container-defaults
 
   db:
     image: postgres:12.8
     volumes:
       - postgres_data1256513:/var/lib/postgresql/data
-    restart: unless-stopped
     environment:
       POSTGRES_DB: ${DB_NAME:-postgres}
       POSTGRES_USER: ${DB_USERNAME}
@@ -44,6 +49,46 @@ services:
       PGPORT: ${DB_PORT:-5432}
     ports:
       - "${DB_PORT:-5432}:${DB_PORT:-5432}"
+    <<: *container-defaults
+
+  # https://github.com/favonia/cloudflare-ddns/blob/main/README.markdown
+  cloudflare-ddns:
+    image: favonia/cloudflare-ddns
+    container_name: cloudflare-ddns
+    # This makes IPv6 easier; see below
+    network_mode: host
+    # Restart the updater after reboot
+    restart: always
+    cap_add:
+      # Capability to change user ID; needed for using PUID
+      - SETUID
+      # Capability to change group ID; needed for using PGID
+      - SETGID
+    # Make the container filesystem read-only
+    read_only: true
+    security_opt:
+      # Another protection to restrict superuser privileges
+      - no-new-privileges:true
+    environment:
+      # Run the updater with user ID 1000
+      - PUID=1000
+      # Run the updater with group ID 1000
+      - PGID=1000
+      # Your Cloudflare API token
+      - CF_API_TOKEN=${CLOUDFLARE_API_KEY}
+      # Your domains (separated by commas)
+      #- DOMAINS=${DDNS_DOMAINS}
+      - IP4_DOMAINS=${DDNS_DOMAINS}
+      # Tell Cloudflare to cache webpages and hide your IP
+      - PROXIED=false
+      - CACHE_EXPIRATION=6h0m0s
+      - DETECTION_TIMEOUT=15s
+      - TZ=America/Santiago
+      - UPDATE_CRON=@every 15m
+      - UPDATE_ON_START=true
+      - UPDATE_TIMEOUT=30s
+      - TTL=1
+      - EMOJI=true
 
 volumes:
   postgres_data1256513:
