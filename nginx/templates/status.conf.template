@@ -1,13 +1,13 @@
 server {
     listen 80;
-    server_name status.arqui-sis-sw-2023-2.ljgonzalez.cl;
+    server_name status.arqui.ljg.cl;
 
     include /etc/nginx/templates/include/https-redirect.conf;
 }
 
 server {
     listen 443 ssl;
-    server_name status.arqui-sis-sw-2023-2.ljgonzalez.cl;
+    server_name status.arqui.ljg.cl;
 
     include /etc/nginx/templates/include/wildcard-ssl.conf;
 
