@@ -19,19 +19,19 @@ done
 
 echo "Construyendo imágenes (sin caché)"
 sleep 1
-docker compose -f ${DOCKER_COMPOSE_FILE} build --no-cache
+sudo docker compose -f ${DOCKER_COMPOSE_FILE} build --no-cache
 
 echo "Descargando imágenes pre-hechas de internet"
 sleep 1
-docker compose -f ${DOCKER_COMPOSE_FILE} pull
+sudo docker compose -f ${DOCKER_COMPOSE_FILE} pull
 
 if ($NO_DAEMON); then
   echo "Levantando contenedores en primer plano"
-  docker compose -f ${DOCKER_COMPOSE_FILE} up
+  sudo docker compose -f ${DOCKER_COMPOSE_FILE} up
 
 else
   echo "Levantando contenedores en segundo plano"
-  docker compose -f ${DOCKER_COMPOSE_FILE} up -d
+  sudo docker compose -f ${DOCKER_COMPOSE_FILE} up -d
 fi
 
 exit 0
