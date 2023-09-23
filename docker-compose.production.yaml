@@ -20,6 +20,8 @@ services:
       # Configs sitios
       - ./nginx/templates:/etc/nginx/templates
     <<: *container-defaults
+    depends_on:
+      - cloudflare-ddns
 
   api:
     build:
@@ -35,6 +37,7 @@ services:
       - "${API_PORT:-8000}:${API_PORT:-8000}"
     depends_on:
       - db
+      - nginx
     <<: *container-defaults
 
   mqtt:
@@ -50,6 +53,10 @@ services:
     ports:
       - "${MQTT_API_PORT:-8001}:${MQTT_API_PORT:-8001}"
     <<: *container-defaults
+    depends_on:
+      - db
+      - nginx
+      - api
 
   db:
     image: postgres:12.8
@@ -64,6 +71,8 @@ services:
     ports:
       - "${DB_PORT:-5432}:${DB_PORT:-5432}"
     <<: *container-defaults
+    depends_on:
+      - nginx
 
   # https://github.com/favonia/cloudflare-ddns/blob/main/README.markdown
   cloudflare-ddns:
