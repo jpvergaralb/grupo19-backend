@@ -13,36 +13,75 @@
 ## Características implementadas y no implementadas
 
 #### Requisitos funcionales (15 pts)
-- [X] RF01 (Esencial): Sus usuarios deben poder registrarse en la plataforma con datos de contacto y un correo electrónico, además de poder ingresar dinero a una billetera virtual
+- [X] RF01 (Esencial): 
+ Sus usuarios deben poder registrarse en la plataforma con datos de contacto y un correo electrónico, 
+ además de poder ingresar dinero a una billetera virtual
 personal.
-- [X] RF02: Los usuarios deben poder ver una lista de las empresas disponibles en el servidor por orden de llegada.
-- [X] RF03 (2 ptos) (Esencial): Debe poder verse el detalle historico de cada empresa de forma paginada y dar la opción de compra.
-- [ ] RF04 (2 ptos): Deben obtener la ubicación desde donde el usuario hizo la compra desde su dirección IP. Para esto pueden usar ChatGPT para apoyarse.
-- [ ] Bonus de 2 décimas si muestran un gráfico con los datos históricos de la última semana indicando la variación de precios por hora
-- [X] RF06 (2 ptos) (Esencial): Al comprar una entrada se deberá enviar la solicitud por el canal `stocks/requests` y esperar la respuesta de si es válida por el canal `stocks/validation`.
-- [X] RF07 (3 ptos) (Esencial): Deberán estar escuchando los canales de `stocks/requests` y `stocks/validation` continuamente para ir actualizando su cantidad de entradas disponibles.
+- [X] RF02: 
+ Los usuarios deben poder ver una lista de las empresas disponibles en el servidor por orden de llegada.
+- [X] RF03 (2 ptos) (Esencial): 
+ Debe poder verse el detalle histórico de cada empresa de forma paginada y dar la opción de compra.
+- [ ] RF04 (2 ptos): 
+ Deben obtener la ubicación desde donde el usuario hizo la compra desde su dirección IP. 
+ Para esto pueden usar ChatGPT para apoyarse.
+  - [ ] Bonus de 2 décimas si muestran un gráfico con los datos históricos de la última semana indicando la variación 
+   de precios por hora
+- [X] RF06 (2 ptos) (Esencial): 
+ Al comprar una entrada se deberá enviar la solicitud por el canal `stocks/requests` y esperar la respuesta de si 
+ es válida por el canal `stocks/validation`.
+- [X] RF07 (3 ptos) (Esencial): 
+ Deberán estar escuchando los canales de `stocks/requests` y `stocks/validation` continuamente para ir actualizando su
+ cantidad de entradas disponibles.
 
 #### Requisitos no funcionales (39 pts)
-- [X] RNF01 (6 ptos) (Esencial): Deben usar un formato de Backend-Frontend separado: una API con respuestas JSON y un frontend. Esto es muy importante puesto que es crítico para las siguientes entregas. El Frontend debe ser ojalá una SPA con un Framework que permita exportar el build de su frontend, como React o Vue
-- [X] RNF02 (2 ptos) (Esencial): Sus aplicaciones en backend deben estar cada una en un contenedor Docker distinto. Debe coordinarse el levantamiento mediante docker compose.
-- [X] RNF03 (2 ptos) (Esencial): Deben tener configuradas Budget alerts en la cuenta que ocupen como grupo, para no alejarse del Free tier de AWS y que se den cuenta si les cobran para que cierren esos servicios.
-- [X] RNF04 (6 ptos) (Esencial) : Su API debe estar detrás de una AWS API gateway tipo REST o HTTP, con los endpoints declarados en esta. Debe asociarse un subdominio a esta (e.g. api.miapp.com) y debe tener CORS correctamente configurado.
-- [X] RNF05 (3 ptos) (Esencial) : Su app debe ofrecer su backend y frontend utilizando HTTPS
-- [X] RNF06 (6 ptos) (Esencial): Deben implementar un servicio de autenticacion/autorización (auth). Este servicio puede ser en base a un servicio de terceros como Auth0 (recomendado), cognito o pueden hacerlo ustedes. Este RNF requiere que ustedes extraigan toda la lógica de los usuarios de la app principal y la trasladen a el servicio hecho por ustedes o el externo. Recomendamos fuertemente usar el modelo Oauth o como mínimo intercambiar tokens JWT con la audiencia e issuer correctos.
-  - [ ] Si hacen un servicio ustedes desde 0, tienen un bonus de 5 ptos, esto implica gestión de tokens JWT con OAuth2, gestión de la información de usuarios, una gestión segura de los tokens a nivel de frontend, y debe correr como un contenedor/servicio aparte.
-- [ ] RNF07 (3 ptos): Su frontend debe estar desplegado en S3 con una distribución Cloudfront.
-- [X] RNF08 (3 ptos): Su API Gateway debe poder usar al servicio del RNF05 para autenticar a los
-  usuarios directamente, es decir que antes de enviar la request a su API, API Gateway verifica
-  que el token sea correcto. Dentro de API Gateway deben crearle un Custom Authorizer su usan
-  tipo REST para poder autenticar sus requests previos a mandarlos a su API.
-- [X] RNF09 (8 ptos): Deben implementar un pipeline de CI. Como proveedores aceptados están CircleCI, Github Actions y AWS codebuild. Recomendamos los dos primeros porque los ayudantes tienen experiencia en estos dos. Esta implementación debe correr un linter que revise su código.
-  - [ ] Implementar un build simple que resuelva un test trivial que pueda fallar solo para el backend (tipo assert false o similar) tiene un bonus de 3 ptos.
-  - [ ] Implementar un pipeline CI para su frontend que revise con un linter su aplicación y haga uso de revisiones de performance de lighthouse tiene bonus de 3 ptos.
+- [X] RNF01 (6 ptos) (Esencial): 
+ Deben usar un formato de Backend-Frontend separado: una API con respuestas JSON y un frontend.
+ Esto es muy importante puesto que es crítico para las siguientes entregas. 
+ El Frontend debe ser ojalá una SPA con un Framework que permita exportar el build de su frontend, como React o Vue.
+- [X] RNF02 (2 ptos) (Esencial): 
+ Sus aplicaciones en backend deben estar cada una en un contenedor Docker distinto.
+ Debe coordinarse el levantamiento mediante docker compose.
+- [X] RNF03 (2 ptos) (Esencial):
+ Deben tener configuradas Budget alerts en la cuenta que ocupen como grupo, para no alejarse del Free tier de AWS y que
+ se den cuenta si les cobran para que cierren esos servicios.
+- [X] RNF04 (6 ptos) (Esencial): 
+ Su API debe estar detrás de una AWS API gateway tipo REST o HTTP, con los endpoints declarados en esta.
+ Debe asociarse un subdominio a esta (e.g. api.miapp.com) y debe tener CORS correctamente configurado.
+- [X] RNF05 (3 ptos) (Esencial): Su app debe ofrecer su backend y frontend utilizando HTTPS.
+- [X] RNF06 (6 ptos) (Esencial): 
+ Deben implementar un servicio de autenticacion/autorización (auth). 
+ Este servicio puede ser en base a un servicio de terceros como Auth0 (recomendado), cognito o pueden hacerlo ustedes. 
+ Este RNF requiere que ustedes extraigan toda la lógica de los usuarios de la app principal y la trasladen al servicio
+ hecho por ustedes o el externo. Recomendamos fuertemente usar el modelo Oauth o como mínimo intercambiar tokens JWT con
+ la audiencia e issuer correctos.
+  - [ ] Si hacen un servicio ustedes desde 0, tienen un bonus de 5 ptos, esto implica gestión de tokens JWT con OAuth2,
+   gestión de la información de usuarios, una gestión segura de los tokens a nivel de frontend, 
+   y debe correr como un contenedor/servicio aparte.
+- [ ] RNF07 (3 ptos): 
+ Su frontend debe estar desplegado en S3 con una distribución Cloudfront.
+- [X] RNF08 (3 ptos): 
+ Su API Gateway debe poder usar al servicio del RNF05 para autenticar a los usuarios directamente, 
+ es decir que antes de enviar la request a su API, API Gateway verifica que el token sea correcto. 
+ Dentro de API Gateway deben crearle un Custom Authorizer su usan tipo REST para poder autenticar sus requests previos a
+ mandarlos a su API.
+- [X] RNF09 (8 ptos): 
+ Deben implementar un pipeline de CI. Como proveedores aceptados están CircleCI, Github Actions y AWS codebuild. 
+ Recomendamos los dos primeros porque los ayudantes tienen experiencia en estos dos. Esta implementación debe correr un 
+ linter que revise su código.
+  - [ ] Implementar un build simple que resuelva un test trivial que pueda fallar solo para el backend 
+   (tipo assert false o similar) tiene un bonus de 3 ptos.
+  - [ ] Implementar un pipeline CI para su frontend que revise con un linter su aplicación y haga uso de revisiones de
+   performance de lighthouse tiene bonus de 3 ptos.
 
 #### Documentación (6 ptos)
-- [X] RDOC01 (3 ptos): Deben crear un diagrama UML de componentes de la entrega, con explicaciones y detalle sobre el sistema. Esto deben tenerlo para la fecha final de entrega.
-- [X] RDOC02 (2 ptos): Deben documentar los pasos necesarios para replicar el pipe CI que usaron en su aplicación (Qué pasos sigue si CI).
-- [X] RDOC03 (1 ptos): Deben dejar una documentación de alguna forma de correr su aplicación en un ambiente local para propósitos de testeo (que instalar, que poner en el .env, como correr la app, etc).
+- [X] RDOC01 (3 ptos): 
+ Deben crear un diagrama UML de componentes de la entrega, con explicaciones y detalle sobre el sistema. Esto deben 
+ tenerlo para la fecha final de entrega.
+- [X] RDOC02 (2 ptos): 
+ Deben documentar los pasos necesarios para replicar el pipe CI que usaron en su aplicación (Qué pasos sigue si CI).
+- [X] RDOC03 (1 ptos): 
+ Deben dejar una documentación de alguna forma de correr su aplicación en un ambiente local para propósitos de testeo 
+ (que instalar, que poner en el .env, como correr la app, etc).
 
 
 ## Acceso al servidor
