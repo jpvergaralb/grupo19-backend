@@ -15,7 +15,7 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Install ssh
-      run: apt-get install openssh-client sshpass -y
+      run: sudo apt-get install openssh-client sshpass -y
 
     - name: Setup environment variables
       run: |
