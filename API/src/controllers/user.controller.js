@@ -148,6 +148,35 @@ const postUpdateWallet = async (req, res) => {
   }
 };
 
+const updateUsersPhone = async (req, res) => {
+  const { auth0Id, phone } = req.body;
+
+  if (!auth0Id || !phone) {
+    return res.status(400).json({ message: 'Missing parameters: either auth0Id or phone.' });
+  }
+
+  try {
+    const user = await User.findOne({ where: { auth0Id } });
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found.' });
+    }
+
+    const updatedValues = { phone };
+    const [, [updatedUser]] = await User.update(updatedValues, {
+      where: { auth0Id },
+      returning: true,
+    });
+
+    return res.status(200).json({
+      message: `Phone updated from ${user.phone} to ${updatedUser.phone} to user ${auth0Id}`,
+      currentPhone: updatedUser.phone,
+    });
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+};
+
 module.exports = {
   getUsers,
   getUser,
@@ -155,4 +184,5 @@ module.exports = {
   getUserRequests,
   postUser,
   postUpdateWallet,
+  updateUsersPhone,
 };
