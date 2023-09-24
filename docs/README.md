@@ -22,7 +22,7 @@ personal.
  Los usuarios deben poder ver una lista de las empresas disponibles en el servidor por orden de llegada.
 - [X] RF03 (2 ptos) (Esencial): 
  Debe poder verse el detalle histórico de cada empresa de **forma paginada** y dar la opción de compra.
-- [ ] RF04 (2 ptos): 
+- [X] RF04 (2 ptos): 
  Deben obtener la ubicación desde donde el usuario hizo la compra desde su dirección IP. 
  Para esto pueden usar ChatGPT para apoyarse.
   - [ ] Bonus de 2 décimas si muestran un gráfico con los datos históricos de la última semana indicando la variación 
@@ -157,3 +157,20 @@ o con drawio.
 
 ![](./docs/diagramaArquiSis.drawio.png)
 ![](../docs/diagramaArquiSis.drawio.png)
+
+##### Explicaión del flujo:
+- El cliente se conecta al CDN de Amazon (Cloudfront)
+- Cloudfront extrae el frontend del bucket (S3) y se lo pasa al cliente.
+- Mediante dicho frontend el cliente envía requests al gateway de Amazon (API Gateway). 
+ La primera request que se envía es el login.
+- El gateway redirige al usuario al sitio de auth0, el que devolverá la información de la cuenta Google 
+ del usuario y el token asociado. De ahora en adelante todas las acciones que realice el usuario serán checkeadas 
+ en la API Gateway con dicho token.
+- Aquellas acciones del usuario que requieran acceso al backend del programa pasaran mediante la API Gateway a la
+ instancia de EC2, donde se encuentra el backend y el mqtt listener.
+- El backend tiene conexión directa a la base de datos y guarda todos los eventos, junto con manejar las requests GET y
+ POST con información sobre usuario, acciones, compras y validaciones
+- El backend se encuentra conectado también al listener MQTT, que intercambia información con el broker MQTT. Actúa como
+ una capa de middleware entre la API REST y el Broker MQTT.
+- Anexo a lo anterior, pero todavía dentro de la instancia de EC2 se encuentra un contenedor que actualiza el registro A
+ del DNS, asegurándose que si cambia la IP del servidor el DNS apunte a la nueva IP.
