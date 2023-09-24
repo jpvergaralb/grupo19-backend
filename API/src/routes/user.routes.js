@@ -7,6 +7,7 @@ const {
   getUserRequests,
   postUser,
   postUpdateWallet,
+  updateUsersPhone
 } = require('../controllers/user.controller');
 
 const userRoutes = express.Router();
@@ -20,6 +21,9 @@ userRoutes.route('/requests/:id/')
 
 userRoutes.route('/auth/:id')
   .get(getUserByAuthId);
+
+userRoutes.route('/update')
+  .post(updateUsersPhone);
 
 userRoutes.route('/wallet/:id')
   .post(postUpdateWallet);
