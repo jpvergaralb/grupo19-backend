@@ -25,4 +25,4 @@ jobs:
         echo "EC2PASSWD=${{ secrets.EC2PASSWD }}" >> $GITHUB_ENV
 
     - name: Update and reload containers
-      run: sshpass -p "${EC2PASS}" ssh -p ${EC2PORT} ${EC2USER}@${EC2HOST} "./reload-backend.sh"
+      run: sshpass -p "${EC2PASSWD}" ssh -p ${EC2PORT} ${EC2USER}@${EC2HOST} "./reload-backend.sh"
