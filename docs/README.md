@@ -14,14 +14,14 @@ La documentación de la API Gateway se encuentra en [el json anexo](./ArquisisE1
 ## Características implementadas y no implementadas
 
 #### Requisitos funcionales (15 pts)
-- [X] RF01 (Esencial): 
- Sus usuarios deben poder registrarse en la plataforma con datos de contacto y un correo electrónico, 
+- [ ] RF01 (Esencial): 
+ Sus usuarios deben poder **registrarse en la plataforma con datos de contacto y un correo electrónico**, 
  además de poder ingresar dinero a una billetera virtual
 personal.
 - [X] RF02: 
  Los usuarios deben poder ver una lista de las empresas disponibles en el servidor por orden de llegada.
 - [X] RF03 (2 ptos) (Esencial): 
- Debe poder verse el detalle histórico de cada empresa de forma paginada y dar la opción de compra.
+ Debe poder verse el detalle histórico de cada empresa de **forma paginada** y dar la opción de compra.
 - [ ] RF04 (2 ptos): 
  Deben obtener la ubicación desde donde el usuario hizo la compra desde su dirección IP. 
  Para esto pueden usar ChatGPT para apoyarse.
@@ -32,7 +32,7 @@ personal.
  es válida por el canal `stocks/validation`.
 - [X] RF07 (3 ptos) (Esencial): 
  Deberán estar escuchando los canales de `stocks/requests` y `stocks/validation` continuamente para ir actualizando su
- cantidad de entradas disponibles.
+ cantidad de _(¿)entradas(?)_ disponibles.
 
 #### Requisitos no funcionales (39 pts)
 - [X] RNF01 (6 ptos) (Esencial): 
@@ -45,9 +45,9 @@ personal.
 - [X] RNF03 (2 ptos) (Esencial):
  Deben tener configuradas Budget alerts en la cuenta que ocupen como grupo, para no alejarse del Free tier de AWS y que
  se den cuenta si les cobran para que cierren esos servicios.
-- [X] RNF04 (6 ptos) (Esencial): 
+- [ ] RNF04 (6 ptos) (Esencial): 
  Su API debe estar detrás de una AWS API gateway tipo REST o HTTP, con los endpoints declarados en esta.
- Debe asociarse un subdominio a esta (e.g. api.miapp.com) y debe tener CORS correctamente configurado.
+ **Debe asociarse un subdominio a esta (e.g. api.miapp.com) y debe tener CORS correctamente configurado.**
 - [X] RNF05 (3 ptos) (Esencial): Su app debe ofrecer su backend y frontend utilizando HTTPS.
 - [X] RNF06 (6 ptos) (Esencial): 
  Deben implementar un servicio de autenticacion/autorización (auth). 
@@ -58,7 +58,7 @@ personal.
   - [ ] Si hacen un servicio ustedes desde 0, tienen un bonus de 5 ptos, esto implica gestión de tokens JWT con OAuth2,
    gestión de la información de usuarios, una gestión segura de los tokens a nivel de frontend, 
    y debe correr como un contenedor/servicio aparte.
-- [ ] RNF07 (3 ptos): 
+- [X] RNF07 (3 ptos): 
  Su frontend debe estar desplegado en S3 con una distribución Cloudfront.
 - [X] RNF08 (3 ptos): 
  Su API Gateway debe poder usar al servicio del RNF05 para autenticar a los usuarios directamente, 
