@@ -186,9 +186,9 @@ const postValidation = async (req, res) => {
         await validationRequests.update({ status: 'cancelled' }, { transaction });
       }
     } else {
-      console.error('No associated request found.');
-      await transaction.rollback();
-      return res.status(404).json({ message: 'No associated request found.' });
+      console.log('🤔 | This request comes from another group.');
+      await transaction.commit();
+      return res.status(201).json({ message: 'This request comes from another group.' });
     }
 
     await transaction.commit();

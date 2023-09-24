@@ -156,7 +156,7 @@ const postRequests = async (req, res) => {
 
     if (await user.CanAffordThisTransaction(quantity, lastStock.price) === false) {
       console.log(`🚨🚔 | User ${user.username} cannot afford ${quantity} stocks of ${symbol} at ${lastStock.price}$`);
-      return res.status(400).json({ message: `User ${user_id} cannot afford ${quantity} stocks of ${symbol} at ${lastStock.price}$` });
+      return res.status(400).json({ message: 'error' });
     }
     const location = await user.processUserLocation(req);
     console.log(`📍 | User ${user.username} sent a buy request from ${location}`);
