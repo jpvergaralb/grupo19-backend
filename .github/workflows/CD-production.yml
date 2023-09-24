@@ -1,0 +1,28 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ "production" ]
+  pull_request:
+    branches: [ "production" ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Install ssh
+      run: apt-get install openssh-client sshpass -y
+
+    - name: Setup environment variables
+      run: |
+        echo "EC2HOST=arqui.ljg.cl" >> $GITHUB_ENV
+        echo "EC2PORT=22" >> $GITHUB_ENV
+        echo "EC2USER=ubuntu" >> $GITHUB_ENV
+        echo "EC2PASS=${{ secrets.EC2PASS }}" >> $GITHUB_ENV
+
+    - name: Update and reload containers
+      run: sshpass -p "${EC2PASS}" ssh -p ${EC2PORT} ${EC2USER}@${EC2HOST} -Ct "./reload-backend.sh"
