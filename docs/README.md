@@ -68,7 +68,7 @@ personal.
  Deben implementar un pipeline de CI. Como proveedores aceptados están CircleCI, Github Actions y AWS codebuild. 
  Recomendamos los dos primeros porque los ayudantes tienen experiencia en estos dos. Esta implementación debe correr un 
  linter que revise su código.
-  - [ ] Implementar un build simple que resuelva un test trivial que pueda fallar solo para el backend 
+  - [X] Implementar un build simple que resuelva un test trivial que pueda fallar solo para el backend 
    (tipo assert false o similar) tiene un bonus de 3 ptos.
   - [ ] Implementar un pipeline CI para su frontend que revise con un linter su aplicación y haga uso de revisiones de
    performance de lighthouse tiene bonus de 3 ptos.
@@ -90,7 +90,37 @@ El acceso es mediante ssh al puerto `22` y host `arqui.ljg.cl`.
 El usuario es `ubuntu`.
 No tiene contraseña de acceso, pero se necesita un archivo `.pem` para acceder.
 
-## Como correr la aplicación en un ambiente local:
+## Cómo correr la aplicación en un ambiente local:
+
+<em>
+ Existen dependencias en nginx que pueden afectar el funcionamiento del código.
+</em>
+
+### 1. Dependencias
+Se necesita tener instalado docker engine.
+
+### 2. Deploy en modo producción (para Linux, WSL & Mac OS)
+1- Crear archivo con variables de entorno a partir del template:
+```bash
+cp template.env .env
+```
+
+2- Completar las credenciales y secretos en el `.env`
+```dotenv
+     ...
+17 | IP_INFO_TOKEN=<COMPLETAR>
+     ...
+29 | DB_USERNAME=<COMPLETAR>
+30 | DB_PASSWORD=<COMPLETAR>
+     ...
+48 | MQTT_BROKER_USERNAME=<COMPLETAR>
+49 | MQTT_BROKER_PASSWORD=<COMPLETAR>
+     ...
+57 | CLOUDFLARE_API_KEY=<COMPLETAR>
+   |
+```
+
+
 
 <ol>
   <li>Se corre el comando "npm install" en los directorios: API y MQTT.</li>
@@ -98,3 +128,25 @@ No tiene contraseña de acceso, pero se necesita un archivo `.pem` para acceder.
   <li>Se corre el comando "docker-compose build" y luego "docker-compose up".</li>
   <li>Luego, el puerto para probar la API estará dado por "API_PORT" en el archivo ".env".</li>
 </ol>
+
+Integración continua
+
+Se hizo uso de GitHub Actions para implementar un proceso de CI.
+El flujo de trabajo se define en un archivo YAML ubicado en la carpeta `.github/workflows` del repositorio y se ejecuta
+con cada push a las ramas `main`, `development`, `fix/*` y `feat/*`.
+
+1. Actualiza el repositorio en github
+2. Settea las variables de entorno
+3. Crea un ambiente de trabajo de node
+4. Instala las dependencias del proyecto
+5. Realiza las migraciones en la base de datos e integra los datos de las seeds
+6. Ejecuta los tests básicos
+7. Corre un lint
+
+Diagrama UML de despliegue
+
+Se encuentra en un archivo .xml que se puede abrir con cualquier editor que use el mismo estádar de diagrams.net,
+o con drawio.
+
+![](./docs/diagramaArquiSis.drawio.png)
+![](../docs/diagramaArquiSis.drawio.png)
