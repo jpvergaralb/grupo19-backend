@@ -7,7 +7,7 @@ const {
   getUserRequests,
   postUser,
   postUpdateWallet,
-  updateUsersPhone
+  updateUsersPhone,
 } = require('../controllers/user.controller');
 
 const userRoutes = express.Router();

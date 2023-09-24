@@ -149,7 +149,7 @@ const postUpdateWallet = async (req, res) => {
 };
 
 const updateUsersPhone = async (req, res) => {
-  const {auth0Id, phone} = req.body;
+  const { auth0Id, phone } = req.body;
 
   if (!auth0Id || !phone) {
     return res.status(400).json({ message: 'Missing parameters: either auth0Id or phone.' });
@@ -175,8 +175,7 @@ const updateUsersPhone = async (req, res) => {
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }
-}
-
+};
 
 module.exports = {
   getUsers,
