@@ -120,16 +120,22 @@ cp template.env .env
    |
 ```
 
+3- Levantar el proyecto en modo producción
 
+Correr el siguiente script:
+```bash
+./deploy.production.unix.sh
+```
 
-<ol>
-  <li>Se corre el comando "npm install" en los directorios: API y MQTT.</li>
-  <li>Se debe crear el archivo ".env" siguiendo el formato del archivo "template.env" donde se deberán rellenar las variables sin valores. Sin embargo, hay que considerar que las variables MQTT_BROKER_USERNAME y MQTT_BROKER_PASSWORD deben ir con los valores dados por enunciado</li>
-  <li>Se corre el comando "docker-compose build" y luego "docker-compose up".</li>
-  <li>Luego, el puerto para probar la API estará dado por "API_PORT" en el archivo ".env".</li>
-</ol>
+Tiene las instrucciones de:
+- construir las imágenes de docker que se hacen a partir de nuestro código.
+- Descargar las imágenes de docker faltantes que usamos para el proyecto
+- Crear los contenedores de docker
+- Levantar los contenedores de docker en segundo plano (_daemonized_)
 
-Integración continua
+El backend debería estar disponible en `http://localhost:${API_PORT}/stocks`
+
+## Integración continua
 
 Se hizo uso de GitHub Actions para implementar un proceso de CI.
 El flujo de trabajo se define en un archivo YAML ubicado en la carpeta `.github/workflows` del repositorio y se ejecuta
@@ -143,9 +149,9 @@ con cada push a las ramas `main`, `development`, `fix/*` y `feat/*`.
 6. Ejecuta los tests básicos
 7. Corre un lint
 
-Diagrama UML de despliegue
+## Diagrama UML de despliegue
 
-Se encuentra en un archivo .xml que se puede abrir con cualquier editor que use el mismo estádar de diagrams.net,
+Se encuentra en un archivo .xml que se puede abrir con cualquier editor que use el mismo estádar de diagrams.net
 o con drawio.
 
 ![](./docs/diagramaArquiSis.drawio.png)
