@@ -46,7 +46,7 @@ personal.
 - [X] RNF03 (2 ptos) (Esencial):
  Deben tener configuradas Budget alerts en la cuenta que ocupen como grupo, para no alejarse del Free tier de AWS y que
  se den cuenta si les cobran para que cierren esos servicios.
-- [ ] RNF04 (6 ptos) (Esencial): 
+- [X] RNF04 (6 ptos) (Esencial): 
  Su API debe estar detrás de una AWS API gateway tipo REST o HTTP, con los endpoints declarados en esta.
  **Debe asociarse un subdominio a esta (e.g. api.miapp.com) y debe tener CORS correctamente configurado.**
 - [X] RNF05 (3 ptos) (Esencial): Su app debe ofrecer su backend y frontend utilizando HTTPS.

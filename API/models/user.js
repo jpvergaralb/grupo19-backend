@@ -136,7 +136,7 @@ module.exports = (sequelize, DataTypes) => {
     };
 
     User.prototype.processUserLocation = async function (req) {
-        const userIP = req.connection.remoteAddress || req.ip || req.headers['x-forwarded-for'];
+        const userIP = req.connection.remoteAddress || req.ip || req.headers['x-forwarded-for'] || req.body.ip;
         // const userIP = "2800:300:6713:c9f0::3"
         try {
             const ipInfo = await axios.get(`http://ipinfo.io/${userIP}?token=${process.env.IP_INFO_TOKEN}`);
