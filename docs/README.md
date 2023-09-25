@@ -10,7 +10,7 @@
 - [MQTT listener: mqtt.arqui.ljg.cl](https://mqtt.arqui.ljg.cl)
 - [Documentación con Postman](https://documenter.getpostman.com/view/20894725/2s9YC7RqfQ#16a7b195-e005-470d-a011-c92a5c9822fe)
  La documentación de la API Gateway se encuentra en [el json anexo](./ArquisisE1-ApiGatewayV2-oas30-postman.json)
-- [API Gateway](gateway.ljg.cl/v1) con dominio personalizado
+- [API Gateway](https://gateway.ljg.cl/api/v1/users) con dominio personalizado
 
 ## Características implementadas y no implementadas
 
