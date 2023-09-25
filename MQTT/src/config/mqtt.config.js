@@ -1,13 +1,11 @@
-const mqtt = require('mqtt')
 require('dotenv').config()
 
-const url = 'mqtt://' + process.env.HOST + ':' + process.env.PORT 
+const url = 'mqtt://' + process.env.MQTT_BROKER_HOST + ':' + process.env.MQTT_BROKER_PORT
 const options = {
-  username: process.env.USERNAME,
-  password: process.env.PASSWORD
+  username: process.env.MQTT_BROKER_USERNAME,
+  password: process.env.MQTT_BROKER_PASSWORD
 }
-const client = mqtt.connect(url, options)
 
-module.exports = { 
-  client 
+module.exports = {
+  url, options
 }

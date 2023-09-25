@@ -1,11 +1,34 @@
-const express = require('express')
-const { 
-    postUser
-} = require('../controllers/user.controller')
+const express = require('express');
 
-const userRoutes = express.Router()
+const {
+  getUsers,
+  getUser,
+  getUserByAuthId,
+  getUserRequests,
+  postUser,
+  postUpdateWallet,
+  updateUsersPhone,
+} = require('../controllers/user.controller');
+
+const userRoutes = express.Router();
 
 userRoutes.route('/')
-          .post(postUser)
+  .get(getUsers)
+  .post(postUser);
 
-module.exports = userRoutes
+userRoutes.route('/requests/:id/')
+  .get(getUserRequests);
+
+userRoutes.route('/auth/:id')
+  .get(getUserByAuthId);
+
+userRoutes.route('/update')
+  .post(updateUsersPhone);
+
+userRoutes.route('/wallet/:id')
+  .post(postUpdateWallet);
+
+userRoutes.route('/:id')
+  .get(getUser);
+
+module.exports = userRoutes;

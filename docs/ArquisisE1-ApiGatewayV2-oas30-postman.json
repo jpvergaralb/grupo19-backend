@@ -1,0 +1,1175 @@
+{
+  "openapi" : "3.0.1",
+  "info" : {
+    "title" : "ArquisisE1",
+    "description" : "Your first API with Amazon API Gateway. This is a sample API that integrates via HTTP with our demo Pet Store endpoints",
+    "version" : "2023-09-24T04:02:34Z"
+  },
+  "servers" : [ {
+    "url" : "https://lhlol718va.execute-api.us-east-2.amazonaws.com/{basePath}",
+    "variables" : {
+      "basePath" : {
+        "default" : "ApiGatewayV2"
+      }
+    }
+  } ],
+  "paths" : {
+    "/api/v1/validations" : {
+      "get" : {
+        "responses" : {
+          "200" : {
+            "description" : "Successful operation",
+            "headers" : {
+              "Access-Control-Allow-Origin" : {
+                "description" : "URI that may access the resource",
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            },
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Empty"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post" : {
+        "responses" : {
+          "200" : {
+            "description" : "Successful operation",
+            "headers" : {
+              "Access-Control-Allow-Origin" : {
+                "description" : "URI that may access the resource",
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            },
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Empty"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "jwt-rsa-custom-authorizer" : [ ]
+        } ]
+      },
+      "options" : {
+        "responses" : {
+          "200" : {
+            "description" : "Successful operation",
+            "headers" : {
+              "Access-Control-Allow-Origin" : {
+                "description" : "URI that may access the resource",
+                "schema" : {
+                  "type" : "string"
+                }
+              },
+              "Access-Control-Allow-Methods" : {
+                "description" : "Method or methods allowed when accessing the resource",
+                "schema" : {
+                  "type" : "string"
+                }
+              },
+              "Access-Control-Allow-Headers" : {
+                "description" : "Used in response to a preflight request to indicate which HTTP headers can be used when making the request.",
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            },
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Empty"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/stocks/companies" : {
+      "get" : {
+        "responses" : {
+          "200" : {
+            "description" : "Successful operation",
+            "headers" : {
+              "Access-Control-Allow-Origin" : {
+                "description" : "URI that may access the resource",
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            },
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Empty"
+                }
+              }
+            }
+          }
+        }
+      },
+      "options" : {
+        "responses" : {
+          "200" : {
+            "description" : "Successful operation",
+            "headers" : {
+              "Access-Control-Allow-Origin" : {
+                "description" : "URI that may access the resource",
+                "schema" : {
+                  "type" : "string"
+                }
+              },
+              "Access-Control-Allow-Methods" : {
+                "description" : "Method or methods allowed when accessing the resource",
+                "schema" : {
+                  "type" : "string"
+                }
+              },
+              "Access-Control-Allow-Headers" : {
+                "description" : "Used in response to a preflight request to indicate which HTTP headers can be used when making the request.",
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            },
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Empty"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/users/wallet/{id}" : {
+      "post" : {
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Successful operation",
+            "headers" : {
+              "Access-Control-Allow-Origin" : {
+                "description" : "URI that may access the resource",
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            },
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Empty"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "jwt-rsa-custom-authorizer" : [ ]
+        } ]
+      },
+      "options" : {
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Successful operation",
+            "headers" : {
+              "Access-Control-Allow-Origin" : {
+                "description" : "URI that may access the resource",
+                "schema" : {
+                  "type" : "string"
+                }
+              },
+              "Access-Control-Allow-Methods" : {
+                "description" : "Method or methods allowed when accessing the resource",
+                "schema" : {
+                  "type" : "string"
+                }
+              },
+              "Access-Control-Allow-Headers" : {
+                "description" : "Used in response to a preflight request to indicate which HTTP headers can be used when making the request.",
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            },
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Empty"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/users/auth" : {
+      "options" : {
+        "responses" : {
+          "200" : {
+            "description" : "Successful operation",
+            "headers" : {
+              "Access-Control-Allow-Origin" : {
+                "description" : "URI that may access the resource",
+                "schema" : {
+                  "type" : "string"
+                }
+              },
+              "Access-Control-Allow-Methods" : {
+                "description" : "Method or methods allowed when accessing the resource",
+                "schema" : {
+                  "type" : "string"
+                }
+              },
+              "Access-Control-Allow-Headers" : {
+                "description" : "Used in response to a preflight request to indicate which HTTP headers can be used when making the request.",
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            },
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Empty"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/users/requests/{id}" : {
+      "get" : {
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Successful operation",
+            "headers" : {
+              "Access-Control-Allow-Origin" : {
+                "description" : "URI that may access the resource",
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            },
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Empty"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "jwt-rsa-custom-authorizer" : [ ]
+        } ]
+      },
+      "options" : {
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Successful operation",
+            "headers" : {
+              "Access-Control-Allow-Origin" : {
+                "description" : "URI that may access the resource",
+                "schema" : {
+                  "type" : "string"
+                }
+              },
+              "Access-Control-Allow-Methods" : {
+                "description" : "Method or methods allowed when accessing the resource",
+                "schema" : {
+                  "type" : "string"
+                }
+              },
+              "Access-Control-Allow-Headers" : {
+                "description" : "Used in response to a preflight request to indicate which HTTP headers can be used when making the request.",
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            },
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Empty"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/users/requests" : {
+      "options" : {
+        "responses" : {
+          "200" : {
+            "description" : "Successful operation",
+            "headers" : {
+              "Access-Control-Allow-Origin" : {
+                "description" : "URI that may access the resource",
+                "schema" : {
+                  "type" : "string"
+                }
+              },
+              "Access-Control-Allow-Methods" : {
+                "description" : "Method or methods allowed when accessing the resource",
+                "schema" : {
+                  "type" : "string"
+                }
+              },
+              "Access-Control-Allow-Headers" : {
+                "description" : "Used in response to a preflight request to indicate which HTTP headers can be used when making the request.",
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            },
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Empty"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/mqtt/v1/requests" : {
+      "get" : {
+        "responses" : {
+          "200" : {
+            "description" : "Successful operation",
+            "headers" : {
+              "Access-Control-Allow-Origin" : {
+                "description" : "URI that may access the resource",
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            },
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Empty"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post" : {
+        "responses" : {
+          "200" : {
+            "description" : "Successful operation",
+            "headers" : {
+              "Access-Control-Allow-Origin" : {
+                "description" : "URI that may access the resource",
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            },
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Empty"
+                }
+              }
+            }
+          }
+        }
+      },
+      "options" : {
+        "responses" : {
+          "200" : {
+            "description" : "Successful operation",
+            "headers" : {
+              "Access-Control-Allow-Origin" : {
+                "description" : "URI that may access the resource",
+                "schema" : {
+                  "type" : "string"
+                }
+              },
+              "Access-Control-Allow-Methods" : {
+                "description" : "Method or methods allowed when accessing the resource",
+                "schema" : {
+                  "type" : "string"
+                }
+              },
+              "Access-Control-Allow-Headers" : {
+                "description" : "Used in response to a preflight request to indicate which HTTP headers can be used when making the request.",
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            },
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Empty"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/stocks/{name}" : {
+      "get" : {
+        "parameters" : [ {
+          "name" : "name",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Successful operation",
+            "headers" : {
+              "Access-Control-Allow-Origin" : {
+                "description" : "URI that may access the resource",
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            },
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Empty"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "jwt-rsa-custom-authorizer" : [ ]
+        } ]
+      },
+      "options" : {
+        "parameters" : [ {
+          "name" : "name",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Successful operation",
+            "headers" : {
+              "Access-Control-Allow-Origin" : {
+                "description" : "URI that may access the resource",
+                "schema" : {
+                  "type" : "string"
+                }
+              },
+              "Access-Control-Allow-Methods" : {
+                "description" : "Method or methods allowed when accessing the resource",
+                "schema" : {
+                  "type" : "string"
+                }
+              },
+              "Access-Control-Allow-Headers" : {
+                "description" : "Used in response to a preflight request to indicate which HTTP headers can be used when making the request.",
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            },
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Empty"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/users/wallet" : {
+      "options" : {
+        "responses" : {
+          "200" : {
+            "description" : "Successful operation",
+            "headers" : {
+              "Access-Control-Allow-Origin" : {
+                "description" : "URI that may access the resource",
+                "schema" : {
+                  "type" : "string"
+                }
+              },
+              "Access-Control-Allow-Methods" : {
+                "description" : "Method or methods allowed when accessing the resource",
+                "schema" : {
+                  "type" : "string"
+                }
+              },
+              "Access-Control-Allow-Headers" : {
+                "description" : "Used in response to a preflight request to indicate which HTTP headers can be used when making the request.",
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            },
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Empty"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/users" : {
+      "get" : {
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "query",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Successful operation",
+            "headers" : {
+              "Access-Control-Allow-Origin" : {
+                "description" : "URI that may access the resource",
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            },
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Empty"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post" : {
+        "responses" : {
+          "200" : {
+            "description" : "Successful operation",
+            "headers" : {
+              "Access-Control-Allow-Origin" : {
+                "description" : "URI that may access the resource",
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            },
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Empty"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "jwt-rsa-custom-authorizer" : [ ]
+        } ]
+      },
+      "options" : {
+        "responses" : {
+          "200" : {
+            "description" : "Successful operation",
+            "headers" : {
+              "Access-Control-Allow-Origin" : {
+                "description" : "URI that may access the resource",
+                "schema" : {
+                  "type" : "string"
+                }
+              },
+              "Access-Control-Allow-Methods" : {
+                "description" : "Method or methods allowed when accessing the resource",
+                "schema" : {
+                  "type" : "string"
+                }
+              },
+              "Access-Control-Allow-Headers" : {
+                "description" : "Used in response to a preflight request to indicate which HTTP headers can be used when making the request.",
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            },
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Empty"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/" : {
+      "get" : {
+        "tags" : [ "pets" ],
+        "description" : "PetStore HTML web page containing API usage information",
+        "responses" : {
+          "200" : {
+            "description" : "Successful operation",
+            "headers" : {
+              "Access-Control-Allow-Origin" : {
+                "description" : "URI that may access the resource",
+                "schema" : {
+                  "type" : "string"
+                }
+              },
+              "Content-Type" : {
+                "description" : "Media type of request",
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            },
+            "content" : { }
+          }
+        },
+        "security" : [ {
+          "jwt-rsa-custom-authorizer" : [ ]
+        } ]
+      },
+      "options" : {
+        "responses" : {
+          "200" : {
+            "description" : "Successful operation",
+            "headers" : {
+              "Access-Control-Allow-Origin" : {
+                "description" : "URI that may access the resource",
+                "schema" : {
+                  "type" : "string"
+                }
+              },
+              "Access-Control-Allow-Methods" : {
+                "description" : "Method or methods allowed when accessing the resource",
+                "schema" : {
+                  "type" : "string"
+                }
+              },
+              "Access-Control-Allow-Headers" : {
+                "description" : "Used in response to a preflight request to indicate which HTTP headers can be used when making the request.",
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            },
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Empty"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/stocks" : {
+      "get" : {
+        "responses" : {
+          "200" : {
+            "description" : "Successful operation",
+            "headers" : {
+              "Access-Control-Allow-Origin" : {
+                "description" : "URI that may access the resource",
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            },
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Empty"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post" : {
+        "responses" : {
+          "200" : {
+            "description" : "Successful operation",
+            "headers" : {
+              "Access-Control-Allow-Origin" : {
+                "description" : "URI that may access the resource",
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            },
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Empty"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "jwt-rsa-custom-authorizer" : [ ]
+        } ]
+      },
+      "options" : {
+        "responses" : {
+          "200" : {
+            "description" : "Successful operation",
+            "headers" : {
+              "Access-Control-Allow-Origin" : {
+                "description" : "URI that may access the resource",
+                "schema" : {
+                  "type" : "string"
+                }
+              },
+              "Access-Control-Allow-Methods" : {
+                "description" : "Method or methods allowed when accessing the resource",
+                "schema" : {
+                  "type" : "string"
+                }
+              },
+              "Access-Control-Allow-Headers" : {
+                "description" : "Used in response to a preflight request to indicate which HTTP headers can be used when making the request.",
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            },
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Empty"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/users/auth/{id}" : {
+      "get" : {
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Successful operation",
+            "headers" : {
+              "Access-Control-Allow-Origin" : {
+                "description" : "URI that may access the resource",
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            },
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Empty"
+                }
+              }
+            }
+          }
+        }
+      },
+      "options" : {
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Successful operation",
+            "headers" : {
+              "Access-Control-Allow-Origin" : {
+                "description" : "URI that may access the resource",
+                "schema" : {
+                  "type" : "string"
+                }
+              },
+              "Access-Control-Allow-Methods" : {
+                "description" : "Method or methods allowed when accessing the resource",
+                "schema" : {
+                  "type" : "string"
+                }
+              },
+              "Access-Control-Allow-Headers" : {
+                "description" : "Used in response to a preflight request to indicate which HTTP headers can be used when making the request.",
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            },
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Empty"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/requests" : {
+      "get" : {
+        "responses" : {
+          "200" : {
+            "description" : "Successful operation",
+            "headers" : {
+              "Access-Control-Allow-Origin" : {
+                "description" : "URI that may access the resource",
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            },
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Empty"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "jwt-rsa-custom-authorizer" : [ ]
+        } ]
+      },
+      "post" : {
+        "responses" : {
+          "200" : {
+            "description" : "Successful operation",
+            "headers" : {
+              "Access-Control-Allow-Origin" : {
+                "description" : "URI that may access the resource",
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            },
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Empty"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "jwt-rsa-custom-authorizer" : [ ]
+        } ]
+      },
+      "options" : {
+        "responses" : {
+          "200" : {
+            "description" : "Successful operation",
+            "headers" : {
+              "Access-Control-Allow-Origin" : {
+                "description" : "URI that may access the resource",
+                "schema" : {
+                  "type" : "string"
+                }
+              },
+              "Access-Control-Allow-Methods" : {
+                "description" : "Method or methods allowed when accessing the resource",
+                "schema" : {
+                  "type" : "string"
+                }
+              },
+              "Access-Control-Allow-Headers" : {
+                "description" : "Used in response to a preflight request to indicate which HTTP headers can be used when making the request.",
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            },
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Empty"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/users/{id}" : {
+      "get" : {
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Successful operation",
+            "headers" : {
+              "Access-Control-Allow-Origin" : {
+                "description" : "URI that may access the resource",
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            },
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Empty"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "jwt-rsa-custom-authorizer" : [ ]
+        } ]
+      },
+      "options" : {
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Successful operation",
+            "headers" : {
+              "Access-Control-Allow-Origin" : {
+                "description" : "URI that may access the resource",
+                "schema" : {
+                  "type" : "string"
+                }
+              },
+              "Access-Control-Allow-Methods" : {
+                "description" : "Method or methods allowed when accessing the resource",
+                "schema" : {
+                  "type" : "string"
+                }
+              },
+              "Access-Control-Allow-Headers" : {
+                "description" : "Used in response to a preflight request to indicate which HTTP headers can be used when making the request.",
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            },
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Empty"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/mqtt" : {
+      "options" : {
+        "responses" : {
+          "200" : {
+            "description" : "Successful operation",
+            "headers" : {
+              "Access-Control-Allow-Origin" : {
+                "description" : "URI that may access the resource",
+                "schema" : {
+                  "type" : "string"
+                }
+              },
+              "Access-Control-Allow-Methods" : {
+                "description" : "Method or methods allowed when accessing the resource",
+                "schema" : {
+                  "type" : "string"
+                }
+              },
+              "Access-Control-Allow-Headers" : {
+                "description" : "Used in response to a preflight request to indicate which HTTP headers can be used when making the request.",
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            },
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Empty"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api" : {
+      "options" : {
+        "responses" : {
+          "200" : {
+            "description" : "Successful operation",
+            "headers" : {
+              "Access-Control-Allow-Origin" : {
+                "description" : "URI that may access the resource",
+                "schema" : {
+                  "type" : "string"
+                }
+              },
+              "Access-Control-Allow-Methods" : {
+                "description" : "Method or methods allowed when accessing the resource",
+                "schema" : {
+                  "type" : "string"
+                }
+              },
+              "Access-Control-Allow-Headers" : {
+                "description" : "Used in response to a preflight request to indicate which HTTP headers can be used when making the request.",
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            },
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Empty"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/mqtt/v1" : {
+      "options" : {
+        "responses" : {
+          "200" : {
+            "description" : "Successful operation",
+            "headers" : {
+              "Access-Control-Allow-Origin" : {
+                "description" : "URI that may access the resource",
+                "schema" : {
+                  "type" : "string"
+                }
+              },
+              "Access-Control-Allow-Methods" : {
+                "description" : "Method or methods allowed when accessing the resource",
+                "schema" : {
+                  "type" : "string"
+                }
+              },
+              "Access-Control-Allow-Headers" : {
+                "description" : "Used in response to a preflight request to indicate which HTTP headers can be used when making the request.",
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            },
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Empty"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components" : {
+    "schemas" : {
+      "Empty" : {
+        "type" : "object"
+      }
+    },
+    "securitySchemes" : {
+      "jwt-rsa-custom-authorizer" : {
+        "type" : "apiKey",
+        "name" : "Authorization",
+        "in" : "header",
+        "x-amazon-apigateway-authtype" : "custom"
+      }
+    }
+  }
+}

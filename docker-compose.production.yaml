@@ -1,0 +1,131 @@
+version: '3'
+
+# Común a todos los contenedores
+x-defaults-container: &container-defaults
+  restart: unless-stopped
+  stop_grace_period: 3s
+
+services:
+  nginx:
+    image: nginx:1.25.2-alpine
+    container_name: nginx
+    ports:
+      - ${NGINX_HTTP_PORT:-80}:80
+      - ${NGINX_HTTPS_PORT:-443}:443
+    volumes:
+      # Logs
+      - ./nginx/logs:/var/log/nginx
+      # Certificados
+      - ./nginx/templates/letsencrypt:/etc/nginx/templates/letsencrypt
+      # Configs sitios
+      - ./nginx/templates:/etc/nginx/templates
+    <<: *container-defaults
+    depends_on:
+      - cloudflare-ddns
+
+  api:
+    build:
+      context: ./API
+      dockerfile: production.Dockerfile
+      args:
+        API_PORT: ${API_PORT}
+        NODE_VERSION: ${API_NODE_VERSION:-16}
+    container_name: api
+    env_file:
+      - .env
+    ports:
+      - "${API_PORT:-8000}:${API_PORT:-8000}"
+    depends_on:
+      - db
+      - nginx
+    <<: *container-defaults
+
+  mqtt:
+    build:
+      context: ./MQTT
+      dockerfile: production.Dockerfile
+      args:
+        MQTT_API_PORT: ${MQTT_API_PORT:-8001}
+        NODE_VERSION: ${MQTT_API_NODE_VERSION:-16}
+    container_name: mqtt
+    env_file:
+      - .env
+    ports:
+      - "${MQTT_API_PORT:-8001}:${MQTT_API_PORT:-8001}"
+    <<: *container-defaults
+    depends_on:
+      - db
+      - nginx
+      - api
+
+  db:
+    image: postgres:12.8
+    volumes:
+      - postgres_data1256513:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: ${DB_NAME:-postgres}
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      PGPORT: ${DB_PORT:-5432}
+    container_name: db
+    ports:
+      - "${DB_PORT:-5432}:${DB_PORT:-5432}"
+    <<: *container-defaults
+    depends_on:
+      - nginx
+
+  # https://github.com/favonia/cloudflare-ddns/blob/main/README.markdown
+  cloudflare-ddns:
+    image: favonia/cloudflare-ddns
+    container_name: cloudflare-ddns
+    # This makes IPv6 easier; see below
+    network_mode: host
+    # Restart the updater after reboot
+    restart: always
+    cap_add:
+      # Capability to change user ID; needed for using PUID
+      - SETUID
+      # Capability to change group ID; needed for using PGID
+      - SETGID
+    # Make the container filesystem read-only
+    read_only: true
+    security_opt:
+      # Another protection to restrict superuser privileges
+      - no-new-privileges:true
+    environment:
+      # Run the updater with user ID 1000
+      - PUID=1000
+      # Run the updater with group ID 1000
+      - PGID=1000
+      # Your Cloudflare API token
+      - CF_API_TOKEN=${CLOUDFLARE_API_KEY}
+      # Your domains (separated by commas)
+      #- DOMAINS=${DDNS_DOMAINS}
+      - IP4_DOMAINS=${DDNS_DOMAINS}
+      # Tell Cloudflare to cache webpages and hide your IP
+      - PROXIED=false
+      - CACHE_EXPIRATION=6h0m0s
+      - DETECTION_TIMEOUT=15s
+      - TZ=America/Santiago
+      - UPDATE_CRON=@every 15m
+      - UPDATE_ON_START=true
+      - UPDATE_TIMEOUT=30s
+      - TTL=1
+      - EMOJI=true
+
+
+  # Monitoreo
+#  dashdot:
+#    image: mauricenino/dashdot
+#    container_name: dashdot
+#    expose:
+#      - 3001
+#    volumes:
+#      - '/:/mnt/host:ro'
+#    privileged: true
+#    restart: always
+#    depends_on:
+#      - nginx
+
+volumes:
+  postgres_data1256513:
