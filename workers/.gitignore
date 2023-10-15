@@ -89,3 +89,7 @@ ENV/
 # Rope project settings
 .ropeproject
 
+# ------------------------------
+venv-3.11
+!venv-3.11/.keep
+.env
