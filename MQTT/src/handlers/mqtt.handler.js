@@ -32,7 +32,8 @@ module.exports = function (client) {
     
     // Suscribirse a los canales usando la función
     [process.env.MQTT_API_INFO_CHANNEL,
-      process.env.MQTT_API_VALIDATION_CHANNEL
+      process.env.MQTT_API_VALIDATION_CHANNEL, 
+      process.env.MQTT_API_REQUEST_CHANNEL
     ].forEach(subscribeToChannel);
   });
   
@@ -49,7 +50,8 @@ module.exports = function (client) {
     // Dirigir el post en función de canal al que se suscribió
     const topicToApiPath = {
       [process.env.MQTT_API_INFO_CHANNEL]: '/stocks',
-      [process.env.MQTT_API_VALIDATION_CHANNEL]: '/validations'
+      [process.env.MQTT_API_VALIDATION_CHANNEL]: '/validations',
+      [process.env.MQTT_API_REQUEST_CHANNEL]: '/requests',
     };
     
     const apiPath = topicToApiPath[topic];
@@ -74,7 +76,6 @@ module.exports = function (client) {
       msg = JSON.parse(message.toString());
       data = msg;
     }
-    
     try {
       console.log(`📨| Enviando datos a ${url}`);
       const response = await axios.post(url, data);

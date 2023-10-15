@@ -127,6 +127,30 @@ const postRequests = async (req, res) => {
       return res.status(400).json({ message: 'Request body is missing' });
     }
 
+    if (group_id !== process.env.GROUP_NUMBER) {
+      if (
+        !group_id
+        || !symbol
+        || !datetime
+        || deposit_token !== ''
+        || !quantity
+        || seller === undefined
+      )
+        {
+          await Request.create({
+            user_id: process.env.MOCK_USER_UUID,
+            stock_id: lastStock.id,
+            group_id,
+            symbol,
+            datetime,
+            deposit_token,
+            quantity,
+            seller,
+            location,
+          });
+        }
+    }
+
     const {
       user_id, group_id, symbol, datetime, deposit_token, quantity, seller,
     } = request;
