@@ -41,6 +41,9 @@ coloredlogs.install(
     field_styles=field_styles,
     fmt="[%(runtime)s] [%(name)s] [%(levelname)s] - %(message)s")
 
+# Redefinir "print" como "log.debug".
+print = logger.debug
+
 if __name__ == '__main__':
     logger.debug("Hello World!")
     logger.info("Hello World!")
