@@ -4,6 +4,8 @@ from environment import env
 from logs import logger as log
 from logs import print
 
+import task
+
 import uvicorn
 
 
@@ -17,6 +19,10 @@ async def root() -> dict:
         "code": 200,
         "message": "I am gRoot"
     }
+
+@app.get("/test/{num1}/{num2}")
+async def prueba_con_suma(num1: str, num2: str) -> dict:
+
 
 # ---------------------
 
