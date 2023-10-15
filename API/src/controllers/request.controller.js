@@ -1,9 +1,11 @@
 const axios = require('axios');
 const db = require('../../models');
+const tx = require('../../utils/trx');
 
 const Request = db.request;
 const User = db.user;
 const Stock = db.stock;
+const Transaction = db.transaction;
 
 const getRequests = async (req, res) => {
   console.log('📠| GET request recibida a /requests');
@@ -189,6 +191,89 @@ const postRequests = async (req, res) => {
   return null;
 };
 
+const confirmRequestToWebpay = async (req, res) => {
+  console.log('📠| POST request recibida a /requests/webpay en API');
+
+  try {
+    const request = req.body;
+
+    if (!request) {
+      return res.status(400).json({ message: 'Request body is missing' });
+    }
+
+    const {
+      user_id, group_id, symbol, datetime, deposit_token, quantity, seller,
+    } = request;
+
+    if (!user_id
+      || !group_id
+      || !symbol
+      || !datetime
+      || deposit_token !== ''
+      || !quantity
+      || seller === undefined
+    ) {
+      return res.status(400).json({ message: 'Missing required fields' });
+    }
+
+    const user = await User.findByPk(user_id);
+    if (!user) {
+      return res.status(404).json({ message: `User ${user_id} not found` });
+    }
+    const lastStock = await Stock.findOne({
+      where: { symbol },
+      order: [['createdAt', 'DESC']],
+    });
+    if (!lastStock) {
+      return res.status(404).json({ message: `Stock ${symbol} not found` });
+    }
+
+    const location = await user.processUserLocation(req);
+    console.log(`📍 | User ${user.username} sent a buy request from ${location}`);
+
+    const newRequest = await Request.create({
+      user_id,
+      stock_id: lastStock.id,
+      group_id,
+      symbol,
+      datetime,
+      deposit_token,
+      quantity,
+      seller,
+      location,
+    });
+
+    const newTransaction = await Transaction.create({
+      user_id,
+      request_id: newRequest.id,
+      stock_symbol: symbol,
+      quantity,
+      amount: lastStock.price * quantity,
+    });
+
+    const redirect_url = process.env.WEBPAY_REDIRECT_URL ? `${process.env.WEBPAY_REDIRECT_URL}/${symbol}` : 'http://localhost:8080';
+
+    const trx = await tx.create(newTransaction.id, 'grupo-19-stocks', newTransaction.amount, redirect_url);
+
+    await db.transaction.update({
+      where: {
+        id: newTransaction.id,
+      },
+      data: {
+        token: trx.token,
+      },
+    });
+
+    res.body = trx;
+    return res.status(201).json({ message: `Transaction ${newTransaction.id} from user ${user_id}: waiting payment` });
+  } catch (error) {
+    res.status(500).json({ message: 'Internal Server Error from API', error });
+  }
+
+  console.log('📞| Fin del mensaje a /requests/webpay');
+  return null;
+};
+
 const updateRequestStatus = async (req, res) => {
   console.log('📠| POST request recibida a /updateRequestStatus en API');
   console.log(req.body);
@@ -202,4 +287,5 @@ module.exports = {
   getRequestsByGroupId,
   getRequestsBySymbol,
   getRequestsBySeller,
+  confirmRequestToWebpay,
 };
