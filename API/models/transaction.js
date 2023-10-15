@@ -12,6 +12,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       transaction.belongsTo(models.user, { foreignKey: 'user_id' });
+      transaction.belongsTo(models.request, { foreignKey: 'request_id' });
     }
   }
   transaction.init({
@@ -30,6 +31,18 @@ module.exports = (sequelize, DataTypes) => {
         },
         notNull: {
           msg: 'User ID cannot be null',
+        },
+      },
+    },
+    request_id: {
+      type: DataTypes.UUID,
+      allowNull: false,
+      validate: {
+        notEmpty: {
+          msg: 'Request ID cannot be empty',
+        },
+        notNull: {
+          msg: 'Request ID cannot be null',
         },
       },
     },
