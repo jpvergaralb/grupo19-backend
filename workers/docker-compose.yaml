@@ -1,58 +1,63 @@
 version: "3.8"
 
-services:
-#  api_workers:
-#    container_name: api_workers
-#    command: /bin/bash -c "/app/entrypoint.api.sh"
-#    build:
-#      context: .
-#      dockerfile: Dockerfile
-#    expose:
-#      - 8001
-#    ports:
-#      - 8001:8001
-#    env_file:
-#      - ./.env
-#      #- ./template.env
-#    restart: unless-stopped
-#    depends_on:
-#      - redis_workers
+x-celery-worker-defaults: &celery-worker-defaults
+  command: /bin/bash -c "/app/entrypoint.celery.sh"
+  build:
+    context: .
+    dockerfile: Dockerfile
+  env_file:
+    - ./.env
+    #- ./template.env
+  depends_on:
+    - redis_workers
+  restart: unless-stopped
+  # TODO: Sacar
+  volumes:
+    - ./src:/app
+  stop_grace_period: 5s
 
-  celery_worker:
-    container_name: celery_workers
-    command: /bin/bash -c "/app/entrypoint.celery.sh"
-    build:
-      context: .
-      dockerfile: Dockerfile
-    env_file:
-      - ./.env
-      #- ./template.env
+x-python-defaults: &python-defaults
+  build:
+    context: .
+    dockerfile: Dockerfile
+  env_file:
+    - ./.env
+    #- ./template.env
+  volumes:
+      - ./src:/app
+  stop_grace_period: 5s
+
+services:
+  api_workers:
+    container_name: api_workers
+    command: /bin/bash -c "/app/entrypoint.api.sh"
+    <<: *python-defaults
+    expose:
+      - 8001
+    ports:
+      - 8001:8001
+    restart: unless-stopped
     depends_on:
       - redis_workers
-    restart: unless-stopped
-    # TODO: Sacar
-    volumes:
-      - ./src:/app
-    stop_grace_period: 5s
 
-  pytest_worker:
+  celery_workers:
+    container_name: celery_workers
+    <<: *celery-worker-defaults
+
+  celery_workers_2:
+    container_name: celery_worker_2
+    <<: *celery-worker-defaults
+
+  pytest_workers:
     container_name: pytest_workers
     command: /bin/bash -c "/app/entrypoint.pytest.sh"
-    build:
-      context: .
-      dockerfile: Dockerfile
-    env_file:
-      - ./.env
-      #- ./template.env
+    <<: *python-defaults
     depends_on:
       - redis_workers
-      - celery_worker
-      #- api_workers
+      - celery_workers
+      - celery_workers_2
+      - api_workers
     restart: no
-    # TODO: Sacar
-    volumes:
-      - ./src:/app
-    stop_grace_period: 5s
 
   redis_workers:
     container_name: redis_workers
