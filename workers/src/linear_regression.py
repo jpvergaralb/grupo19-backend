@@ -1,17 +1,16 @@
 import numpy as np
-from datetime import datetime
 
 
-def linear_regression(x, y):
+def linear_regression(x: np.ndarray, y: np.ndarray) -> (float, float):
     """
     Realiza una regresión lineal simple sobre los datos proporcionados.
 
     Parámetros
     ----------
-    x : numpy.array
+    x : numpy.ndarray
         Variable independiente, que en este contexto representa típicamente
         el tiempo.
-    y : numpy.array
+    y : numpy.ndarray
         Variable dependiente, que representa los precios de las acciones en
         este contexto.
 
@@ -39,13 +38,13 @@ def linear_regression(x, y):
     >>> print(f"y = {m:.2f}x + {b:.2f}")
     y = 0.60x + 2.20
     """
-    x_mean = np.mean(x)
-    y_mean = np.mean(y)
+    x_mean: np.float64 = np.mean(x)
+    y_mean: np.float64 = np.mean(y)
 
-    numerator = sum((x - x_mean) * (y - y_mean))
-    denominator = sum((x - x_mean) ** 2)
+    numerator: float = sum((x - float(x_mean)) * (y - float(y_mean)))
+    denominator: float = sum((x - float(x_mean)) ** 2)
 
-    m = numerator / denominator
-    b = y_mean - m * x_mean
+    m: float = numerator / denominator
+    b: float = y_mean - m * x_mean
 
     return m, b
