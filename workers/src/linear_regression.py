@@ -1,6 +1,7 @@
 import numpy as np
-
+from logs import logger as log
 from logs import print
+from environment import env
 
 
 def linear_regression(x: np.ndarray, y: np.ndarray) -> tuple[float, float]:
