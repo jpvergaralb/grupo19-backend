@@ -27,18 +27,23 @@ class CeleryJob(BaseModel):
     JobId: str
     challenges: List[StocksData]
 
+
 # ------------------------------------
 
 
+# ## Fast API
+app = FastAPI()
 
 
+# ------------------------------------
 
+# Tests
+@app.get("/")
+async def root() -> dict:
+    return {
+        "code": 200,
+        "message": "I am Root"
+    }
 
-
-
-
-
-
-
-
+# ------------------------------------
 
