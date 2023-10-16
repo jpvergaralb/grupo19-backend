@@ -249,7 +249,6 @@ if __name__ == '__main__':
 
 
     class TestLinearRegressionFunctions(unittest.TestCase):
-
         def test_linear_regression(self):
             x = np.array([1, 2, 3, 4, 5])
             y = np.array([2, 4, 5, 4, 5])
