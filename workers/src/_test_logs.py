@@ -16,7 +16,6 @@ async def test_log_output(caplog):
         log.error("Error message")
         log.critical("Critical message")
 
-        # Now, verify the log outputs
         assert "Debug message" in caplog.text
         assert "Info message" in caplog.text
         assert "Warning message" in caplog.text
