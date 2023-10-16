@@ -1,22 +1,22 @@
 version: "3.8"
 
 services:
-  api_workers:
-    container_name: api_workers
-    command: /bin/bash -c "/app/entrypoint.api.sh"
-    build:
-      context: .
-      dockerfile: Dockerfile
-    expose:
-      - 8001
-    ports:
-      - 8001:8001
-    env_file:
-      - ./.env
-      #- ./template.env
-    restart: unless-stopped
-    depends_on:
-      - redis_workers
+#  api_workers:
+#    container_name: api_workers
+#    command: /bin/bash -c "/app/entrypoint.api.sh"
+#    build:
+#      context: .
+#      dockerfile: Dockerfile
+#    expose:
+#      - 8001
+#    ports:
+#      - 8001:8001
+#    env_file:
+#      - ./.env
+#      #- ./template.env
+#    restart: unless-stopped
+#    depends_on:
+#      - redis_workers
 
   celery_worker:
     container_name: celery_workers
