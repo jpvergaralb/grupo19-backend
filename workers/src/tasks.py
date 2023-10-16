@@ -8,7 +8,7 @@ from redis import Redis
 app = Celery('tasks',
              backend='redis://redis_workers:6379/0',
              broker='redis://redis_workers:6379/0')
-redis_client = Redis(host='redis_workers', port=6379, db=0)
+
 
 
 # --------------------------------------------------
