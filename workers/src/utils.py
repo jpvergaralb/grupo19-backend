@@ -44,11 +44,11 @@ def convert_str_to_typed(value: str) -> Union[str, int, float, bool, None]:
     'ChatGPT'
     """
     match True:
-        case _ if None:
+        case _ if value in ("None", "NONE"):
             return None
 
         # Intentar convertir a int
-        case _ if value.isdigit():
+        case _ if value.isdigit() and value[0] != "0":
             return int(value)
 
         # Intentar convertir a float

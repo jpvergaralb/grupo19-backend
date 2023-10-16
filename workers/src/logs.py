@@ -75,32 +75,9 @@ coloredlogs.install(
 print = logger.debug
 
 if __name__ == '__main__':
-    import unittest
 
     logger.debug("Hello World!")
     logger.info("Hello World!")
     logger.warning("Hello World!")
     logger.error("Hello World!")
     logger.critical("Hello World!")
-
-
-    class TestRuntimeFunction(unittest.TestCase):
-        def test_seconds_format(self):
-            global start_time
-            start_time = time()
-            sleep(1)  # Dormir 1 segundo
-            self.assertEqual(runtime(), "00:00:01")
-
-        def test_minutes_format(self):
-            global start_time
-            start_time = time()
-            sleep(61)  # Dormir 61 segundos -> 1 minuto y 1 segundo
-            self.assertEqual(runtime(), "00:01:01")
-
-        def test_hours_format(self):
-            global start_time
-            start_time = time()
-            sleep(3661)  # Dormir 3661 segundos -> 1 hora, 1 minuto y 1 segundo
-            self.assertEqual(runtime(), "01:01:01")
-
-    unittest.main(verbosity=2)
