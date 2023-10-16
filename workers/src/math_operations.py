@@ -101,3 +101,46 @@ def predict_stock_value(data: dict[int, float], moment_epoch: int) -> float:
     m, b = linear_regression(x, y)
 
     return m * moment_epoch + b
+
+
+def stocks_bought_wight(stocks_bought: int) -> float:
+    """
+    --- Documentación por ChatGPT ---
+    Calcula el peso de la predicción en función de la cantidad de acciones
+    compradas.
+
+    Params
+    ----------
+    :param stocks_bought: int
+        Número de acciones compradas.
+
+    :return: float
+    -------
+        Peso de la predicción para el número especificado de acciones
+        compradas.
+
+    Notas
+    -----
+    Esta función utiliza una fórmula base para calcular el peso de la
+    predicción. La idea detrás de esta fórmula es ajustar el peso de la
+    predicción en función de la cantidad de acciones que se han comprado.
+
+    La fórmula base es:
+        1 / ((5 + n - 50) / 50)
+    donde 'n' es el número de acciones compradas.
+
+    Ejemplo
+    -------
+    >>> stocks = 55
+    >>> weight = stocks_bought_wight(stocks)
+    >>> print(f"El peso de la predicción {stocks} acciones es: {weight:.2f}")
+    # Este es solo un valor ilustrativo, no es el resultado real.
+    El peso de la predicción para 55 acciones compradas es: 0.96
+    """
+
+    def base_formula(n):
+        return 1 / ((5 + n - 50) / 50)
+
+    prediction_weight = base_formula(stocks_bought)
+
+    return prediction_weight
