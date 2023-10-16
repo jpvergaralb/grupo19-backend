@@ -17,7 +17,7 @@ async def test_post_dummy_task_singlethreaded():
         task_name = "test_dummy_task"
         response = await ac.post("/dummy_task", json={"name": task_name})
 
-        assert response.status_code == 200
+        assert response.status_code == 202
 
         data = response.json()
         assert "task_id" in data
@@ -35,7 +35,7 @@ async def test_post_dummy_task_multithreaded():
         # Función interna para hacer la solicitud POST asincrónicamente
         async def send_request(task_name):
             response = await ac.post("/dummy_task", json={"name": task_name})
-            assert response.status_code == 200
+            assert response.status_code == 202
             data = response.json()
             assert "task_id" in data
             assert "status" in data
