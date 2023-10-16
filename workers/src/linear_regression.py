@@ -90,7 +90,7 @@ def predict_stock_value(data: dict[int, float], moment_epoch: int) -> float:
     >>> epoch_moment = 1680970000
     >>> predicted_value = predict_stock_value(stocks_data, epoch_moment)
     >>> print(f"El valor predicho es: {predicted_value:.2f}")
-    El valor predicho es: 123.45  # Este es solo un valor ilustrativo, no es
+    El valor predicho es: 123.45 # Este es solo un valor ilustrativo, no es
     el resultado real.
     """
     x = np.array(list(data.keys()))
