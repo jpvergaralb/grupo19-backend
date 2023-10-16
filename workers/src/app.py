@@ -57,7 +57,7 @@ class CeleryJob(BaseModel):
     #     }
     #   ]
     # }
-    task_id: str
+    job_id: str
     stocks_predictions: List[StocksData]
 
 
@@ -159,45 +159,123 @@ def create_task(task_in: TaskIn) -> JSONResponse:
 # ------------------------------------
 
 
-@app.post("/job/")
+@app.post("/job")
 async def create_another_task(jobs: CeleryJob) -> JSONResponse:
+    """
+    --- Documentación por ChatGPT ---
+    Crea y envía múltiples tareas de predicción de acciones al servicio de
+    Celery para su procesamiento asíncrono y agrupa todas estas tareas bajo un
+    ID de trabajo único proporcionado.
+
+    Params
+    ----------
+    :param jobs: CeleryJob
+        Objeto que contiene un identificador de trabajo y una lista de
+        solicitudes de predicciones de acciones. Cada solicitud incluye
+        la fecha de inicio, el símbolo de la acción y la cantidad comprada.
+
+        Formato esperado:
+        {
+            "job_id": <str>,
+            "stocks_predictions": [
+                {
+                    "starting_date_epoch": <int>,
+                    "stock_symbol": <str>,
+                    "amount_bought": <int>
+                },
+                ...,
+                {
+                    "starting_date_epoch": <int>,
+                    "stock_symbol": <str>,
+                    "amount_bought": <int>
+                }
+            ]
+        }
+
+    :return: JSONResponse
+    -------
+        Respuesta en formato JSON que contiene el ID de trabajo y una lista
+        con los ID de las tareas y sus respectivos estados iniciales.
+
+    Notas
+    -----
+    La función utiliza el servicio Celery para procesar las tareas de
+    manera asíncrona. Los posibles estados de las tareas son:
+        - PENDING: Esperando a ser procesada.
+        - STARTED: Ha comenzado su ejecución.
+        - RETRY: Siendo reintentada por un fallo durante la ejecución.
+        - FAILURE: No pudo completarse con éxito.
+        - SUCCESS: Completada con éxito.
+        - RECEIVED: Recibida por un worker pero no ha comenzado su ejecución.
+        - REVOKED: Cancelada antes de su ejecución.
+        - REJECTED: Rechazada por un problema con el worker o configuración.
+
+    Ejemplo
+    -------
+    >>> from fastapi.testclient import TestClient
+
+    >>> client = TestClient(app)
+    >>> request_data = {
+    ...     "job_id": "unique_job_id_123",
+    ...     "stocks_predictions": [
+    ...         {
+    ...             "starting_date_epoch": 1680969060,
+    ...             "stock_symbol": "AAPL",
+    ...             "amount_bought": 100
+    ...         },
+    ...         {
+    ...             "starting_date_epoch": 1680969360,
+    ...             "stock_symbol": "GOOGL",
+    ...             "amount_bought": 50
+    ...         },
+    ...         {
+    ...             "starting_date_epoch": 1680969660,
+    ...             "stock_symbol": "AMZN",
+    ...             "amount_bought": 70
+    ...         }
+    ...     ]
+    ... }
+    >>> response = client.post("/job", json=request_data)
+    >>> print(response.json())
+    {
+        "job_id": "unique_job_id_123",
+        "tasks": [
+            {"task_id": "12345abcd", "status": "PENDING"},
+            {"task_id": "67890efgh", "status": "PENDING"},
+            {"task_id": "11223ijkl", "status": "PENDING"}
+        ]
+    }
+    """
+
     tasks: List[AsyncResult] = list()
 
     for stock_prediction_request in jobs.stocks_predictions:
-        tasks.append = celery_app.send_task(
-            "task.linear_regression",
-            args=[stock_prediction_request.starting_date_epoch,
-                  stock_prediction_request.stock_symbol,
-                  stock_prediction_request.amount_bought])
+        tasks.append(
+            celery_app.send_task(
+                "task.linear_regression",
+                args=[stock_prediction_request.starting_date_epoch,
+                      stock_prediction_request.stock_symbol,
+                      stock_prediction_request.amount_bought]))
 
-    # ---- Status codes: ----
-    # PENDING: La tarea está esperando a ser procesada.
-    # STARTED: La tarea ha comenzado su ejecución.
-    # RETRY: La tarea está siendo reintentada, posiblemente debido a un
-    #     fallo durante la ejecución.
-    # FAILURE: La tarea no ha podido completarse con éxito.
-    # SUCCESS: La tarea se ha completado con éxito.
-    # RECEIVED: La tarea ha sido recibida por un worker (proceso de
-    #     trabajo), pero aún no ha comenzado su ejecución.
-    # REVOKED: La tarea ha sido cancelada antes de su ejecución.
-    # REJECTED: La tarea ha sido rechazada por algún motivo, por lo
-    #     general, esto sucede si hay un problema con el worker o con
-    #     la configuración.
-    content = {"tasks": [{"task_id": task.id, "status": task.status}
-                         for task in tasks]}
+    content = {
+        "job_id": jobs.job_id,
+        "tasks": [{"task_id": task.id, "status": task.status}
+                  for task in tasks]}
 
     return JSONResponse(content, status_code=201)
 
 
+# https://realpython.com/python-redis/
 @app.get("/job/{job_id}")
 # TODO
 async def job_status(job_id: str) -> JSONResponse:
-    content = {_: _, }
+    # Rebisar si la llave existe y printear el valor
+    content = dict()
     return JSONResponse(content=content, status_code=200)
 
 
 @app.get("/heartbeat")
-async def add() -> JSONResponse:
+async def heartbeat() -> JSONResponse:
     """
         --- Documentación por ChatGPT ---
         Endpoint que verifica la salud o "heartbeat" de la aplicación.
