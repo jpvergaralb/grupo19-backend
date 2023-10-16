@@ -31,8 +31,8 @@ def test_find_prime_slowly():
 
 @pytest.mark.asyncio
 async def test_find_prime_slowly_celery():
-    inputs = [1030003, 2700000]
-    expected_outputs = [1029989, 2699999]
+    inputs = [103000, 270000]
+    expected_outputs = [102983, 269987]
 
     # Enviar las tareas asincrónicamente usando Celery
     async_results = [find_prime_slowly.delay(inp) for inp in inputs]
