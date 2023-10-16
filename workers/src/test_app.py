@@ -10,25 +10,35 @@ from app import app
 
 
 @pytest.mark.asyncio
-async def test_root():
-    print("Starting test_root...")
-
+async def test_get_root():
     async with AsyncClient(app=app, base_url="http://test") as ac:
         response = await ac.get("/")
-
-    print("Checking status code...")
-    assert response.status_code == 200, f"Expected status code 200, but got {response.status_code}"
-
-    print("Checking response content...")
-    expected_content = {
+    assert response.status_code == 200
+    assert response.json() == {
         "code": 200,
         "message": "I am Root"
     }
-    assert response.json() == expected_content, f"Expected content {expected_content}, but got {response.json()}"
 
 
+@pytest.mark.asyncio
+async def test_get_add_empty():
+    async with AsyncClient(app=app, base_url="http://test") as ac:
+        response = await ac.get("/add")
+    assert response.status_code == 200
+    assert response.json() == {
+        "code": 200,
+        "message": "I should add something"
+    }
 
 
-if __name__ == '__main__':
-    asyncio.run(test_root())
-    log.info("All tests passed!")
+@pytest.mark.asyncio
+async def test_get_add_values():
+    async with AsyncClient(app=app, base_url="http://test") as ac:
+        response = await ac.get("/add?val1=12&val2=15")
+    assert response.status_code == 200
+    assert response.json() == {
+        "code": 200,
+        "message": "I am adding 12 and 15",
+        "result": 27
+    }
+

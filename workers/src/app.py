@@ -8,8 +8,9 @@ from tasks import app as celery_app, redis_client
 import asyncio
 import json
 from random import randint
-from typing import List, Union
+from typing import List, Union, Optional
 import requests
+from time import sleep
 
 
 # ------------------------------------
@@ -43,6 +44,21 @@ async def root() -> dict:
     return {
         "code": 200,
         "message": "I am Root"
+    }
+
+
+@app.get("/add")
+async def add(val1: Optional[int] = None, val2: Optional[int] = None) -> dict:
+
+    if None in (val1, val2):
+        return {
+            "code": 200,
+            "message": "I should add something"
+        }
+    return {
+        "code": 200,
+        "message": f"I am adding {val1} and {val2}",
+        "result": val1 + val2
     }
 
 # ------------------------------------
