@@ -49,7 +49,9 @@ env = {
 
 }
 
-log_level = env["LOG_LEVEL"].upper()
+log_level = env["LOG_LEVEL"].upper() \
+    if isinstance(env["LOG_LEVEL"], str) \
+    else ""
 
 match log_level:
     case _ if log_level in ("TRACE", "VERBOSE", "DEBUG"):

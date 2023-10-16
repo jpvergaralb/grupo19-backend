@@ -1,7 +1,7 @@
 import pytest
 from unittest.mock import patch
 
-from tasks import add, linear_regression
+from tasks import add, find_prime_slowly
 
 
 # -----------------------------------------------------------------
@@ -10,8 +10,8 @@ from tasks import add, linear_regression
 @pytest.fixture(scope='session')
 def celery_config():
     return {
-        'broker_url': 'memory://',
-        'result_backend': 'memory://'
+        'broker_url': 'redis://localhost:6379/0',
+        'result_backend': 'redis://localhost:6379/0'
     }
 
 
@@ -22,5 +22,24 @@ def test_add():
     result = add.apply((2, 3))
     assert result.result == 5
 
+
+def test_find_prime_slowly():
+    # Usa apply() para ejecutar la tarea de forma síncrona.
+    result = find_prime_slowly.apply((1000000,))
+    assert result.result == 999983
+
+
+@pytest.mark.asyncio
+async def test_find_prime_slowly_celery():
+    inputs = [1030003, 2700000]
+    expected_outputs = [1029989, 2699999]
+
+    # Enviar las tareas asincrónicamente usando Celery
+    async_results = [find_prime_slowly.delay(inp) for inp in inputs]
+
+    # Esperar y recolectar los resultados
+    results = [async_result.get() for async_result in async_results]
+
+    assert results == expected_outputs
 
 # -----------------------------------------------------------------

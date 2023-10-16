@@ -24,9 +24,31 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    env_file:
+      - ./.env
+      #- ./template.env
     depends_on:
       - redis_workers
     restart: unless-stopped
+    # TODO: Sacar
+    volumes:
+      - ./src:/app
+    stop_grace_period: 5s
+
+  pytest_worker:
+    container_name: pytest_workers
+    command: /bin/bash -c "/app/entrypoint.pytest.sh"
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file:
+      - ./.env
+      #- ./template.env
+    depends_on:
+      - redis_workers
+      - celery_worker
+      #- api_workers
+    restart: no
     # TODO: Sacar
     volumes:
       - ./src:/app
