@@ -1,7 +1,7 @@
 from logs import logger as log
 from logs import print
 from environment import env
-
+from time import sleep
 import pytest
 from httpx import AsyncClient
 import asyncio
@@ -40,5 +40,17 @@ async def test_get_add_values():
         "code": 200,
         "message": "I am adding 12 and 15",
         "result": 27
+    }
+
+
+# ----------------------------------------
+
+@pytest.mark.asyncio
+async def test_get_heartbeat():
+    async with AsyncClient(app=app, base_url="http://test") as ac:
+        response = await ac.get("/heartbeat")
+    assert response.status_code == 200
+    assert response.json() == {
+        "message": True
     }
 
