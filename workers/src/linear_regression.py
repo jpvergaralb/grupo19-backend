@@ -1,11 +1,12 @@
 import numpy as np
 
 
-def linear_regression(x: np.ndarray, y: np.ndarray) -> (float, float):
+def linear_regression(x: np.ndarray, y: np.ndarray) -> tuple[float, float]:
     """
+    --- Documentación por ChatGPT ---
     Realiza una regresión lineal simple sobre los datos proporcionados.
 
-    Parámetros
+    Params
     ----------
     x : numpy.ndarray
         Variable independiente, que en este contexto representa típicamente
@@ -14,7 +15,7 @@ def linear_regression(x: np.ndarray, y: np.ndarray) -> (float, float):
         Variable dependiente, que representa los precios de las acciones en
         este contexto.
 
-    Devoluciones
+    Returns
     -------
     float
         La pendiente (m) de la línea de regresión.
@@ -44,7 +45,12 @@ def linear_regression(x: np.ndarray, y: np.ndarray) -> (float, float):
     numerator: float = sum((x - float(x_mean)) * (y - float(y_mean)))
     denominator: float = sum((x - float(x_mean)) ** 2)
 
-    m: float = numerator / denominator
-    b: float = y_mean - m * x_mean
+    slope: float = numerator / denominator
+    base: float = y_mean - m * x_mean
 
-    return m, b
+    return slope, base
+
+
+def
+
+
