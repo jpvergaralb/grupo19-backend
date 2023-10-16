@@ -27,6 +27,9 @@ services:
     depends_on:
       - redis_workers
     restart: unless-stopped
+    # TODO: Sacar
+    volumes:
+      - ./src:/app
 
   redis_workers:
     container_name: redis_workers
