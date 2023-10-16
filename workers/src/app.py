@@ -60,6 +60,13 @@ async def add(val1: Optional[int] = None, val2: Optional[int] = None) -> dict:
         "result": val1 + val2
     }
 
+
+@app.post("/dummy_task")
+def create_task(task_in: TaskIn):
+    task = celery_app.send_task("tasks.dummy_task",
+                                args=[task_in.name])
+    return {"task_id": task.id, "status": task.status}
+
 # ------------------------------------
 
 

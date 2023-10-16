@@ -1,5 +1,6 @@
 from random import random
 from time import sleep
+from typing import Union
 
 from celery import Celery
 from redis import Redis
@@ -14,13 +15,13 @@ redis_client = Redis(host='redis_workers', port=6379, db=0)
 # Tareas de ejemplo
 
 @app.task(name="tasks.add")
-def add(x, y):
+def add(x: Union[int, float], y: Union[int, float]) -> Union[int, float]:
     sleep(random() * 3)
     return x + y
 
 
 @app.task(name="tasks.find_n_prime_slowly")
-def find_prime_slowly(number):
+def find_prime_slowly(number: int) -> int:
     def is_prime(n):
         if n <= 1:
             return False
@@ -37,6 +38,14 @@ def find_prime_slowly(number):
         return primes
 
     return calc_prime(number)[-1]
+
+
+@app.task(name="tasks.dummy_task")
+def dummy_task(name: str) -> str:
+    print(f"Dummy task starting: {name}")
+    sleep(random() * 3)
+    print(f"Dummy task executed: {name}")
+    return "I'm Done"
 
 # --------------------------------------------------
 

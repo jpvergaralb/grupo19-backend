@@ -42,7 +42,6 @@ async def test_get_add_values():
         "result": 27
     }
 
-
 # ----------------------------------------
 
 @pytest.mark.asyncio
