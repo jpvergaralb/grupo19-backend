@@ -50,9 +50,9 @@ def linear_regression(x: np.ndarray, y: np.ndarray) -> tuple[float, float]:
     denominator: float = sum((x - float(x_mean)) ** 2)
 
     slope: float = numerator / denominator
-    base: float = y_mean - slope * x_mean
+    intercept: float = y_mean - slope * x_mean
 
-    return slope, base
+    return slope, intercept
 
 
 def predict_stock_value(data: dict[int, float], moment_epoch: int) -> float:
@@ -103,7 +103,7 @@ def predict_stock_value(data: dict[int, float], moment_epoch: int) -> float:
     return m * moment_epoch + b
 
 
-def stocks_bought_wight(stocks_bought: int) -> float:
+def stocks_bought_weight(stocks_bought: int) -> float:
     """
     --- Documentación por ChatGPT ---
     Calcula el peso de la predicción en función de la cantidad de acciones
@@ -132,7 +132,7 @@ def stocks_bought_wight(stocks_bought: int) -> float:
     Ejemplo
     -------
     >>> stocks = 55
-    >>> weight = stocks_bought_wight(stocks)
+    >>> weight = stocks_bought_weight(stocks)
     >>> print(f"El peso de la predicción {stocks} acciones es: {weight:.2f}")
     # Este es solo un valor ilustrativo, no es el resultado real.
     El peso de la predicción para 55 acciones compradas es: 0.96
@@ -144,3 +144,101 @@ def stocks_bought_wight(stocks_bought: int) -> float:
     prediction_weight = base_formula(stocks_bought)
 
     return prediction_weight
+
+
+def adjusted_slope_price(data: dict[int, float], stocks_bought: int) -> float:
+    """
+    --- Documentación por ChatGPT ---
+    Calcula la pendiente ajustada utilizando el peso de predicción basado en
+    las acciones compradas.
+
+    Params
+    ----------
+    :param data: dict[int, float]
+        Diccionario que contiene datos históricos de precios de acciones con
+        epoch time como clave y el precio de las acciones como valor.
+    :param stocks_bought: int
+        Número de acciones compradas.
+
+    :return: float
+    -------
+        Pendiente ajustada.
+
+    Notas
+    -----
+    Esta función calcula la pendiente original usando regresión lineal y luego
+     ajusta esta pendiente utilizando el peso de predicción basado en la
+     cantidad de acciones compradas.
+
+    Ejemplo
+    -------
+    >>> data_example = {
+    ...        1680969060: 5,
+    ...        1680969360: 7
+    ...    }
+    >>> stocks = 55
+    >>> adj_slope = adjusted_slope_price(data_example, stocks)
+    >>> print(f"Pendiente ajustada: {adj_slope:.2f}")
+    """
+
+    # Obtener la pendiente original usando regresión lineal
+    x: np.ndarray = np.array(list(data.keys()))
+    y: np.ndarray = np.array(list(data.values()))
+    slope, _ = linear_regression(x, y)
+
+    # Calcular el peso de la predicción en función de las acciones compradas
+    prediction_weight: float = stocks_bought_weight(stocks_bought)
+
+    # Ajustar la pendiente
+    return slope * prediction_weight
+
+
+def expected_stock_price_with_adjustment(data: dict[int, float],
+                                         adjusted_slope: float,
+                                         current_value: float) -> float:
+    """
+    --- Documentación por ChatGPT ---
+    Calcula el precio esperado de las acciones usando una pendiente ajustada.
+
+    Params
+    ----------
+    :param data: dict[int, float]
+        Diccionario que contiene datos históricos de precios de acciones con
+        epoch time como clave y el precio de las acciones como valor.
+    :param adjusted_slope: float
+        Pendiente ajustada que se usará para calcular el precio esperado.
+    :param current_value: float
+        Valor actual de las acciones.
+
+    :return: float
+    -------
+        Precio esperado de las acciones utilizando la pendiente ajustada.
+
+    Notas
+    -----
+    Esta función utiliza la pendiente ajustada y el valor actual de las
+    acciones para predecir el precio esperado.
+
+    Ejemplo
+    -------
+    >>> data_example = {
+    ...        1680969060: 5,
+    ...        1680969360: 7
+    ...    }
+    >>> current = 10.0
+    >>> adj_slope = 1.2
+    >>> expected_value = expected_stock_price_with_adjustment(
+    ...         data_example, adj_slope, current
+    ...     )
+    >>> print(f"El precio esperado de las acciones es: {expected_value:.2f}")
+    """
+
+    # Obtener el intercepto (ordenada al origen) usando regresión lineal
+    x: np.ndarray = np.array(list(data.keys()))
+    y: np.ndarray = np.array(list(data.values()))
+    _, intercept = linear_regression(x, y)
+
+    # Calcular el precio esperado usando la pendiente ajustada
+    expected_price: float = adjusted_slope * current_value + intercept
+
+    return expected_price
