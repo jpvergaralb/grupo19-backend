@@ -41,9 +41,7 @@ env = {
     "WORKER_API_HOST": getenv("WORKER_API_HOST"),
     "WORKER_API_PORT": getenv("WORKER_API_PORT"),
 
-    "CELERY_BROKER_URL": getenv("CELERY_BROKER_URL"),
-    "CELERY_RESULT_BACKEND": getenv("CELERY_RESULT_BACKEND"),
-
+    "REDIS_PROTOCOL": getenv("REDIS_PROTOCOL"),
     "REDIS_HOST": getenv("REDIS_HOST"),
     "REDIS_PORT": getenv("REDIS_PORT"),
     "REDIS_DATABASE": getenv("REDIS_DATABASE"),

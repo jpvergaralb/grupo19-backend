@@ -1,8 +1,11 @@
 from typing import Union
 
 
-def convert_str_to_typed(value: str) -> Union[str, int, float, bool]:
+def convert_str_to_typed(value: str) -> Union[str, int, float, bool, None]:
     match True:
+        case _ if None:
+            return None
+
         # Intentar convertir a int
         case _ if value.isdigit():
             return int(value)
