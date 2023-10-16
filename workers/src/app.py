@@ -62,6 +62,7 @@ async def add(val1: Optional[int] = None, val2: Optional[int] = None) -> dict:
 
 # ------------------------------------
 
+
 @app.get("/heartbeat")
 async def add() -> dict:
     return {
