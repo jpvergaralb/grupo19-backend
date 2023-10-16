@@ -49,7 +49,6 @@ async def root() -> dict:
 
 @app.get("/add")
 async def add(val1: Optional[int] = None, val2: Optional[int] = None) -> dict:
-
     if None in (val1, val2):
         return {
             "code": 200,
@@ -63,3 +62,8 @@ async def add(val1: Optional[int] = None, val2: Optional[int] = None) -> dict:
 
 # ------------------------------------
 
+@app.get("/heartbeat")
+async def add() -> dict:
+    return {
+        "message": True
+    }
