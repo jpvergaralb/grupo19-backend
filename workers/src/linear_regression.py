@@ -99,4 +99,3 @@ def predict_stock_value(data: dict[int, float], moment_epoch: int) -> float:
     m, b = linear_regression(x, y)
 
     return m * moment_epoch + b
-
