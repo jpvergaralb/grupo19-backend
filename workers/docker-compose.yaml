@@ -40,8 +40,8 @@ services:
     depends_on:
       - redis_workers
 
-  celery_workers:
-    container_name: celery_workers
+  celery_workers_1:
+    container_name: celery_workers_1
     <<: *celery-worker-defaults
 
   celery_workers_2:
@@ -62,7 +62,7 @@ services:
     <<: *python-defaults
     depends_on:
       - redis_workers
-      - celery_workers
+      - celery_workers_1
       - celery_workers_2
       - celery_workers_3
       - celery_workers_4
