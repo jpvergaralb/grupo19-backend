@@ -12,15 +12,11 @@ const makePrediction = async (req, res) => {
   }
 
   try {
-    // const fetchedStockData = await fetchStockData(dataRage, symbol);
     // const validatedPurchasesCount = await getValidatedPurchasesCount(symbol);
+    const stocks = await fetchStockData(timeFrame, symbol);
 
-    // console.log(validatedPurchasesCount);
-    // console.log(fetchedStockData);
-    const stockData = await fetchStockData(timeFrame, symbol)
-    //axios.post(a la api de workers)
-    return res.status(200).json({ message: 'Prediction created', stockData});
-  
+    //axios.post('http://workers:7777/path', { stocks, validatedPurchasesCount })
+    return res.status(200).json(stocks);
     
   } catch (error) {
     return res.status(500).json( error );
@@ -28,19 +24,13 @@ const makePrediction = async (req, res) => {
 }
 
 
-//RETORNA LOS STOCKS DE 100 EN 100 DESDE HASTA EL TIMEFRAME INDICADO
 async function fetchStockData(timeFrame, symbol) {
   const LIMIT = 100;
 
   const endDate = new Date();
   const startDate = new Date();
   startDate.setDate(endDate.getDate() - timeFrame); 
-  console.log(startDate, endDate)
 
-  const countAll = await Stock.count();
-  console.log(countAll);
-
-  // Hace una consulta para obtener el total de registros y los primeros 100 registros
   const { count, rows } = await Stock.findAndCountAll({
       where: {
           symbol: symbol,
@@ -50,9 +40,8 @@ async function fetchStockData(timeFrame, symbol) {
       },
       limit: LIMIT
   });
+  
   let stocks = rows;
-
-  // Si hay más registros por obtener, sigue consultando
   for (let offset = LIMIT; offset < count; offset += LIMIT) {
       const additionalStocks = await Stock.findAll({
           where: {
@@ -67,6 +56,10 @@ async function fetchStockData(timeFrame, symbol) {
 
       stocks = stocks.concat(additionalStocks);
   }
+  stocks.sort((a, b) => {
+    return new Date(a.createdAt) - new Date(b.createdAt);
+  });
+  console.log(`\nFound ${count} ${symbol} stocks in the last ${timeFrame} days 💰\n`)
 
   return stocks;
 }
