@@ -1,49 +1,44 @@
 'use strict';
 
 const { v4: uuidv4 } = require('uuid');
+const db = require('../models');
+const User = db.user;
+
+const possibleSymbols = [
+  'AAPL',
+  'GOOGL',
+  'AMZN',
+  'MSFT',
+  'TSLA',
+]
+
+const generateRandomRequest = async (count) => {
+  const requests = [];
+
+  for (let i = 0; i < count; i++) {
+    const user = await User.findOne({ order: db.sequelize.random()})
+    const request = {
+      id: uuidv4(),
+      stock_id: Math.floor(Math.random() * 3) + 1,
+      user_id: user.id,
+      group_id: 19,
+      symbol: possibleSymbols[Math.floor(Math.random() * possibleSymbols.length)],
+      datetime: new Date(),
+      deposit_token: 'rHagzMPLwfJCXDXW2sNJZRxygCaYmaO6',
+      quantity: Math.floor(Math.random() * 3) + 1,
+      seller: 0,
+      location: '-34.603722, -58.381592',
+      createdAt: new Date(),
+      updatedAt: new Date()
+    };
+    requests.push(request);
+  }
+  return requests;
+}
 
 module.exports = {
   async up (queryInterface, Sequelize) {
-    await queryInterface.bulkInsert('requests', [
-      { id: '8a04cb0b-9c2a-4895-1e5c-95626ad9d1f0',
-        stock_id: 2,
-        user_id: '8a04cb0b-9c2a-4895-8e5c-95626ad9d1f0',
-        group_id: '13',
-        symbol: "AAPL",
-        datetime: new Date(),
-        deposit_token: 'rHagzMPLwfJCXDXW2sNJZRxygCaYmaO6',
-        quantity: 1,
-        seller: 0,
-        location: '-34.603722, -58.381592',
-        createdAt: new Date(),
-        updatedAt: new Date() },
-      
-      {  id: uuidv4(),
-        stock_id: 1,
-        user_id: "8a04cb0b-9c2a-4895-8e5c-95626ad9d1f1",
-        group_id: '2',
-        symbol: "AMZN",
-        datetime: new Date(),
-        deposit_token: 'wxYOxbeQLHcYCJGj5GdnOKblj1hsrSiW',
-        quantity: 3,
-        seller: 0,
-        location: '-34.603722, -58.381592',
-        createdAt: new Date(),
-        updatedAt: new Date() },
-      
-      {  id: uuidv4(),
-        stock_id: 3,
-        user_id: "8a04cb0b-9c2a-4895-8e5c-95626ad9d1f2",
-        group_id: '1',
-        symbol: "GOOGL",
-        datetime: new Date(),
-        deposit_token: 'bi33YNacrEHxmiez6NCvhoGd5Xlea95q',
-        quantity: 1,
-        seller: 0,
-        location: '-34.603722, -58.381592',
-        createdAt: new Date(),
-        updatedAt: new Date() },
-    ], {});
+    await queryInterface.bulkInsert('requests', await generateRandomRequest(1000), {});
   },
   
   async down (queryInterface, Sequelize) {

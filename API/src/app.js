@@ -5,6 +5,7 @@ const stockRoutes = require('./routes/stock.routes');
 const userRoutes = require('./routes/user.routes');
 const validationRoutes = require('./routes/validation.routes');
 const requestRoutes = require('./routes/request.routes');
+const predictionRoutes = require('./routes/prediction.routes');
 // const syncDatabase = require('./db/syncDatabase') // 👈🏻
 
 const app = express();
@@ -15,5 +16,6 @@ app.use('/stocks', stockRoutes);
 app.use('/users', userRoutes);
 app.use('/validations', validationRoutes);
 app.use('/requests', requestRoutes);
+app.use('/predictions', predictionRoutes);
 
 module.exports = app;
