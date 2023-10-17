@@ -2,6 +2,8 @@ const db = require('../../models');
 const { Op } = require('sequelize');
 
 const Stock = db.stock;
+const Validation = db.validation;
+const Request = db.request;
 
 const makePrediction = async (req, res) => {
 
@@ -12,17 +14,18 @@ const makePrediction = async (req, res) => {
   }
 
   try {
-    // const validatedPurchasesCount = await getValidatedPurchasesCount(symbol);
+    const validatedPurchasesCount = await getValidatedPurchasesCount(symbol);
     const stocks = await fetchStockData(timeFrame, symbol);
 
     //axios.post('http://workers:7777/path', { stocks, validatedPurchasesCount })
-    return res.status(200).json(stocks);
+    // return res.status(200).json({stock: symbol, data: stocks});
+    return res.status(200).json({count: validatedPurchasesCount, data: stocks});
     
   } catch (error) {
+    console.log(error)
     return res.status(500).json( error );
   }
 }
-
 
 async function fetchStockData(timeFrame, symbol) {
   const LIMIT = 100;
@@ -36,12 +39,14 @@ async function fetchStockData(timeFrame, symbol) {
           symbol: symbol,
           createdAt: {
             [Op.between] : [startDate , endDate ]
-          }
+          },
       },
-      limit: LIMIT
+      limit: LIMIT,
+      attributes: ['createdAt', 'price']
   });
   
   let stocks = rows;
+
   for (let offset = LIMIT; offset < count; offset += LIMIT) {
       const additionalStocks = await Stock.findAll({
           where: {
@@ -51,22 +56,35 @@ async function fetchStockData(timeFrame, symbol) {
               }
           },
           limit: LIMIT,
-          offset: offset
+          offset: offset,
+          attributes: ['createdAt', 'price']
       });
-
       stocks = stocks.concat(additionalStocks);
   }
-  stocks.sort((a, b) => {
-    return new Date(a.createdAt) - new Date(b.createdAt);
-  });
+
   console.log(`\nFound ${count} ${symbol} stocks in the last ${timeFrame} days 💰\n`)
 
   return stocks;
 }
 
-// RETORNA LA CANTIDAD DE COMPORAS VALIDADAS DE LO S ULTIMOS 7 DIAS PARA UN STOCK
 const getValidatedPurchasesCount = async (symbol) => {
-  return;
+  const endDate = new Date();
+  const sevenDaysAgo = new Date();
+  sevenDaysAgo.setDate(endDate.getDate() - 7); 
+
+  const validations = await Validation.findAll({
+    where: {
+      valid: true,
+      createdAt: {
+        [Op.between]: [sevenDaysAgo, endDate]
+      },
+    },
+  });
+
+  const requests = await Promise.all(validations.map(validation => validation.getRequest()));
+  const validationsRequests = requests.filter(request => request.symbol === symbol);
+
+  return validationsRequests.length;
 }
 
 module.exports = {
