@@ -32,7 +32,7 @@ requestRoutes.route('/seller/:seller')
 requestRoutes.route('/webpay/create')
   .post(createRequestToWebpay);
 
-  requestRoutes.route('/webpay/commit')
-    .post(commitRequestToWebpay);
+requestRoutes.route('/webpay/commit')
+  .post(commitRequestToWebpay);
 
 module.exports = requestRoutes;
