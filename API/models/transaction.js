@@ -96,8 +96,8 @@ module.exports = (sequelize, DataTypes) => {
           msg: 'status cannot be empty',
         },
         isIn: {
-          args: [['pending', 'filled', 'cancelled']],
-          msg: 'status must be one of the following: pending, filled, cancelled',
+          args: [['pending', 'filled', 'rejected']],
+          msg: 'status must be one of the following: pending, filled, rejected',
         },
       },
     },

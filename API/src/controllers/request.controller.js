@@ -191,7 +191,7 @@ const postRequests = async (req, res) => {
   return null;
 };
 
-const confirmRequestToWebpay = async (req, res) => {
+const createRequestToWebpay = async (req, res) => {
   console.log('📠| POST request recibida a /requests/webpay en API');
 
   try {
@@ -274,6 +274,38 @@ const confirmRequestToWebpay = async (req, res) => {
   return null;
 };
 
+const commitRequestToWebpay = async (req, res) => {
+  const { token_ws } = req.body;
+  if (!token_ws || token_ws === '') {
+    return res.status(200).json({ message: 'Transaccion anulada por el usuario' });
+  }
+  const confirmedTx = await tx.commit(token_ws);
+
+  if (confirmedTx.response_code !== 0) { // Rechaza la compra
+    await db.transaction.update({
+      where: {
+        token: token_ws,
+      },
+      data: {
+        status: 'rejected',
+      },
+    });
+
+    return res.status(200).json({ message: 'Transaccion ha sido rechazada' });
+  }
+
+  await db.transaction.update({
+    where: {
+      token: token_ws,
+    },
+    data: {
+      status: 'filled',
+    },
+  });
+
+  return res.status(200).json({ message: 'Transaccion ha sido aceptada' });
+};
+
 const updateRequestStatus = async (req, res) => {
   console.log('📠| POST request recibida a /updateRequestStatus en API');
   console.log(req.body);
@@ -287,5 +319,6 @@ module.exports = {
   getRequestsByGroupId,
   getRequestsBySymbol,
   getRequestsBySeller,
-  confirmRequestToWebpay,
+  createRequestToWebpay,
+  commitRequestToWebpay,
 };
