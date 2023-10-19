@@ -6,4 +6,4 @@ const tx = new WebpayPlus.Transaction(
   new Options(IntegrationCommerceCodes.WEBPAY_PLUS, IntegrationApiKeys.WEBPAY, Environment.Integration)
 );
 
-export default tx;
+module.exports = tx;
