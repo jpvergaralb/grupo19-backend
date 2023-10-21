@@ -83,8 +83,8 @@ module.exports = (sequelize, DataTypes) => {
         notNull: {
           msg: 'amount cannot be null',
         },
-        isInt: {
-          msg: 'amount must be an integer',
+        isFloat: {
+          msg: 'amount must be an float',
         },
       },
     },
