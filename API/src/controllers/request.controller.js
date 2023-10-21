@@ -220,6 +220,7 @@ const createRequestToWebpay = async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: `User ${user_id} not found` });
     }
+
     const lastStock = await Stock.findOne({
       where: { symbol },
       order: [['createdAt', 'DESC']],
@@ -253,8 +254,12 @@ const createRequestToWebpay = async (req, res) => {
 
     const redirect_url = process.env.WEBPAY_REDIRECT_URL ? `${process.env.WEBPAY_REDIRECT_URL}/${symbol}` : 'http://localhost:8080';
 
-    const trx = await tx.create(newTransaction.id, 'grupo-19-stocks', newTransaction.amount, redirect_url);
-
+    const trx = await tx.create(
+      newTransaction.id.slice(0, 25),
+      process.env.WEBPAY_SESSION_NAME,
+      newTransaction.amount,
+      redirect_url,
+    );
     await db.transaction.update({
       where: {
         id: newTransaction.id,
@@ -264,14 +269,19 @@ const createRequestToWebpay = async (req, res) => {
       },
     });
 
-    res.body = trx;
-    return res.status(201).json({ message: `Transaction ${newTransaction.id} from user ${user_id}: waiting payment` });
+    const data = {
+      token: trx.token,
+      url: trx.url,
+    };
+
+    res.status(201).json({ message: `Transaction ${newTransaction.id} from user ${user_id}: waiting payment`, transaction: data});
   } catch (error) {
     res.status(500).json({ message: 'Internal Server Error from API', error });
+    console.log(error);
   }
 
   console.log('📞| Fin del mensaje a /requests/webpay');
-  return null;
+  return res;
 };
 
 const commitRequestToWebpay = async (req, res) => {
