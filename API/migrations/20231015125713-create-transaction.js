@@ -17,6 +17,14 @@ module.exports = {
           key: 'id',
         },
       },
+      request_id: {
+        type: Sequelize.UUID,
+        allowNull: false,
+        references: {
+          model: 'requests',
+          key: 'id',
+        },
+      },
       stock_symbol: {
         type: Sequelize.STRING,
         allowNull: false,
