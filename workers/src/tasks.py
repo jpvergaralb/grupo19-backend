@@ -63,7 +63,7 @@ def dummy_task(name: str) -> str:
 def linear_regression(job_id: str,
                       amount_bought: int,
                       company_symbol: str,
-                      starting_date_iso8601: str) -> float:
+                      starting_date_iso8601: str):
 
     prices = dict()
     reached_starting_date = False
@@ -115,4 +115,19 @@ def linear_regression(job_id: str,
 
         page_counter += 1
 
-    return 1.1
+        # +--------------------------------+
+
+        plot_slope = math_operations.adjusted_slope_price(
+            data=prices,
+            stocks_bought=amount_bought)
+
+        current_price = prices[max(prices.keys())]
+
+        expected_price = math_operations.expected_stock_price_with_adjustment(
+            data=prices,
+            adjusted_slope=plot_slope,
+            current_value=current_price)
+
+        # +--------------------------------+
+
+    return expected_price, prices

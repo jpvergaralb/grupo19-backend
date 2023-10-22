@@ -151,9 +151,7 @@ def create_task(task_in: TaskIn) -> JSONResponse:
     }
     return JSONResponse(content=content, status_code=202)
 
-
-# ------------------------------------
-
+    # ------------------------------------
 
 @app.post("/job")
 async def create_another_task(job: CeleryJob) -> JSONResponse:
