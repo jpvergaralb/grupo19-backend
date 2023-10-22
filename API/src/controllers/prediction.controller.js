@@ -7,8 +7,8 @@ const Prediction = db.prediction;
 const { sequelize } = db;
 
 const makePrediction = async (req, res) => {
-  console.log(` 📠| GET request recibida a /predictions?timeFrame=${req.query.timeFrame}&symbol=${req.query.symbol}`)
-  
+  console.log(` 📠| GET request recibida a /predictions?timeFrame=${req.query.timeFrame}&symbol=${req.query.symbol}`);
+
   const transaction = await sequelize.transaction();
   const { timeFrame, symbol } = req.query;
   const { userId } = req.body;
@@ -32,7 +32,7 @@ const makePrediction = async (req, res) => {
       jobId,
       status: 'pending',
     }, { transaction });
-    
+
     // axios.post('http://workers:7777/path', { stocks, validatedPurchasesCount })
     await transaction.commit();
     return res.status(200).json({

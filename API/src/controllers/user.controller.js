@@ -107,7 +107,7 @@ const getUserRequests = async (req, res) => {
   console.log('📞| Fin del mensaje a /users/:id/requests');
 };
 
-const getUserPredictions = async (req, res) => {  
+const getUserPredictions = async (req, res) => {
   const { id } = req.params;
   if (!id) {
     return res.status(400).json({ message: 'Missing parameters: id.' });
@@ -117,14 +117,37 @@ const getUserPredictions = async (req, res) => {
     const user = await User.findByPk(id);
     if (user) {
       const predictions = await user.getPredictions();
-      res.status(200).json({ predictions });
-    } else {
-      res.status(404).json({ message: 'No user found' });
+      return res.status(200).json({ predictions });
     }
+    return res.status(404).json({ message: 'No user found' });
   } catch (error) {
-    res.status(500).json({ error });
+    return res.status(500).json({ error });
   }
 };
+
+const getLastUserPrediction = async (req, res) => {
+  const { id } = req.params; 
+
+  if (!id) {
+    return res.status(400).json({ message: 'Missing parameters: id.' });
+  }
+
+  try {
+    const user = await User.findByPk(id);
+
+    if (user) {
+      const lastPrediction = await user.getPredictions({
+        limit: 1,
+        order: [['createdAt', 'DESC']],
+      });
+      
+      return res.status(200).json({ lastPrediction });
+    }
+    return res.status(404).json({ message: 'No user found' });
+  } catch (error) {
+    return res.status(500).json({ error });
+  }
+}
 
 const postUpdateWallet = async (req, res) => {
   const { amount } = req.body;
@@ -202,6 +225,7 @@ module.exports = {
   getUserByAuthId,
   getUserRequests,
   getUserPredictions,
+  getLastUserPrediction,
   postUser,
   postUpdateWallet,
   updateUsersPhone,
