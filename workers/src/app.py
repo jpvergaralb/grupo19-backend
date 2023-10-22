@@ -57,6 +57,40 @@ app = FastAPI()
 # Tests
 @app.get("/")
 def root() -> JSONResponse:
+    """
+    --- Documentación por ChatGPT ---
+    Endpoint que devuelve un mensaje simple para verificar que el
+    servicio está en funcionamiento.
+
+    Route
+    -----
+    GET /
+
+    Respuesta
+    --------
+    JSONResponse
+        Un objeto JSONResponse que devuelve un mensaje simple.
+
+    Campos de respuesta
+    -------------------
+    "message": str
+        Un mensaje que indica "I am Root", útil para verificaciones
+        rápidas del funcionamiento del servicio.
+
+    Ejemplo de respuesta
+    -------------------
+    {
+        "message": "I am Root"
+    }
+
+    Ejemplo
+    -------
+    >>> response = requests.get("https://yourapi.com/")
+    >>> response.json()
+    {
+        "message": "I am Root"
+    }
+    """
     content = {
         "message": "I am Root"
     }
@@ -66,6 +100,60 @@ def root() -> JSONResponse:
 @app.get("/add")
 def add(val1: Optional[int] = None,
         val2: Optional[int] = None) -> JSONResponse:
+    """
+    --- Documentación por ChatGPT ---
+    Endpoint que suma dos valores proporcionados como parámetros de
+    consulta.
+
+    Route
+    -----
+    GET /add
+
+    Parámetros de consulta
+    ----------------------
+    val1 : int, opcional
+        Primer valor a sumar.
+    val2 : int, opcional
+        Segundo valor a sumar.
+
+    Respuesta
+    --------
+    JSONResponse
+        Un objeto JSONResponse que contiene el resultado de la suma o un
+        mensaje
+        indicando la necesidad de proporcionar valores para sumar.
+
+    Campos de respuesta
+    -------------------
+    "message": str
+        Un mensaje indicando la operación realizada o la necesidad de
+        proporcionar valores.
+    "result": int, opcional
+        El resultado de la suma de val1 y val2, si se proporcionaron
+        ambos valores.
+
+    Ejemplo de respuesta
+    -------------------
+    - Si se proporcionan ambos valores:
+    {
+        "message": "I am adding 3 and 4",
+        "result": 7
+    }
+
+    - Si no se proporciona al menos uno de los valores:
+    {
+        "message": "I should add something"
+    }
+
+    Ejemplo
+    -------
+    >>> response = requests.get("https://yourapi.com/add?val1=3&val2=4")
+    >>> response.json()
+    {
+        "message": "I am adding 3 and 4",
+        "result": 7
+    }
+    """
     if None in (val1, val2):
         content = {
             "message": "I should add something"
@@ -81,6 +169,54 @@ def add(val1: Optional[int] = None,
 
 @app.post("/subtract")
 def subtract(val1: NumberIn, val2: NumberIn):
+    """
+    --- Documentación por ChatGPT ---
+    Endpoint que resta dos números proporcionados en el cuerpo de la
+    petición.
+
+    Route
+    -----
+    POST /subtract
+
+    Parámetros de cuerpo (body parameters)
+    --------------------------------------
+    val1 : NumberIn
+        Primer número desde el cual se restará.
+    val2 : NumberIn
+        Segundo número que será restado del primero.
+
+    Respuesta
+    --------
+    JSONResponse
+        Un objeto JSONResponse que contiene el resultado de la resta.
+
+    Campos de respuesta
+    -------------------
+    "message": str
+        Un mensaje indicando la operación realizada.
+    "result": int
+        El resultado de restar val2 de val1.
+
+    Ejemplo de respuesta
+    -------------------
+    {
+        "message": "I am subtracting 4 from 10",
+        "result": 6
+    }
+
+    Ejemplo
+    -------
+    >>> data = {
+    ...     "val1": {"number": 10},
+    ...     "val2": {"number": 4}
+    ... }
+    >>> response = requests.post("https://yourapi.com/subtract", json=data)
+    >>> response.json()
+    {
+        "message": "I am subtracting 4 from 10",
+        "result": 6
+    }
+    """
     content = {
         "message": f"I am subtracting {val2.number} from {val1.number}",
         "result": val1.number - val2.number
