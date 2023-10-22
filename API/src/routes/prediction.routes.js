@@ -7,6 +7,6 @@ const {
 } = require('../controllers/prediction.controller');
 
 predictionRoutes.route('/')
-  .get(makePrediction);
+  .post(makePrediction);
 
 module.exports = predictionRoutes;
