@@ -14,8 +14,10 @@ from redis import Redis
 from utils import iso8601_to_epoch
 import math_operations
 import numpy as np
-from sklearn.linear_model import LinearRegression
+import json
 
+# Conexión a redis
+redis_client = Redis(host='redis_workers', port=6379, db=0)
 
 app = Celery('tasks',
              backend='redis://redis_workers:6379/0',
@@ -129,5 +131,20 @@ def linear_regression(job_id: str,
         amount_bought)
 
     # +--------------------------------+
+    data_out = {
+        "expected_price": expected_price,
+        "amount_bought": amount_bought,
+        "company_symbol": company_symbol,
+        "times": {
+            "starting_time": starting_time_epoch,
+            "run_at": now,
+            "delta_time": delta_time
+        }
+    }
+
+    json_string = json.dumps(data_out)
+
+    redis_client.set(f"{job_id}",
+                     json_string)
 
     return expected_price

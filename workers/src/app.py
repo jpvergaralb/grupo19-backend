@@ -4,7 +4,7 @@ from environment import env
 
 from pydantic import BaseModel
 from fastapi import Depends, FastAPI, Header, HTTPException, Path, Query
-from tasks import app as celery_app
+from tasks import app as celery_app, redis_client
 import asyncio
 import json
 from random import randint
@@ -17,11 +17,6 @@ from celery.result import AsyncResult
 import dateutil.parser as dp
 
 from utils import iso8601_to_epoch
-
-# ------------------------------------
-
-# Conexión a redis
-redis_client = Redis(host='redis_workers', port=6379, db=0)
 
 
 # ------------------------------------
@@ -292,6 +287,68 @@ def create_task(task_in: TaskIn) -> JSONResponse:
 
 @app.post("/job")
 async def create_another_task(job: CeleryJob) -> JSONResponse:
+    """
+    --- Documentación por ChatGPT ---
+    Endpoint que crea una nueva tarea asincrónica de Celery para
+    realizar una regresión lineal.
+
+    Route
+    -----
+    POST /job
+
+    Parámetros de cuerpo (body parameters)
+    --------------------------------------
+    job : CeleryJob
+        Información de la tarea que se desea crear, incluyendo detalles
+        como el ID del trabajo,
+        la cantidad validada, el símbolo y la fecha de inicio.
+
+    Respuesta
+    --------
+    JSONResponse
+        Un objeto JSONResponse que contiene información sobre la tarea
+        creada.
+
+    Campos de respuesta
+    -------------------
+    "job_id": str || UUID
+        ID del trabajo proporcionado en la solicitud.
+    "tasks": dict
+        Información sobre la tarea de Celery.
+        - "task_id": str || UUID
+            ID de la tarea de Celery.
+        - "status": str
+            Estado de la tarea de Celery.
+
+    Ejemplo de respuesta
+    -------------------
+    {
+        "job_id": "a1234bc5-d6e7-890f-ghij-klmno1234567",
+        "tasks": {
+            "task_id": "p1234qr5-s6t7-890u-vwxz-yzabc1234567",
+            "status": "PENDING"
+        }
+    }
+
+    Ejemplo
+    -------
+    >>> data = {
+    ...     "jobId": "a1234bc5-d6e7-890f-ghij-klmno1234567",
+    ...     "amountValidated": 500,
+    ...     "symbol": "AAPL",
+    ...     "startingDate": "2023-10-22T10:15:30Z"
+    ... }
+    >>> response = requests.post("https://yourapi.com/job", json=data)
+    >>> response.json()
+    {
+        "job_id": "a1234bc5-d6e7-890f-ghij-klmno1234567",
+        "tasks": {
+            "task_id": "p1234qr5-s6t7-890u-vwxz-yzabc1234567",
+            "status": "PENDING"
+        }
+    }
+    """
+
     task = celery_app.send_task("tasks.linear_regression",
                                 args=[job.jobId,  # str
                                       job.amountValidated,  # int
@@ -316,15 +373,13 @@ async def create_another_task(job: CeleryJob) -> JSONResponse:
 async def job_status(job_id: str) -> JSONResponse:
     # Revisar si la llave existe y printear el valor
 
+    key = [llave for llave in redis_client.scan_iter(f"{job_id}")]
+    print(key)
+
     out_data = {"job_id": job_id,
-                "stocks_predictions": []}
+                "stocks_predictions": ""}
 
-    for key in redis_client.keys():
-        if job_id in key:
-            stocks_predictions = json.loads(redis_client.get(key))
-            out_data["stocks_predictions"] = stocks_predictions
-
-    content = dict()
+    content = out_data
     return JSONResponse(content=content, status_code=200)
 
 
