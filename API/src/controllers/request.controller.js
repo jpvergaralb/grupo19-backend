@@ -290,38 +290,57 @@ const createRequestToWebpay = async (req, res) => {
   return res;
 };
 
+const commitLock = {};
+
 const commitRequestToWebpay = async (req, res) => {
-  console.log('📠| POST request recibida a /requests/webpay/commit en API');
+  console.log('📠| POST request received at /requests/webpay/commit in API');
   const { token_ws } = req.body;
   if (!token_ws || token_ws === '') {
-    return res.status(200).json({ message: 'Transaccion anulada por el usuario' });
+    return res.status(200).json({ message: 'Transaction canceled by the user' });
   }
 
-  try {
+  if (commitLock[token_ws]) {
+    // If a previous transaction is still in progress, wait for it to finish.
+    await commitLock[token_ws];
+  }
+
+  let message;
+
+  const commitTransaction = async () => {
     const confirmedTx = await tx.commit(token_ws);
 
-    if (confirmedTx.response_code !== 0) { // Rechaza la compra
-      await db.transaction.update({ stats: 'rejected' }, {
+    if (confirmedTx.response_code !== 0) {
+      // Reject the purchase
+      await db.transaction.update({ status: 'rejected' }, {
         where: {
           token: token_ws,
         },
       });
-
-      return res.status(200).json({ message: 'Transaccion ha sido rechazada' });
+      message = 'Transaction has been rejected';
+    } else {
+      // Accept the purchase
+      await db.transaction.update({ status: 'filled' }, {
+        where: {
+          token: token_ws,
+        },
+      });
+      message = 'Transaction has been accepted';
     }
+  };
 
-    await db.transaction.update({ stats: 'filled' }, {
-      where: {
-        token: token_ws,
-      },
-    });
-    res.status(200).json({ message: 'Transaccion ha sido aceptada' });
+  try {
+    // Create a new Promise representing the ongoing transaction and store it in commitLock
+    commitLock[token_ws] = commitTransaction();
+    await commitLock[token_ws]; // Wait for the transaction to finish
   } catch (error) {
     res.status(500).json({ message: 'Internal Server Error from API', error });
-    console.log(error);
+  } finally {
+    // Release the lock after the commit is done, whether it succeeds or fails.
+    commitLock[token_ws] = null;
   }
-  console.log('📞| Fin del mensaje a /requests/webpay/commit');
-  return res;
+
+  console.log('📞| End of request to /requests/webpay/commit');
+  return res.status(200).json({ message });
 };
 
 const updateRequestStatus = async (req, res) => {
