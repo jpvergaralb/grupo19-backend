@@ -274,6 +274,12 @@ const createRequestToWebpay = async (req, res) => {
       },
     });
 
+    await Request.update({ deposit_token: trx.token }, {
+      where: {
+        id: newRequest.id,
+      },
+    });
+
     const data = {
       token: trx.token,
       url: trx.url,
@@ -332,6 +338,17 @@ const commitRequestToWebpay = async (req, res) => {
     // Create a new Promise representing the ongoing transaction and store it in commitLock
     commitLock[token_ws] = commitTransaction();
     await commitLock[token_ws]; // Wait for the transaction to finish
+
+    // Se envia la solicitud al broker MQTT
+    const newRequest = await Request.findOne({
+      where: {
+        deposit_token: token_ws,
+      },
+    });
+
+    const url = `${process.env.MQTT_PROTOCOL}://${process.env.MQTT_API_HOST}:${process.env.MQTT_API_PORT}/${process.env.MQTT_API_REQUESTS_PATH}`;
+    console.log(`Posting to ${url}`);
+    await axios.post(url, newRequest);
   } catch (error) {
     res.status(500).json({ message: 'Internal Server Error from API', error });
   } finally {
