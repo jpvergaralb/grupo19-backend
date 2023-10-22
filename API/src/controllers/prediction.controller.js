@@ -1,7 +1,7 @@
 const { Op } = require('sequelize');
+const { v4: uuidv4 } = require('uuid');
 const db = require('../../models');
 
-const Stock = db.stock;
 const Validation = db.validation;
 
 const makePrediction = async (req, res) => {
@@ -13,57 +13,23 @@ const makePrediction = async (req, res) => {
 
   try {
     // eslint-disable-next-line no-use-before-define
-    const validatedPurchasesCount = await getValidatedPurchasesCount(symbol);
+    const amountValidated = await getValidatedPurchasesCount(symbol);
     // eslint-disable-next-line no-use-before-define
-    const stocks = await fetchStockData(timeFrame, symbol);
+    const jobId = uuidv4();
+
+    // calculate starting date in ISO8601 format
+    const endDate = new Date();
+    const startingDate = new Date();
+    startingDate.setDate(endDate.getDate() - timeFrame);
     // axios.post('http://workers:7777/path', { stocks, validatedPurchasesCount })
-    return res.status(200).json({ count: validatedPurchasesCount, data: stocks });
+    return res.status(200).json({
+      jobId, symbol, amountValidated, startingDate,
+    });
   } catch (error) {
     console.log(error);
     return res.status(500).json(error);
   }
 };
-
-async function fetchStockData(timeFrame, symbol) {
-  const LIMIT = 100;
-
-  const endDate = new Date();
-  const startDate = new Date();
-  startDate.setDate(endDate.getDate() - timeFrame);
-
-  const { count, rows } = await Stock.findAndCountAll({
-    where: {
-      symbol,
-      createdAt: {
-        [Op.between]: [startDate, endDate],
-      },
-    },
-    limit: LIMIT,
-    attributes: ['createdAt', 'price'],
-  });
-
-  let stocks = rows;
-
-  for (let offset = LIMIT; offset < count; offset += LIMIT) {
-    // eslint-disable-next-line no-await-in-loop
-    const additionalStocks = await Stock.findAll({
-      where: {
-        symbol,
-        createdAt: {
-          [Op.between]: [startDate, endDate],
-        },
-      },
-      limit: LIMIT,
-      offset,
-      attributes: ['createdAt', 'price'],
-    });
-    stocks = stocks.concat(additionalStocks);
-  }
-
-  console.log(`\nFound ${count} ${symbol} stocks in the last ${timeFrame} days 💰\n`);
-
-  return stocks;
-}
 
 const getValidatedPurchasesCount = async (symbol) => {
   const endDate = new Date();
