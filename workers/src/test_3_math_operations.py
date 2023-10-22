@@ -2,7 +2,7 @@ import pytest
 import numpy as np
 from math_operations import (linear_regression,
                              expected_stock_price_with_adjustment,
-                             adjusted_slope_price, stocks_bought_weight,
+                             stocks_bought_weight,
                              predict_stock_value)
 
 
@@ -22,40 +22,36 @@ def test_predict_stock_value():
     stocks_data = {
         1680969060: 5,
         1680969360: 7,
-        1680969660: 546,
-        1680969960: 115,
-        1680970260: 41
+        1680969660: 5,
+        1680969960: 5,
+        1680970260: 4
     }
-    epoch_moment = 1680970000
+    epoch_moment = 1680973000
+    expected_value = 0.746666666585952
     predicted_value = predict_stock_value(stocks_data, epoch_moment)
-    assert isinstance(predicted_value, float)
+    assert_almost_equal(expected_value, predicted_value, places=2)
 
 
 def test_stocks_bought_weight():
     stocks = 55
     weight = stocks_bought_weight(stocks)
-    expected_weight = 1 / ((5 + 55 - 50) / 50)
+    expected_weight = 1 + ((5 + 55 - 50) / 50)
     assert_almost_equal(weight, expected_weight, places=2)
-
-
-def test_adjusted_slope_price():
-    data_example = {
-        1680969060: 5,
-        1680969360: 7
-    }
-    stocks = 55
-    adj_slope = adjusted_slope_price(data_example, stocks)
-    assert isinstance(adj_slope, float)
 
 
 def test_expected_stock_price_with_adjustment():
     data_example = {
         1680969060: 5,
-        1680969360: 7
+        1680969360: 7,
+        1680969660: 5,
+        1680969960: 5,
+        1680970260: 6
     }
-    current = 10.0
-    adj_slope = 1.2
-    expected_value = expected_stock_price_with_adjustment(data_example,
-                                                          adj_slope,
-                                                          current)
-    assert isinstance(expected_value, float)
+    prediction_time = 1680980260
+    amount_bought = 45
+    predicted_value = expected_stock_price_with_adjustment(
+        data_example, prediction_time, amount_bought
+    )
+    expected_value = 5.6
+
+    assert_almost_equal(predicted_value, expected_value, places=1)

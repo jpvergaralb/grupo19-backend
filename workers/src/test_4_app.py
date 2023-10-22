@@ -10,7 +10,7 @@ from app import app
 
 
 @pytest.mark.asyncio
-async def est_get_root():
+async def test_get_root():
     async with AsyncClient(app=app, base_url="http://test") as async_client:
         response = await async_client.get("/")
     assert response.status_code == 200
@@ -20,7 +20,7 @@ async def est_get_root():
 
 
 @pytest.mark.asyncio
-async def est_get_add_empty():
+async def test_get_add_empty():
     async with AsyncClient(app=app, base_url="http://test") as async_client:
         response = await async_client.get("/add")
     assert response.status_code == 204
@@ -30,7 +30,7 @@ async def est_get_add_empty():
 
 
 @pytest.mark.asyncio
-async def est_get_add_values():
+async def test_get_add_values():
     async with AsyncClient(app=app, base_url="http://test") as async_client:
         response = await async_client.get("/add?val1=12&val2=15")
     assert response.status_code == 200
@@ -41,7 +41,7 @@ async def est_get_add_values():
 
 
 @pytest.mark.asyncio
-async def est_get_subtract_values():
+async def test_get_subtract_values():
     test_data = {
         "val1": {"number": 12},
         "val2": {"number": 15}
@@ -58,7 +58,7 @@ async def est_get_subtract_values():
 
 
 @pytest.mark.asyncio
-async def est_get_heartbeat():
+async def test_get_heartbeat():
     async with AsyncClient(app=app, base_url="http://test") as async_client:
         response = await async_client.get("/heartbeat")
     assert response.status_code == 200

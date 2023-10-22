@@ -68,6 +68,43 @@ def convert_str_to_typed(value: str) -> Union[str, int, float, bool, None]:
 
 
 def iso8601_to_epoch(iso_time: str) -> int:
+    """
+    --- Documentación por ChatGPT ---
+    Convierte una cadena de tiempo en formato ISO 8601 a una marca de tiempo
+    (timestamp) en formato epoch.
+
+    Parámetros
+    ----------
+    iso_time : str
+        La cadena de tiempo en formato ISO 8601 que se desea convertir.
+
+    Retorna
+    -------
+    int
+        El valor de la marca de tiempo en formato epoch correspondiente a la
+        fecha y hora especificada.
+
+    Notas
+    -----
+    El formato ISO 8601 es un estándar internacional para la representación de
+    fechas y horas. Un ejemplo de este
+    formato es "2023-10-22T10:15:30Z". La función convierte este formato a un
+    valor entero que representa el número
+    total de segundos desde el 1 de enero de 1970 (conocido como "tiempo epoch"
+    en Unix).
+
+    Referencias
+    -----------
+    Esta implementación se basa en la solución propuesta en StackOverflow:
+    https://stackoverflow.com/questions/27245488/converting-iso-8601-date-time-to-seconds-in-python
+
+    Ejemplo
+    -------
+    >>> iso_time_string = "2023-07-18T20:35:30-04:00"
+    >>> epoch_time = iso8601_to_epoch(iso_time_string)
+    >>> print(epoch_time)
+    1689726930
+    """
     # https://stackoverflow.com/questions/27245488/converting-iso-8601-date-time-to-seconds-in-python
     parsed_time = dp.parse(iso_time)
     epoch = parsed_time.timestamp()

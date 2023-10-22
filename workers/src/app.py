@@ -195,46 +195,46 @@ async def job_status(job_id: str) -> JSONResponse:
 @app.get("/heartbeat")
 async def heartbeat() -> JSONResponse:
     """
-        --- Documentación por ChatGPT ---
-        Endpoint que verifica la salud o "heartbeat" de la aplicación.
+    --- Documentación por ChatGPT ---
+    Endpoint que verifica la salud o "heartbeat" de la aplicación.
 
-        Route
-        -----
-        GET /heartbeat
+    Route
+    -----
+    GET /heartbeat
 
-        Respuesta
-        --------
-        JSONResponse
-            Un objeto JSONResponse que indica si la aplicación está
-            funcionando correctamente.
+    Respuesta
+    --------
+    JSONResponse
+        Un objeto JSONResponse que indica si la aplicación está
+        funcionando correctamente.
 
-        Campos de respuesta
-        ------------------
-        "message": bool
-            Un valor booleano que indica la salud de la aplicación. Si es
-            `True`, significa que la aplicación está funcionando correctamente.
+    Campos de respuesta
+    ------------------
+    "message": bool
+        Un valor booleano que indica la salud de la aplicación. Si es
+        `True`, significa que la aplicación está funcionando correctamente.
 
-        Ejemplo de respuesta
-        -------------------
-        {
-            "message": True
-        }
+    Ejemplo de respuesta
+    -------------------
+    {
+        "message": True
+    }
 
-        Notas
-        -----
-        Este endpoint se utiliza comúnmente en infraestructuras y
-        despliegues para comprobar la salud o "heartbeat" de un servicio. Si
-        el servicio devuelve `True`, indica que está funcionando como se
-        espera.
+    Notas
+    -----
+    Este endpoint se utiliza comúnmente en infraestructuras y
+    despliegues para comprobar la salud o "heartbeat" de un servicio. Si
+    el servicio devuelve `True`, indica que está funcionando como se
+    espera.
 
-        Ejemplo
-        -------
-        >>> response = requests.get("https://yourapi.com/heartbeat")
-        >>> response.json()
-        {
-            "message": True
-        }
-        """
+    Ejemplo
+    -------
+    >>> response = requests.get("https://yourapi.com/heartbeat")
+    >>> response.json()
+    {
+        "message": True
+    }
+    """
     content = {
         "message": True
     }
