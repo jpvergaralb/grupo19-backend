@@ -192,7 +192,7 @@ const postRequests = async (req, res) => {
 };
 
 const createRequestToWebpay = async (req, res) => {
-  console.log('📠| POST request recibida a /requests/webpay en API');
+  console.log('📠| POST request recibida a /requests/webpay/create en API');
 
   try {
     const request = req.body;
@@ -244,15 +244,22 @@ const createRequestToWebpay = async (req, res) => {
       location,
     });
 
+    let precio_clp;
+
+    await axios.get(`https://v6.exchangerate-api.com/v6/${process.env.CURRENCY_CONVERSION_KEY}/latest/USD`)
+      .then((response) => {
+        precio_clp = Math.ceil(response.data.conversion_rates.CLP * lastStock.price * quantity);
+      });
+
     const newTransaction = await Transaction.create({
       user_id,
       request_id: newRequest.id,
       stock_symbol: symbol,
       quantity,
-      amount: lastStock.price * quantity,
+      amount: precio_clp,
     });
 
-    const redirect_url = process.env.WEBPAY_REDIRECT_URL ? `${process.env.WEBPAY_REDIRECT_URL}/${symbol}` : 'http://localhost:8080';
+    const redirect_url = process.env.WEBPAY_REDIRECT_URL ? `${process.env.WEBPAY_REDIRECT_URL}` : 'http://localhost:8080';
 
     const trx = await tx.create(
       newTransaction.id.slice(0, 25),
@@ -260,60 +267,61 @@ const createRequestToWebpay = async (req, res) => {
       newTransaction.amount,
       redirect_url,
     );
-    await db.transaction.update({
+
+    await Transaction.update({ token: trx.token }, {
       where: {
         id: newTransaction.id,
-      },
-      data: {
-        token: trx.token,
       },
     });
 
     const data = {
       token: trx.token,
       url: trx.url,
+      precio_clp: newTransaction.amount,
     };
 
-    res.status(201).json({ message: `Transaction ${newTransaction.id} from user ${user_id}: waiting payment`, transaction: data});
+    res.status(201).json({ message: `Transaction ${newTransaction.id} from user ${user_id}: waiting payment`, transaction: data });
   } catch (error) {
     res.status(500).json({ message: 'Internal Server Error from API', error });
     console.log(error);
   }
 
-  console.log('📞| Fin del mensaje a /requests/webpay');
+  console.log('📞| Fin del mensaje a /requests/webpay/create');
   return res;
 };
 
 const commitRequestToWebpay = async (req, res) => {
+  console.log('📠| POST request recibida a /requests/webpay/commit en API');
   const { token_ws } = req.body;
   if (!token_ws || token_ws === '') {
     return res.status(200).json({ message: 'Transaccion anulada por el usuario' });
   }
-  const confirmedTx = await tx.commit(token_ws);
 
-  if (confirmedTx.response_code !== 0) { // Rechaza la compra
-    await db.transaction.update({
+  try {
+    const confirmedTx = await tx.commit(token_ws);
+
+    if (confirmedTx.response_code !== 0) { // Rechaza la compra
+      await db.transaction.update({ stats: 'rejected' }, {
+        where: {
+          token: token_ws,
+        },
+      });
+
+      return res.status(200).json({ message: 'Transaccion ha sido rechazada' });
+    }
+
+    await db.transaction.update({ stats: 'filled' }, {
       where: {
         token: token_ws,
       },
-      data: {
-        status: 'rejected',
-      },
     });
-
-    return res.status(200).json({ message: 'Transaccion ha sido rechazada' });
+    res.status(200).json({ message: 'Transaccion ha sido aceptada' });
+  } catch (error) {
+    res.status(500).json({ message: 'Internal Server Error from API', error });
+    console.log(error);
   }
-
-  await db.transaction.update({
-    where: {
-      token: token_ws,
-    },
-    data: {
-      status: 'filled',
-    },
-  });
-
-  return res.status(200).json({ message: 'Transaccion ha sido aceptada' });
+  console.log('📞| Fin del mensaje a /requests/webpay/commit');
+  return res;
 };
 
 const updateRequestStatus = async (req, res) => {
