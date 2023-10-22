@@ -1,4 +1,5 @@
 from typing import Union
+from dateutil import parser as dp
 
 
 def convert_str_to_typed(value: str) -> Union[str, int, float, bool, None]:
@@ -65,3 +66,9 @@ def convert_str_to_typed(value: str) -> Union[str, int, float, bool, None]:
         case _:
             return value
 
+
+def iso8601_to_epoch(iso_time: str) -> int:
+    # https://stackoverflow.com/questions/27245488/converting-iso-8601-date-time-to-seconds-in-python
+    parsed_time = dp.parse(iso_time)
+    epoch = parsed_time.timestamp()
+    return int(epoch)

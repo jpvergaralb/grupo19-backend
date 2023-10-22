@@ -1,5 +1,3 @@
-from starlette.responses import JSONResponse
-
 from logs import logger as log
 from logs import print
 from environment import env
@@ -16,6 +14,9 @@ from time import sleep
 from fastapi.responses import JSONResponse
 from redis import Redis
 from celery.result import AsyncResult
+import dateutil.parser as dp
+
+from utils import iso8601_to_epoch
 
 # ------------------------------------
 
@@ -25,6 +26,10 @@ redis_client = Redis(host='redis_workers', port=6379, db=0)
 
 # ------------------------------------
 # Intentar convertir al tipo correcto de variable desde el json
+class NumberIn(BaseModel):
+    number: int
+
+
 class TaskIn(BaseModel):
     # Tarea de ejemplo:
     # {
@@ -33,32 +38,11 @@ class TaskIn(BaseModel):
     name: str
 
 
-class StocksData(BaseModel):
-    starting_date_epoch: int
-    stock_symbol: str
-    amount_bought: int
-
-
 class CeleryJob(BaseModel):
-    # Tarea con calculos de stocks
-    # {
-    #   "task_id": <int>
-    #   "stocks_predictions": [
-    #     {
-    #       "starting_date_epoch": <int>,
-    #       "stock_symbol": <str>,
-    #       "amount_bought": <int>
-    #     },
-    #     ...,
-    #     {
-    #       "starting_date_epoch": <int>,
-    #       "stock_symbol": <str>,
-    #       "amount_bought": <int>
-    #     }
-    #   ]
-    # }
-    job_id: str
-    stocks_predictions: List[StocksData]
+    jobId: str
+    symbol: str
+    amountValidated: int
+    startingDate: str  # ISO8601
 
 
 # ------------------------------------
@@ -72,7 +56,7 @@ app = FastAPI()
 
 # Tests
 @app.get("/")
-async def root() -> JSONResponse:
+def root() -> JSONResponse:
     content = {
         "message": "I am Root"
     }
@@ -80,7 +64,7 @@ async def root() -> JSONResponse:
 
 
 @app.get("/add")
-async def add(val1: Optional[int] = None,
+def add(val1: Optional[int] = None,
               val2: Optional[int] = None) -> JSONResponse:
     if None in (val1, val2):
         content = {
@@ -91,6 +75,15 @@ async def add(val1: Optional[int] = None,
     content = {
         "message": f"I am adding {val1} and {val2}",
         "result": val1 + val2
+    }
+    return JSONResponse(content=content, status_code=200)
+
+
+@app.post("/subtract")
+def subtract(val1: NumberIn, val2: NumberIn):
+    content = {
+        "message": f"I am subtracting {val2.number} from {val1.number}",
+        "result": val1.number - val2.number
     }
     return JSONResponse(content=content, status_code=200)
 
@@ -143,16 +136,18 @@ def create_task(task_in: TaskIn) -> JSONResponse:
         json=data)
         >>> response.json()
         {
-            "task_id": "f4b469fa-2457-4b5c-a4aa-2e2f2b3b5e7c",
+            "task_id": "SampleTaskName",
             "status": "PENDING",
             "message": "I'm Done"
         }
         """
+
     task = celery_app.send_task("tasks.dummy_task",
                                 args=[task_in.name])
     content = {
         "task_id": task.id,
-        "status": task.status
+        "status": task.status,
+        "message": "I'm Done"
     }
     return JSONResponse(content=content, status_code=202)
 
@@ -160,116 +155,39 @@ def create_task(task_in: TaskIn) -> JSONResponse:
 
 
 @app.post("/job")
-async def create_another_task(jobs: CeleryJob) -> JSONResponse:
-    """
-    --- Documentación por ChatGPT ---
-    Crea y envía múltiples tareas de predicción de acciones al servicio de
-    Celery para su procesamiento asíncrono y agrupa todas estas tareas bajo un
-    ID de trabajo único proporcionado.
-
-    Params
-    ----------
-    :param jobs: CeleryJob
-        Objeto que contiene un identificador de trabajo y una lista de
-        solicitudes de predicciones de acciones. Cada solicitud incluye
-        la fecha de inicio, el símbolo de la acción y la cantidad comprada.
-
-        Formato esperado:
-        {
-            "job_id": <str>,
-            "stocks_predictions": [
-                {
-                    "starting_date_epoch": <int>,
-                    "stock_symbol": <str>,
-                    "amount_bought": <int>
-                },
-                ...,
-                {
-                    "starting_date_epoch": <int>,
-                    "stock_symbol": <str>,
-                    "amount_bought": <int>
-                }
-            ]
-        }
-
-    :return: JSONResponse
-    -------
-        Respuesta en formato JSON que contiene el ID de trabajo y una lista
-        con los ID de las tareas y sus respectivos estados iniciales.
-
-    Notas
-    -----
-    La función utiliza el servicio Celery para procesar las tareas de
-    manera asíncrona. Los posibles estados de las tareas son:
-        - PENDING: Esperando a ser procesada.
-        - STARTED: Ha comenzado su ejecución.
-        - RETRY: Siendo reintentada por un fallo durante la ejecución.
-        - FAILURE: No pudo completarse con éxito.
-        - SUCCESS: Completada con éxito.
-        - RECEIVED: Recibida por un worker pero no ha comenzado su ejecución.
-        - REVOKED: Cancelada antes de su ejecución.
-        - REJECTED: Rechazada por un problema con el worker o configuración.
-
-    Ejemplo
-    -------
-    >>> from fastapi.testclient import TestClient
-
-    >>> client = TestClient(app)
-    >>> request_data = {
-    ...     "job_id": "unique_job_id_123",
-    ...     "stocks_predictions": [
-    ...         {
-    ...             "starting_date_epoch": 1680969060,
-    ...             "stock_symbol": "AAPL",
-    ...             "amount_bought": 100
-    ...         },
-    ...         {
-    ...             "starting_date_epoch": 1680969360,
-    ...             "stock_symbol": "GOOGL",
-    ...             "amount_bought": 50
-    ...         },
-    ...         {
-    ...             "starting_date_epoch": 1680969660,
-    ...             "stock_symbol": "AMZN",
-    ...             "amount_bought": 70
-    ...         }
-    ...     ]
-    ... }
-    >>> response = client.post("/job", json=request_data)
-    >>> print(response.json())
-    {
-        "job_id": "unique_job_id_123",
-        "tasks": [
-            {"task_id": "12345abcd", "status": "PENDING"},
-            {"task_id": "67890efgh", "status": "PENDING"},
-            {"task_id": "11223ijkl", "status": "PENDING"}
-        ]
-    }
-    """
-
-    tasks: List[AsyncResult] = list()
-
-    for stock_prediction_request in jobs.stocks_predictions:
-        tasks.append(
-            celery_app.send_task(
-                "task.linear_regression",
-                args=[stock_prediction_request.starting_date_epoch,
-                      stock_prediction_request.stock_symbol,
-                      stock_prediction_request.amount_bought]))
+async def create_another_task(job: CeleryJob) -> JSONResponse:
+    task = celery_app.send_task("task.linear_regression",
+                                args=[job.jobId,  # str
+                                      job.amountValidated,  # int
+                                      job.symbol,
+                                      job.startingDate  # str ISO8601
+                                ])
 
     content = {
-        "job_id": jobs.job_id,
-        "tasks": [{"task_id": task.id, "status": task.status}
-                  for task in tasks]}
+        "job_id": job.jobId,  # str || UUID
+        "tasks": {  # dict
+            "task_id": task.id,  # str || UUID
+            "status": task.status  # str
+        }
+    }
 
-    return JSONResponse(content, status_code=201)
+    return JSONResponse(content=content, status_code=201)
 
 
 # https://realpython.com/python-redis/
 @app.get("/job/{job_id}")
 # TODO
 async def job_status(job_id: str) -> JSONResponse:
-    # Rebisar si la llave existe y printear el valor
+    # Revisar si la llave existe y printear el valor
+
+    out_data = {"job_id": job_id,
+                "stocks_predictions": []}
+
+    for key in redis_client.keys():
+        if job_id in key:
+            stocks_predictions = json.loads(redis_client.get(key))
+            out_data["stocks_predictions"] = stocks_predictions
+
     content = dict()
     return JSONResponse(content=content, status_code=200)
 

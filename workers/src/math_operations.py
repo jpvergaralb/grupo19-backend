@@ -146,7 +146,8 @@ def stocks_bought_weight(stocks_bought: int) -> float:
     return prediction_weight
 
 
-def adjusted_slope_price(data: dict[int, float], stocks_bought: int) -> float:
+def adjusted_slope_price(data: dict[int, float],
+                         stocks_bought: int) -> float:
     """
     --- Documentación por ChatGPT ---
     Calcula la pendiente ajustada utilizando el peso de predicción basado en

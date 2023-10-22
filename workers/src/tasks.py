@@ -1,14 +1,23 @@
+from logs import logger as log
+from logs import print
+from environment import env
+
 from random import random
 from time import sleep
-from typing import Union
+from typing import Union, List
+from time import sleep
+import requests
 
 from celery import Celery
 from redis import Redis
 
+from utils import iso8601_to_epoch
+import math_operations
+
+
 app = Celery('tasks',
              backend='redis://redis_workers:6379/0',
              broker='redis://redis_workers:6379/0')
-
 
 
 # --------------------------------------------------
@@ -51,6 +60,9 @@ def dummy_task(name: str) -> str:
 
 
 @app.task(name="tasks.linear_regression")
-def linear_regression():
+def linear_regression(job_id: str,
+                      amount_bought: int,
+                      company_symbol: str,
+                      starting_date_iso8601: str):
     pass
 
