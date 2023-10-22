@@ -3,7 +3,7 @@ from logs import print
 from environment import env
 
 from random import random
-from time import sleep
+from time import sleep, time
 from typing import Union, List
 from time import sleep
 import requests
@@ -13,6 +13,8 @@ from redis import Redis
 
 from utils import iso8601_to_epoch
 import math_operations
+import numpy as np
+from sklearn.linear_model import LinearRegression
 
 
 app = Celery('tasks',
@@ -115,19 +117,17 @@ def linear_regression(job_id: str,
 
         page_counter += 1
 
-        # +--------------------------------+
+    # +--------------------------------+
 
-        plot_slope = math_operations.adjusted_slope_price(
-            data=prices,
-            stocks_bought=amount_bought)
+    now = int(time())
+    delta_time = now - starting_time_epoch
+    the_future = now + delta_time
 
-        current_price = prices[max(prices.keys())]
+    expected_price = math_operations.expected_stock_price_with_adjustment(
+        prices,
+        the_future,
+        amount_bought)
 
-        expected_price = math_operations.expected_stock_price_with_adjustment(
-            data=prices,
-            adjusted_slope=plot_slope,
-            current_value=current_price)
+    # +--------------------------------+
 
-        # +--------------------------------+
-
-    return expected_price, prices
+    return expected_price

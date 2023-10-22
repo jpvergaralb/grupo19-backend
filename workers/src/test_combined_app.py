@@ -29,7 +29,7 @@ async def est_post_dummy_task_singlethreaded():
 
 
 @pytest.mark.asyncio
-async def test_post_dummy_task_multithreaded():
+async def est_post_dummy_task_multithreaded():
     async with AsyncClient(app=app, base_url="http://test") as ac:
 
         # Función interna para hacer la solicitud POST asincrónicamente

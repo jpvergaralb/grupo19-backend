@@ -153,6 +153,7 @@ def create_task(task_in: TaskIn) -> JSONResponse:
 
     # ------------------------------------
 
+
 @app.post("/job")
 async def create_another_task(job: CeleryJob) -> JSONResponse:
     task = celery_app.send_task("tasks.linear_regression",
