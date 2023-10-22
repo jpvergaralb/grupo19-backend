@@ -72,7 +72,7 @@ def linear_regression(job_id: str,
     page_counter = 1
     starting_time_epoch: int = iso8601_to_epoch(starting_date_iso8601)
 
-    def fetch_data(company: str, current_page, page_size: int = 100):
+    def fetch_data(company: str, current_page, page_size: int = 1000):
         url = f'https://api.arqui.ljg.cl/' \
               f'stocks/{company}' \
               f'?size={page_size}' \
