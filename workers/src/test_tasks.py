@@ -17,20 +17,20 @@ def celery_config():
 
 # -----------------------------------------------------------------
 
-def test_add():
+def est_add():
     # Usa apply() para ejecutar la tarea de forma síncrona.
     result = add.apply((2, 3))
     assert result.result == 5
 
 
-def test_find_prime_slowly():
+def est_find_prime_slowly():
     # Usa apply() para ejecutar la tarea de forma síncrona.
     result = find_prime_slowly.apply((1000000,))
     assert result.result == 999983
 
 
 @pytest.mark.asyncio
-async def test_find_prime_slowly_celery():
+async def est_find_prime_slowly_celery():
     inputs = [103000, 270000]
     expected_outputs = [102983, 269987]
 

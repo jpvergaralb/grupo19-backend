@@ -65,7 +65,7 @@ def root() -> JSONResponse:
 
 @app.get("/add")
 def add(val1: Optional[int] = None,
-              val2: Optional[int] = None) -> JSONResponse:
+        val2: Optional[int] = None) -> JSONResponse:
     if None in (val1, val2):
         content = {
             "message": "I should add something"
@@ -151,17 +151,18 @@ def create_task(task_in: TaskIn) -> JSONResponse:
     }
     return JSONResponse(content=content, status_code=202)
 
+
 # ------------------------------------
 
 
 @app.post("/job")
 async def create_another_task(job: CeleryJob) -> JSONResponse:
-    task = celery_app.send_task("task.linear_regression",
+    task = celery_app.send_task("tasks.linear_regression",
                                 args=[job.jobId,  # str
                                       job.amountValidated,  # int
                                       job.symbol,
                                       job.startingDate  # str ISO8601
-                                ])
+                                      ])
 
     content = {
         "job_id": job.jobId,  # str || UUID

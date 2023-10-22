@@ -56,13 +56,63 @@ def dummy_task(name: str) -> str:
     print(f"Dummy task executed: {name}")
     return "I'm Done"
 
-# --------------------------------------------------
 
+# --------------------------------------------------
 
 @app.task(name="tasks.linear_regression")
 def linear_regression(job_id: str,
                       amount_bought: int,
                       company_symbol: str,
-                      starting_date_iso8601: str):
-    pass
+                      starting_date_iso8601: str) -> float:
 
+    prices = dict()
+    reached_starting_date = False
+    page_counter = 1
+    starting_time_epoch: int = iso8601_to_epoch(starting_date_iso8601)
+
+    def fetch_data(company: str, current_page, page_size: int = 100):
+        url = f'https://api.arqui.ljg.cl/' \
+              f'stocks/{company}' \
+              f'?size={page_size}' \
+              f'&page={current_page}'
+        headers = {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+        }
+
+        response = requests.get(url, headers=headers)
+
+        return response.json()
+
+    while not reached_starting_date:
+        current_response = fetch_data(company_symbol, page_counter)
+
+        # {'stock': [
+        #     {'id': 99079, 'symbol': 'AAPL', 'shortName': 'Apple Inc.',
+        #               'price': 172.88, 'currency': 'USD',
+        #               'source': 'Nasdaq Real Time Price',
+        #               'createdAt': '2023-10-22T01:04:49.460Z',
+        #               'updatedAt': '2023-10-22T01:04:49.460Z'},
+        #     {'id': 99064, 'symbol': 'AAPL', 'shortName': 'Apple Inc.',
+        #               'price': 172.88, 'currency': 'USD',
+        #               'source': 'Nasdaq Real Time Price',
+        #               'createdAt': '2023-10-22T00:59:49.411Z',
+        #               'updatedAt': '2023-10-22T00:59:49.411Z'}
+        # ]}
+
+        if "stock" not in current_response.keys():
+            break
+
+        for stock in current_response["stock"]:
+            creation_time = iso8601_to_epoch(stock["createdAt"])
+            stock_price = stock["price"]
+
+            if starting_time_epoch > creation_time:
+                reached_starting_date = True
+                break
+
+            prices[creation_time] = stock_price
+
+        page_counter += 1
+
+    return 1.1
