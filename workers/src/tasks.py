@@ -17,11 +17,14 @@ import numpy as np
 import json
 
 # Conexión a redis
-redis_client = Redis(host='redis_workers', port=6379, db=0)
+redis_client = Redis(host=env['REDIS_HOST'], port=env['REDIS_PORT'], db=env['REDIS_DATABASE'])
+
+redis_uri = f"{env['REDIS_PROTOCOL']}://{env['REDIS_HOST']}:{env['REDIS_PORT']}/{env['REDIS_DATABASE']}"
+
 
 app = Celery('tasks',
-             backend='redis://redis_workers:6379/0',
-             broker='redis://redis_workers:6379/0')
+             backend=redis_uri,
+             broker=redis_uri)
 
 
 # --------------------------------------------------
@@ -190,8 +193,8 @@ def linear_regression(job_id: str,
     starting_time_epoch: int = iso8601_to_epoch(starting_date_iso8601)
 
     # Función para descargar datos desde la API
-    def fetch_data(company: str, current_page, page_size: int = 100):
-        url = f'https://api.arqui.ljg.cl/' \
+    def fetch_data(company: str, current_page, page_size: int = env["QUERY_FETCH_SIZE"]):
+        url = f'{env["MAIN_API_URI"]}' \
               f'stocks/{company}' \
               f'?size={page_size}' \
               f'&page={current_page}'
