@@ -51,7 +51,7 @@ async def test_jobs_pending():
     # Enviar request
 
     async with AsyncClient(app=app, base_url="http://test") as async_client:
-        response = await async_client.post("/job", json=test_data)
+        await async_client.post("/job", json=test_data)
 
     # -----
     # Revisar que esté esperando
