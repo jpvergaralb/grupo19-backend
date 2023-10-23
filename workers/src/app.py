@@ -469,6 +469,12 @@ async def job_status(job_id: str) -> JSONResponse:
 
     log.debug(f"Buscando tarea: celery-task-meta-{job_id}")
 
+    # llaves_diccionario = [llave for llave in diccionario.keys()
+    #                       if "celery-task-meta-" in llave]
+    # llaves_redis = [llave.decode("utf8")
+    #                 for llave
+    #                 in redis_client.scan_iter(f"celery-task-meta-*")]
+
     keys = [key.decode('utf-8')
             for key in redis_client.scan_iter(f"*")
             if job_id in key.decode('utf-8')]
@@ -485,6 +491,8 @@ async def job_status(job_id: str) -> JSONResponse:
         log.debug(f"Tomando el primero de la lista")
 
         job_id = keys[0]
+
+        # job_data = diccionario[job_id]
         job_data = redis_client.get(job_id)
 
         log.debug(f"Convirtiendo de bytes a dict")
@@ -494,14 +502,6 @@ async def job_status(job_id: str) -> JSONResponse:
         log.debug(f"Trabajo encontrado: {job_data}")
 
         status_code = 200
-
-        # if "result" in job_data.keys():
-        #     content = {"job_id": job_id,
-        #                "stocks_predictions": job_data["result"]}
-        #
-        # else:
-        #     content = {"job_id": job_id,
-        #                "stocks_predictions": job_data["expected_price"]}
 
         content = {"job_id": job_id.strip("celery-task-meta-"),
                    "stocks_predictions": job_data["result"],

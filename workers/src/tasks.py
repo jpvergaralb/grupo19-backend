@@ -69,11 +69,14 @@ def linear_regression(job_id: str,
                       company_symbol: str,
                       starting_date_iso8601: str):
 
+    # Declaro y defino variables
+
     prices = dict()
     reached_starting_date = False
     page_counter = 1
     starting_time_epoch: int = iso8601_to_epoch(starting_date_iso8601)
 
+    # Función para descargar datos desde la API
     def fetch_data(company: str, current_page, page_size: int = 100):
         url = f'https://api.arqui.ljg.cl/' \
               f'stocks/{company}' \
@@ -88,6 +91,8 @@ def linear_regression(job_id: str,
 
         return response.json()
 
+    # Pedir datos hasta que se llegue a la fecha límite
+    # o no hayan más datos en la API
     while not reached_starting_date:
         current_response = fetch_data(company_symbol, page_counter)
 
