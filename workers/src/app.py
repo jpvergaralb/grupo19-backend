@@ -50,7 +50,7 @@ app = FastAPI()
 # ------------------------------------
 
 # Tests
-# @app.get("/")
+@app.get("/")
 def root() -> JSONResponse:
     """
     --- Documentación por ChatGPT ---

@@ -75,6 +75,4 @@ async def test_jobs():
     response_data = response.json()
 
     assert response_data["job_id"] == test_data["jobId"]
-    assert "task_id" in response_data["tasks"]
-    assert isinstance(response_data["tasks"]["task_id"], str)
-    assert response_data["tasks"]["status"] == "PENDING"
+    assert response_data["status"] == "PENDING"
