@@ -353,12 +353,16 @@ async def create_another_task(job: CeleryJob) -> JSONResponse:
 
     log.debug("Guadando datos de tarea en Redis")
 
+    # +---------------------------------+------------------------------------+
+    # | b'celery-task-meta-{job.jobId}' | b"{'status': 'PENDING', 'resul..." |
+    # +---------------------------------+------------------------------------+
+
     task_data = {'status': 'PENDING',
                  'result': -2147483648,
                  'traceback': None,
                  'children': [],
                  'date_done': None,
-                 'task_id': f'celery-task-meta-{job.jobId}'}
+                 'task_id': f'{job.jobId}'}
 
     json_string = json.dumps(task_data)
     json_bytes = json_string.encode('utf-8')
