@@ -373,14 +373,27 @@ async def create_another_task(job: CeleryJob) -> JSONResponse:
 async def job_status(job_id: str) -> JSONResponse:
     # Revisar si la llave existe y printear el valor
 
-    key = [llave for llave in redis_client.scan_iter(f"{job_id}")]
-    print(key)
+    key = [job for job in redis_client.scan_iter(f"{job_id}")]
 
-    out_data = {"job_id": job_id,
-                "stocks_predictions": ""}
+    if not key:
+        content = {"job_id": job_id,
+                   "stocks_predictions": -2147483648,
+                   "message": "Job not found"}
+        status_code = 404
+
+    else:
+        log.debug(f"Trabajo(s) encontrado: {key}")
+        log.debug(f"Tomando el primero de la lista")
+
+        job_id = key[0]
+
+
+
+        out_data = {"job_id": job_id,
+                    "stocks_predictions": ""}
 
     content = out_data
-    return JSONResponse(content=content, status_code=200)
+    return JSONResponse(content=content, status_code=status_code)
 
 
 @app.get("/heartbeat")

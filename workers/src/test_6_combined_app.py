@@ -62,7 +62,7 @@ async def test_jobs():
     random_uuid = uuid.uuid4()
 
     test_data = {
-        "jobId": "e1b00aad-a70f-4079-ae9b-b8fd36a91c30",
+        "jobId": f"{random_uuid}",
         "symbol": "AMZN",
         "amountValidated": 1,
         "startingDate": "2023-10-05T00:31:02.172Z"

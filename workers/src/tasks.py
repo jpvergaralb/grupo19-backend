@@ -142,9 +142,27 @@ def linear_regression(job_id: str,
         }
     }
 
+    log.debug(f"""
+    data_out = <[
+        "expected_price": {expected_price},
+        "amount_bought": {amount_bought},
+        "company_symbol": {company_symbol},
+        "times": <[
+            "starting_time": {starting_time_epoch},
+            "run_at": {now},
+            "delta_time": {delta_time}
+        ]>
+    ]>
+    """)
+
     json_string = json.dumps(data_out)
+    json_bytes = json_string.encode('utf-8')
+
+    log.debug("Guardando en redis")
 
     redis_client.set(f"{job_id}",
-                     json_string)
+                     json_bytes)
+
+    log.debug("Retornando por si acaso")
 
     return expected_price
