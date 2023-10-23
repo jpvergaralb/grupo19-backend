@@ -50,7 +50,7 @@ app = FastAPI()
 # ------------------------------------
 
 # Tests
-@app.get("/")
+# @app.get("/")
 def root() -> JSONResponse:
     """
     --- Documentación por ChatGPT ---
@@ -290,7 +290,7 @@ async def create_another_task(job: CeleryJob) -> JSONResponse:
     """
     --- Documentación por ChatGPT ---
     Endpoint que crea una nueva tarea asincrónica de Celery para
-    realizar una regresión lineal.
+    realizar una regresión lineal y la almacena en Redis.
 
     Route
     -----
@@ -300,38 +300,33 @@ async def create_another_task(job: CeleryJob) -> JSONResponse:
     --------------------------------------
     job : CeleryJob
         Información de la tarea que se desea crear, incluyendo detalles
-        como el ID del trabajo,
-        la cantidad validada, el símbolo y la fecha de inicio.
+        como el ID del trabajo (jobId), la cantidad validada (amountValidated),
+        el símbolo de la acción (symbol) y la fecha de inicio (startingDate)
+        en formato ISO8601.
 
     Respuesta
-    --------
+    ---------
     JSONResponse
         Un objeto JSONResponse que contiene información sobre la tarea
         creada.
 
     Campos de respuesta
     -------------------
-    "job_id": str || UUID
+    - "job_id": str || UUID
         ID del trabajo proporcionado en la solicitud.
-    "tasks": dict
-        Información sobre la tarea de Celery.
-        - "task_id": str || UUID
-            ID de la tarea de Celery.
-        - "status": str
-            Estado de la tarea de Celery.
+    - "status": str
+        Estado de la tarea de Celery (por ejemplo, "PENDING").
 
     Ejemplo de respuesta
-    -------------------
+    --------------------
     {
         "job_id": "a1234bc5-d6e7-890f-ghij-klmno1234567",
-        "tasks": {
-            "task_id": "p1234qr5-s6t7-890u-vwxz-yzabc1234567",
-            "status": "PENDING"
-        }
+        "status": "PENDING"
     }
 
-    Ejemplo
-    -------
+    Ejemplo de uso
+    --------------
+    >>> import requests
     >>> data = {
     ...     "jobId": "a1234bc5-d6e7-890f-ghij-klmno1234567",
     ...     "amountValidated": 500,
@@ -342,26 +337,55 @@ async def create_another_task(job: CeleryJob) -> JSONResponse:
     >>> response.json()
     {
         "job_id": "a1234bc5-d6e7-890f-ghij-klmno1234567",
-        "tasks": {
-            "task_id": "p1234qr5-s6t7-890u-vwxz-yzabc1234567",
-            "status": "PENDING"
-        }
+        "status": "PENDING"
     }
+
+    Notas
+    -----
+    1. Antes de enviar la tarea a Celery, la función almacena un objeto
+       inicial de tarea en Redis con un estado "PENDING".
+    2. Si hay algún problema al guardar el objeto de tarea en Redis, se
+       registra un error.
     """
+
+    # +--------------------------------+
+    # Guadando datos de tarea en Redis
+
+    log.debug("Guadando datos de tarea en Redis")
+
+    task_data = {'status': 'PENDING',
+                 'result': -2147483648,
+                 'traceback': None,
+                 'children': [],
+                 'date_done': None,
+                 'task_id': f'celery-task-meta-{job.jobId}'}
+
+    json_string = json.dumps(task_data)
+    json_bytes = json_string.encode('utf-8')
+    task_name = f'celery-task-meta-{job.jobId}'.encode(encoding='utf-8')
+
+    try:
+        redis_client.set(task_name, json_bytes)
+
+    except Exception as e:
+        log.error(f"Error saving data to Redis: \n{e}")
+
+    # +--------------------------------+
+    # Creando tarea
+
+    log.debug("Creando tarea")
 
     task = celery_app.send_task("tasks.linear_regression",
                                 args=[job.jobId,  # str
                                       job.amountValidated,  # int
                                       job.symbol,
                                       job.startingDate  # str ISO8601
-                                      ])
+                                      ],
+                                task_id=job.jobId)
 
     content = {
         "job_id": job.jobId,  # str || UUID
-        "tasks": {  # dict
-            "task_id": task.id,  # str || UUID
-            "status": task.status  # str
-        }
+        "status": task.status  # str
     }
 
     return JSONResponse(content=content, status_code=201)
@@ -369,30 +393,116 @@ async def create_another_task(job: CeleryJob) -> JSONResponse:
 
 # https://realpython.com/python-redis/
 @app.get("/job/{job_id}")
-# TODO
 async def job_status(job_id: str) -> JSONResponse:
-    # Revisar si la llave existe y printear el valor
+    """
+    --- Documentación por ChatGPT ---
+    Endpoint que devuelve el estado y los resultados de una tarea asincrónica
+    de Celery a partir de su ID.
 
-    key = [job for job in redis_client.scan_iter(f"{job_id}")]
+    Route
+    -----
+    GET /job/{job_id}
 
-    if not key:
+    Parámetros del path
+    -------------------
+    job_id : str
+        ID del trabajo asincrónico de Celery cuyo estado y resultados se desea
+        consultar.
+
+    Respuesta
+    --------
+    JSONResponse
+        Un objeto JSONResponse que contiene información sobre el estado y los
+        resultados de la tarea.
+
+    Campos de respuesta
+    -------------------
+    "job_id": str
+        ID del trabajo asincrónico de Celery.
+    "stocks_predictions": int || float
+        Predicciones de acciones o precios esperados para el trabajo.
+        Retorna -2147483648 si el trabajo no se encuentra.
+    "status": str
+        Estado de la tarea de Celery.
+    "message": str [Opcional]
+        Mensaje adicional en caso de que el trabajo no se encuentre.
+
+    Ejemplo de respuesta (Tarea encontrada)
+    --------------------------------------
+    {
+        "job_id": "a1234bc5-d6e7-890f-ghij-klmno1234567",
+        "stocks_predictions": 150.52,
+        "status": "SUCCESS"
+    }
+
+    Ejemplo de respuesta (Tarea no encontrada)
+    -----------------------------------------
+    {
+        "job_id": "a1234bc5-d6e7-890f-ghij-klmno1234567",
+        "stocks_predictions": -2147483648,
+        "message": "Job not found"
+    }
+
+    Ejemplo
+    -------
+    Ejemplo
+    -------
+    >>> import requests
+    >>> job_id_query = "a1234bc5-d6e7-890f-ghij-klmno1234567"
+    >>> response = requests.get(f"http://localhost:8000/job/{job_id_query}")
+    >>> response.json()
+    {'job_id': 'a1234bc5-d6e7-890f-ghij-klmno1234567',
+    'stocks_predictions': 150.52,
+    'status': 'SUCCESS'}
+
+    Notas
+    -----
+    La función busca el trabajo en una base de datos Redis usando el prefijo
+    'celery-task-meta-' junto con el ID del trabajo. Si no se encuentra ninguna
+    coincidencia, se devuelve un código de estado 404 y un mensaje indicando
+    que el trabajo no fue encontrado.
+    """
+
+    log.debug(f"Buscando tarea: celery-task-meta-{job_id}")
+
+    keys = [key.decode('utf-8')
+            for key in redis_client.scan_iter(f"*")
+            if job_id in key.decode('utf-8')]
+
+    log.debug(f"Trabajo(s) encontrado: {keys}")
+
+    if not keys:
         content = {"job_id": job_id,
                    "stocks_predictions": -2147483648,
                    "message": "Job not found"}
         status_code = 404
 
     else:
-        log.debug(f"Trabajo(s) encontrado: {key}")
         log.debug(f"Tomando el primero de la lista")
 
-        job_id = key[0]
+        job_id = keys[0]
+        job_data = redis_client.get(job_id)
 
+        log.debug(f"Convirtiendo de bytes a dict")
+        job_data = job_data.decode("utf-8")
+        job_data = json.loads(job_data)
 
+        log.debug(f"Trabajo encontrado: {job_data}")
 
-        out_data = {"job_id": job_id,
-                    "stocks_predictions": ""}
+        status_code = 200
 
-    content = out_data
+        # if "result" in job_data.keys():
+        #     content = {"job_id": job_id,
+        #                "stocks_predictions": job_data["result"]}
+        #
+        # else:
+        #     content = {"job_id": job_id,
+        #                "stocks_predictions": job_data["expected_price"]}
+
+        content = {"job_id": job_id.strip("celery-task-meta-"),
+                   "stocks_predictions": job_data["result"],
+                   "status": job_data["status"]}
+
     return JSONResponse(content=content, status_code=status_code)
 
 

@@ -2,7 +2,7 @@ from logs import logger as log
 from logs import print
 from environment import env
 
-from random import random
+from random import random, randint
 from time import sleep, time
 from typing import Union, List
 from time import sleep
@@ -74,7 +74,7 @@ def linear_regression(job_id: str,
     page_counter = 1
     starting_time_epoch: int = iso8601_to_epoch(starting_date_iso8601)
 
-    def fetch_data(company: str, current_page, page_size: int = 1000):
+    def fetch_data(company: str, current_page, page_size: int = 100):
         url = f'https://api.arqui.ljg.cl/' \
               f'stocks/{company}' \
               f'?size={page_size}' \
@@ -131,38 +131,44 @@ def linear_regression(job_id: str,
         amount_bought)
 
     # +--------------------------------+
-    data_out = {
-        "expected_price": expected_price,
-        "amount_bought": amount_bought,
-        "company_symbol": company_symbol,
-        "times": {
-            "starting_time": starting_time_epoch,
-            "run_at": now,
-            "delta_time": delta_time
-        }
-    }
+    # data_out = {
+    #     "expected_price": expected_price,
+    #     "amount_bought": amount_bought,
+    #     "company_symbol": company_symbol,
+    #     "times": {
+    #         "starting_time": starting_time_epoch,
+    #         "run_at": now,
+    #         "delta_time": delta_time
+    #     }
+    # }
+    #
+    # log.debug(f"""
+    # data_out = <[
+    #     "expected_price": {expected_price},
+    #     "amount_bought": {amount_bought},
+    #     "company_symbol": {company_symbol},
+    #     "times": <[
+    #         "starting_time": {starting_time_epoch},
+    #         "run_at": {now},
+    #         "delta_time": {delta_time}
+    #     ]>
+    # ]>
+    # """)
 
-    log.debug(f"""
-    data_out = <[
-        "expected_price": {expected_price},
-        "amount_bought": {amount_bought},
-        "company_symbol": {company_symbol},
-        "times": <[
-            "starting_time": {starting_time_epoch},
-            "run_at": {now},
-            "delta_time": {delta_time}
-        ]>
-    ]>
-    """)
+    # json_string = json.dumps(data_out)
+    # json_bytes = json_string.encode('utf-8')
 
-    json_string = json.dumps(data_out)
-    json_bytes = json_string.encode('utf-8')
+    log.debug(f"Guardando en redis: {expected_price}")
 
-    log.debug("Guardando en redis")
-
-    redis_client.set(f"{job_id}",
-                     json_bytes)
-
-    log.debug("Retornando por si acaso")
+    # try:
+    #     task_extra_numbers = randint(10000, 99999)
+    #     redis_client.set(f"{job_id}-{task_extra_numbers}", json_bytes)
+    #
+    # except Exception as e:
+    #     log.error(f"Error saving data to Redis: {e}")
+    #
+    # finally:
+    #     log.debug("Retornando por si acaso")
+    #     return expected_price
 
     return expected_price
