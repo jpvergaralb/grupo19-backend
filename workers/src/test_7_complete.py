@@ -109,11 +109,7 @@ async def test_jobs_success():
     async with AsyncClient(app=app, base_url="http://test") as async_client:
         response = await async_client.get(f"/job/{test_data['jobId']}")
     assert response.status_code == 200
-    response_data = response.json() == {
-        "job_id": test_data['jobId'],
-        "stocks_predictions": -2147483648,
-        "status": "PENDING"
-    }
+    response_data = response.json()
 
     assert isinstance(response_data["job_id"], str)
     assert response_data["job_id"] == test_data["jobId"]
