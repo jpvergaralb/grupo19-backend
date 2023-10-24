@@ -10,6 +10,8 @@ x-celery-worker-defaults: &celery-worker-defaults
     #- ./template.env
   depends_on:
     - redis_workers
+    - api_workers
+    - nginx
   restart: unless-stopped
   # TODO: Sacar
   volumes:
@@ -27,6 +29,7 @@ x-python-defaults: &python-defaults
       - ./src:/app
   stop_grace_period: 5s
 
+
 services:
   api_workers:
     container_name: api_workers
@@ -39,6 +42,7 @@ services:
     restart: unless-stopped
     depends_on:
       - redis_workers
+      - nginx_workers
 
   celery_workers_1:
     container_name: celery_workers_1
@@ -77,6 +81,25 @@ services:
     ports:
       - 6379:6379
     restart: unless-stopped
+
+  nginx_workers:
+    container_name: nginx_workers
+    image: nginx:1.25.2-alpine
+    ports:
+      - ${NGINX_HTTP_PORT:-80}:80
+      - ${NGINX_HTTPS_PORT:-443}:443
+    volumes:
+      # Logs
+      - ./nginx/logs:/var/log/nginx
+      # Certificates
+      - ./nginx/templates/letsencrypt:/etc/nginx/templates/letsencrypt
+      # Configs Sitios
+      - ./nginx/templates:/etc/nginx/templates
+      restart: unless-stopped
+      stop_grace_period: 3s
+#    depends_on:
+#      - cloudflare-ddns_workers
+
 
 volumes:
   redis:
