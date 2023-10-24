@@ -1,5 +1,6 @@
 import pytest
-from utils import convert_str_to_typed, iso8601_to_epoch
+
+from utils import convert_str_to_typed, iso8601_to_epoch, epoch_to_iso8601
 
 
 @pytest.mark.parametrize("input_str, expected_output", [
@@ -30,3 +31,12 @@ def test_iso8601_to_epoch():
     result = iso8601_to_epoch(iso_time)
     assert type(result) is int
     assert result == epoch_time
+
+
+def test_epoch_to_iso8601():
+    iso_time = "2020-10-22T22:26:49Z"
+    epoch_time = 1603405609
+
+    result = epoch_to_iso8601(epoch_time)
+    assert type(result) is str
+    assert result == iso_time

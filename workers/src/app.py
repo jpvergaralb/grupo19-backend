@@ -102,7 +102,7 @@ def root() -> JSONResponse:
     return JSONResponse(content=content, status_code=200)
 
 
-@app.get("/add")
+#@app.get("/add")
 def add(val1: Optional[int] = None,
         val2: Optional[int] = None) -> JSONResponse:
     """
@@ -178,7 +178,7 @@ def add(val1: Optional[int] = None,
     return JSONResponse(content=content, status_code=200)
 
 
-@app.post("/subtract")
+#@app.post("/subtract")
 def subtract(val1: NumberIn, val2: NumberIn):
     """
     --- Documentación por ChatGPT ---
@@ -240,7 +240,7 @@ def subtract(val1: NumberIn, val2: NumberIn):
     return JSONResponse(content=content, status_code=200)
 
 
-@app.post("/dummy_task")
+#@app.post("/dummy_task")
 def create_task(task_in: TaskIn) -> JSONResponse:
     """
         --- Documentación por ChatGPT ---
@@ -467,7 +467,7 @@ async def job_status(job_id: str) -> JSONResponse:
             - `"times": dict` (Información de tiempos relevantes como tiempo
                 de inicio, tiempo de ejecución y delta)
             - `"price_history": list of lists` (Historial de precios, donde
-                cada lista contiene [tiempo_epoch, precio])
+                cada lista contiene [tiempo_iso8601, precio])
 
     Ejemplo de respuesta (Tarea encontrada)
     --------------------------------------
@@ -481,17 +481,15 @@ async def job_status(job_id: str) -> JSONResponse:
             "amount_bought": 50,
             "company_symbol": "AMZN",
             "times": {
-                "starting_time": 1680969060,
-                "ran_at": 1698184895,
-                "delta_time": 17215835,
+                "prediction_starting_time": "2022-10-22T12:34:56Z",
+                "run_at": "2022-10-23T14:56:11Z",
+                "prediction_future_time": "2022-10-24T16:32:12Z",
+                "delta_time_seconds": 12345,
             },
             "price_history": [
-                [1680969060, 140.16],
-                [1680969360, 153.12],
+                ["2022-10-22T12:34:56Z", 140.16],
+                ["2022-10-22T13:45:67Z", 153.12],
                 ...
-                [1680969660, 135.65],
-                [1680969960, 651.201],
-                [1680970260, 163.2]
             ]
         }
     }
@@ -509,12 +507,13 @@ async def job_status(job_id: str) -> JSONResponse:
             "amount_bought": -2147483648,
             "company_symbol": "UNKNOWN",
             "times": {
-                "starting_time": -2147483648,
-                "ran_at": -2147483648,
-                "delta_time": 0,
+                "prediction_starting_time": "1970-01-01T00:00:00Z",
+                "run_at": "1970-01-01T00:00:00Z",
+                "prediction_future_time": "1970-01-01T00:00:00Z",
+                "delta_time_seconds": 0,
             },
             "price_history": [
-                [-2147483648, -2147483648]
+                ["1970-01-01T00:00:00Z", -2147483648]
             ]
         }
     }
@@ -560,40 +559,22 @@ async def job_status(job_id: str) -> JSONResponse:
     log.debug(f"Trabajo(s) encontrado: {keys}")
 
     if not keys:
-        # {
-        #     "message": "Job not found",
-        #     "status": "UNKNOWN",
-        #     "job_id": "a1234bc5-d6e7-890f-ghij-klmno1234567",
-        #     "job_data": {
-        #         "stocks_predictions": -2147483648,
-        #         "amount_bought": -2147483648,
-        #         "company_symbol": "",
-        #         "times": {
-        #             "starting_time": -2147483648,
-        #             "ran_at": -2147483648,
-        #             "delta_time": 0,
-        #         },
-        #         "price_history": [
-        #             [-2147483648, -2147483648]
-        #         ]
-        #     }
-        # }
-
         content = {
             "message": "Job not found",
             "status": "UNKNOWN",
-            "job_id": job_id,
+            "job_id": "a1234bc5-d6e7-890f-ghij-klmno1234567",
             "job_data": {
                 "stocks_predictions": -2147483648,
                 "amount_bought": -2147483648,
                 "company_symbol": "UNKNOWN",
                 "times": {
-                    "starting_time": -2147483648,
-                    "ran_at": -2147483648,
-                    "delta_time": 0,
+                    "prediction_starting_time": "1970-01-01T00:00:00Z",
+                    "run_at": "1970-01-01T00:00:00Z",
+                    "prediction_future_time": "1970-01-01T00:00:00Z",
+                    "delta_time_seconds": 0,
                 },
                 "price_history": [
-                    [-2147483648, -2147483648]
+                    ["1970-01-01T00:00:00Z", -2147483648]
                 ]
             }
         }
@@ -625,25 +606,23 @@ async def job_status(job_id: str) -> JSONResponse:
         #         "amount_bought": 50,
         #         "company_symbol": "AMZN",
         #         "times": {
-        #             "starting_time": 1680969060,
-        #             "ran_at": 1698184895,
-        #             "delta_time": 17215835,
+        #             "prediction_starting_time": "2022-10-22T12:34:56Z",
+        #             "run_at": "2022-10-23T14:56:11Z",
+        #             "prediction_future_time": "2022-10-24T16:32:12Z",
+        #             "delta_time_seconds": 12345,
         #         },
         #         "price_history": [
-        #             [1680969060, 140.16],
-        #             [1680969360, 153.12],
+        #             ["2022-10-22T12:34:56Z", 140.16],
+        #             ["2022-10-22T13:45:67Z", 153.12],
         #             ...
-        #             [1680969660, 135.65],
-        #             [1680969960, 651.201],
-        #             [1680970260, 163.2]
         #         ]
         #     }
         # }
 
         content = {
-            "job_id": job_id.strip("celery-task-meta-"),
             "message": "Job found",
             "status": status_converter(job_data["status"]),
+            "job_id": job_id.strip("celery-task-meta-"),
             "job_data": job_data["result"]
         }
 
@@ -658,25 +637,27 @@ async def heartbeat() -> JSONResponse:
 
     Route
     -----
-    GET /heartbeat
+    `GET /heartbeat`
 
     Respuesta
     --------
-    JSONResponse
+    `JSONResponse`
         Un objeto JSONResponse que indica si la aplicación está
         funcionando correctamente.
 
     Campos de respuesta
     ------------------
-    "message": bool
+    `"message": bool`
         Un valor booleano que indica la salud de la aplicación. Si es
         `True`, significa que la aplicación está funcionando correctamente.
 
     Ejemplo de respuesta
     -------------------
+    ```
     {
         "message": True
     }
+    ```
 
     Notas
     -----
@@ -687,11 +668,13 @@ async def heartbeat() -> JSONResponse:
 
     Ejemplo
     -------
+    ```
     >>> response = requests.get("https://yourapi.com/heartbeat")
     >>> response.json()
     {
         "message": True
     }
+    ```
     """
     content = {
         "message": True

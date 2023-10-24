@@ -11,7 +11,7 @@ import math_operations
 from environment import env
 from logs import logger as log
 from logs import print
-from utils import iso8601_to_epoch
+from utils import iso8601_to_epoch, epoch_to_iso8601
 
 # Conexión a redis
 redis_client = Redis(host=env['REDIS_HOST'], port=env['REDIS_PORT'], db=env['REDIS_DATABASE'])
@@ -291,20 +291,38 @@ def linear_regression(job_id: str,
 
     # ----------------------------------------
 
-    prices_list = [[datetime, prices[datetime]]
+    prices_list = [[epoch_to_iso8601(datetime), prices[datetime]]
                    for datetime in prices.keys()]
 
     del prices
     prices_list.sort(key=lambda data_list: data_list[0])
 
+    # "job_data": {
+    #     "stocks_predictions": 150.52,
+    #     "amount_bought": 50,
+    #     "company_symbol": "AMZN",
+    #     "times": {
+    #         "prediction_starting_time": "2022-10-22T12:34:56Z",
+    #         "run_at": "2022-10-23T14:56:11Z",
+    #         "prediction_future_time": "2022-10-24T16:32:12Z",
+    #         "delta_time_seconds": 12345,
+    #     },
+    #     "price_history": [
+    #         ["2022-10-22T12:34:56Z", 140.16],
+    #         ["2022-10-22T13:45:67Z", 153.12],
+    #         ...
+    #     ]
+    # }
+
     new_data = {
-        "expected_price": expected_price,
+        "stocks_predictions": expected_price,
         "amount_bought": amount_bought,
         "company_symbol": company_symbol,
         "times": {
-            "starting_time": starting_time_epoch,
-            "ran_at": now,
-            "delta_time": delta_time
+            "prediction_starting_time": epoch_to_iso8601(starting_time_epoch),
+            "ran_at": epoch_to_iso8601(now),
+            "prediction_future_time": epoch_to_iso8601(the_future),
+            "delta_time_seconds": delta_time
         },
         "price_history": prices_list
     }
