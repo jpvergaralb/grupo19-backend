@@ -37,11 +37,22 @@ if not located:
 
 env = {
     "LOG_LEVEL": getenv("LOG_LEVEL"),
+
     "WORKER_API_HOST": getenv("WORKER_API_HOST"),
     "WORKER_API_PORT": getenv("WORKER_API_PORT"),
+
+    "REDIS_PROTOCOL": getenv("REDIS_PROTOCOL"),
+    "REDIS_HOST": getenv("REDIS_HOST"),
+    "REDIS_PORT": getenv("REDIS_PORT"),
+    "REDIS_DATABASE": getenv("REDIS_DATABASE"),
+
+    "QUERY_FETCH_SIZE": getenv("QUERY_FETCH_SIZE"),
+    "MAIN_API_URI": getenv("MAIN_API_URI")
 }
 
-log_level = env["LOG_LEVEL"].upper()
+log_level = env["LOG_LEVEL"].upper() \
+    if isinstance(env["LOG_LEVEL"], str) \
+    else ""
 
 match log_level:
     case _ if log_level in ("TRACE", "VERBOSE", "DEBUG"):

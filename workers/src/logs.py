@@ -6,6 +6,36 @@ start_time = time()
 
 
 def runtime():
+    """
+    --- Documentación por ChatGPT ---
+    Calcula el tiempo transcurrido desde un tiempo de inicio `start_time`.
+
+    Notas
+    -----
+    Esta función calcula el tiempo que ha transcurrido desde `start_time`
+    (que debe ser definido previamente) hasta el momento actual. El tiempo
+    transcurrido se devuelve en el formato 'HH:MM:SS'.
+
+    Es importante notar que `start_time` debe ser definido previamente y
+    representar un punto de tiempo anterior (usualmente usando
+    `time.time()`).
+    La función no verifica la existencia de `start_time`, por lo que debe
+    asegurarse de que esté correctamente definido antes de llamar a esta
+    función.
+
+    Retorna
+    -------
+    str
+        El tiempo transcurrido en formato 'HH:MM:SS'.
+
+    Ejemplo
+    -------
+    >>> start_time = time()
+    >>> # Suponiendo que esperas por algunos segundos o minutos...
+    >>> elapsed = runtime()
+    >>> print(f"Tiempo transcurrido: {elapsed}")
+    Tiempo transcurrido: 00:00:15  # Solo un ejemplo.
+    """
     elapsed_time = time() - start_time
     mins, secs = divmod(elapsed_time, 60)
     hours, mins = divmod(mins, 60)
@@ -45,6 +75,7 @@ coloredlogs.install(
 print = logger.debug
 
 if __name__ == '__main__':
+
     logger.debug("Hello World!")
     logger.info("Hello World!")
     logger.warning("Hello World!")
