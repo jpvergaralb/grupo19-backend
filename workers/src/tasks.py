@@ -1,20 +1,17 @@
-from logs import logger as log
-from logs import print
-from environment import env
-
-from random import random, randint
-from time import sleep, time
-from typing import Union, List
+from random import random
 from time import sleep
-import requests
+from time import time
+from typing import Union
 
+import requests
 from celery import Celery
 from redis import Redis
 
-from utils import iso8601_to_epoch
 import math_operations
-import numpy as np
-import json
+from environment import env
+from logs import logger as log
+from logs import print
+from utils import iso8601_to_epoch
 
 # Conexión a redis
 redis_client = Redis(host=env['REDIS_HOST'], port=env['REDIS_PORT'], db=env['REDIS_DATABASE'])
@@ -292,4 +289,24 @@ def linear_regression(job_id: str,
     #     log.debug("Retornando por si acaso")
     #     return expected_price
 
-    return expected_price
+    # ----------------------------------------
+
+    prices_list = [[datetime, prices[datetime]]
+                   for datetime in prices.keys()]
+
+    del prices
+    prices_list.sort(key=lambda data_list: data_list[0])
+
+    new_data = {
+        "expected_price": expected_price,
+        "amount_bought": amount_bought,
+        "company_symbol": company_symbol,
+        "times": {
+            "starting_time": starting_time_epoch,
+            "ran_at": now,
+            "delta_time": delta_time
+        },
+        "price_history": prices_list
+    }
+
+    return new_data
