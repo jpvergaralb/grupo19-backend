@@ -20,3 +20,4 @@ def convert_str_to_typed(value: str) -> Union[str, int, float, bool]:
 
         case _:
             return value
+
