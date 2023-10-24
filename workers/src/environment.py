@@ -46,7 +46,8 @@ env = {
     "REDIS_PORT": getenv("REDIS_PORT"),
     "REDIS_DATABASE": getenv("REDIS_DATABASE"),
 
-
+    "QUERY_FETCH_SIZE": getenv("QUERY_FETCH_SIZE"),
+    "MAIN_API_URI": getenv("MAIN_API_URI")
 }
 
 log_level = env["LOG_LEVEL"].upper() \

@@ -149,6 +149,50 @@ def stocks_bought_weight(stocks_bought: int) -> float:
 def expected_stock_price_with_adjustment(data: dict[int, float],
                                          the_future_time: int,
                                          stocks_bought: int) -> float:
+    """
+    --- Documentación por ChatGPT ---
+    Calcula el valor esperado de una acción para un momento específico en el futuro,
+    teniendo en cuenta un ajuste basado en la cantidad de acciones compradas.
+
+    Params
+    ----------
+    :param data: dict[int, float]
+        Diccionario que contiene los valores de las acciones (valores) y sus
+        respectivos tiempos en formato epoch (claves).
+    :param the_future_time: int
+        El tiempo específico en formato epoch para el cual se quiere predecir
+        el valor de las acciones.
+    :param stocks_bought: int
+        Número de acciones compradas.
+
+    :return: float
+    -------
+        Valor esperado ajustado de la acción para el momento especificado en el
+        futuro.
+
+    Notas
+    -----
+    Esta función combina dos procedimientos:
+    1. Utiliza la regresión lineal para predecir el valor de las acciones para
+       un momento específico en el futuro.
+    2. Ajusta esta predicción basándose en el peso calculado de la cantidad de
+       acciones que se han comprado.
+
+    Ejemplo
+    -------
+    >>> stocks_data = {
+    ...     1680969060: 5,
+    ...     1680969360: 7,
+    ...     1680969660: 546,
+    ...     1680969960: 115,
+    ...     1680970260: 41
+    ... }
+    >>> future_time = 1680971000
+    >>> stocks_count = 60
+    >>> expected_value = expected_stock_price_with_adjustment(stocks_data, future_time, stocks_count)
+    >>> print(f"El valor esperado ajustado es: {expected_value:.2f}")
+    El valor esperado ajustado es: 145.67  # Este es solo un valor ilustrativo, no es el resultado real.
+    """
 
     almost_there = predict_stock_value(data, the_future_time)
     finally_there = almost_there * stocks_bought_weight(stocks_bought)
