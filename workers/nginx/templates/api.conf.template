@@ -1,0 +1,27 @@
+# ------------------------------------------------------------
+# api.arqui-workers.ljg.cl
+# ------------------------------------------------------------
+
+# Load balancing
+upstream backend_api {
+    server api_workers:8001;
+}
+
+server {
+    listen 80;
+    server_name api.arqui-workers.ljg.cl;
+
+    include /etc/nginx/templates/include/https-redirect.conf;
+}
+
+server {
+    listen 443 ssl;
+    server_name api.arqui-workers.ljg.cl;
+
+    include /etc/nginx/templates/include/wildcard-ssl.conf;
+
+    location / {
+        proxy_pass http://backend_api;
+        include /etc/nginx/templates/include/proxy.conf;
+    }
+}
