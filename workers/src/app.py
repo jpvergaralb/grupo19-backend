@@ -386,8 +386,23 @@ async def create_another_task(job: CeleryJob) -> JSONResponse:
     # | b'celery-task-meta-{job.jobId}' | b"{'status': 'PENDING', 'resul..." |
     # +---------------------------------+------------------------------------+
 
+    result = {
+        "stocks_predictions": 0,
+        "amount_bought": job.amountValidated,
+        "company_symbol": job.symbol,
+        "times": {
+            "prediction_starting_time": job.startingDate,
+            "run_at": "1970-01-01T00:00:00Z",
+            "prediction_future_time": "1970-01-01T00:00:00Z",
+            "delta_time_seconds": 0,
+        },
+        "price_history": [
+            ["1970-01-01T00:00:00Z", 0]
+        ]
+    }
+
     task_data = {'status': 'PENDING',
-                 'result': -2147483648,
+                 'result': result,
                  'traceback': None,
                  'children': [],
                  'date_done': None,
