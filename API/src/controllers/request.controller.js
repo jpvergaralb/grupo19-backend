@@ -4,6 +4,8 @@ const db = require('../../models');
 const Request = db.request;
 const User = db.user;
 const Stock = db.stock;
+const MOCK_USER_UUID = '7459cf2b-2d9f-48a2-99a3-0a3958fc9931';
+const GROUP_NUMBER = 19;
 
 const getRequests = async (req, res) => {
   console.log('📠| GET request recibida a /requests');
@@ -152,6 +154,29 @@ const postRequests = async (req, res) => {
     });
     if (!lastStock) {
       return res.status(404).json({ message: `Stock ${symbol} not found` });
+    }
+
+    if (group_id !== GROUP_NUMBER) {
+      if (
+        !group_id
+        || !symbol
+        || !datetime
+        || deposit_token !== ''
+        || !quantity
+        || seller === undefined
+      ) {
+        await Request.create({
+          user_id: MOCK_USER_UUID,
+          stock_id: lastStock.id,
+          group_id,
+          symbol,
+          datetime,
+          deposit_token,
+          quantity,
+          seller,
+          location: 'unknown',
+        });
+      }
     }
 
     if (await user.CanAffordThisTransaction(quantity, lastStock.price) === false) {
