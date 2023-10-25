@@ -1,5 +1,5 @@
 #!/bin/bash
-sleep 2
+sleep 5
 echo "Hello Pytest"
 python3 -m pytest --verbose
 echo "Bye Pytest"

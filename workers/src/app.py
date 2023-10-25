@@ -32,18 +32,17 @@ class CeleryJob(BaseModel):
 
 
 def status_converter(status: str = "PENDING"):
-    match status:
-        case ("PENDING", "STARTED", "RETRY", "RECEIVED"):
-            return "PENDING"
+    if status in ("PENDING", "STARTED", "RETRY", "RECEIVED"):
+        return "PENDING"
 
-        case ("SUCCESS"):
-            return "SUCCESS"
+    elif status == "SUCCESS":
+        return "SUCCESS"
 
-        case ("FAILURE", "REVOKED", "REJECTED", "IGNORED", "TERMINATED"):
-            return "FAILURE"
+    elif status in ("FAILURE", "REVOKED", "REJECTED", "IGNORED", "TERMINATED"):
+        return "FAILURE"
 
-        case _:
-            return "UNKNOWN"
+    else:
+        return "UNKNOWN"
 
 # ------------------------------------
 
@@ -102,7 +101,7 @@ def root() -> JSONResponse:
     return JSONResponse(content=content, status_code=200)
 
 
-#@app.get("/add")
+@app.get("/add")
 def add(val1: Optional[int] = None,
         val2: Optional[int] = None) -> JSONResponse:
     """
@@ -178,7 +177,7 @@ def add(val1: Optional[int] = None,
     return JSONResponse(content=content, status_code=200)
 
 
-#@app.post("/subtract")
+@app.post("/subtract")
 def subtract(val1: NumberIn, val2: NumberIn):
     """
     --- Documentación por ChatGPT ---
@@ -240,7 +239,7 @@ def subtract(val1: NumberIn, val2: NumberIn):
     return JSONResponse(content=content, status_code=200)
 
 
-#@app.post("/dummy_task")
+@app.post("/dummy_task")
 def create_task(task_in: TaskIn) -> JSONResponse:
     """
         --- Documentación por ChatGPT ---
@@ -432,8 +431,8 @@ async def create_another_task(job: CeleryJob) -> JSONResponse:
                                 task_id=job.jobId)
 
     content = {
-        "job_id": status_converter(job.jobId),  # str || UUID
-        "status": task.status  # str
+        "job_id": job.jobId,  # str || UUID
+        "status": status_converter(task.status)  # str
     }
 
     return JSONResponse(content=content, status_code=201)
