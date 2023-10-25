@@ -3,7 +3,6 @@ const app = require('../app');
 const db = require('../../models');
 const {
   sellerMockId,
-  groupMockId,
   statusMock,
   missingFieldValidationMock,
 } = require('./utils/validationRoutes.util');
@@ -22,7 +21,7 @@ describe('Validations API - General Cases', () => {
   });
 
   it('should return validations by group id', async () => {
-    const res = await request(app).get(`/validations/group/19`);
+    const res = await request(app).get('/validations/group/19');
     expect(res.statusCode).toEqual(200);
   });
 
