@@ -125,30 +125,6 @@ const getUserPredictions = async (req, res) => {
   }
 };
 
-const getLastUserPrediction = async (req, res) => {
-  const { id } = req.params;
-
-  if (!id) {
-    return res.status(400).json({ message: 'Missing parameters: id.' });
-  }
-
-  try {
-    const user = await User.findByPk(id);
-
-    if (user) {
-      const lastPrediction = await user.getPredictions({
-        limit: 1,
-        order: [['createdAt', 'DESC']],
-      });
-
-      return res.status(200).json({ lastPrediction });
-    }
-    return res.status(404).json({ message: 'No user found' });
-  } catch (error) {
-    return res.status(500).json({ error });
-  }
-};
-
 const postUpdateWallet = async (req, res) => {
   const { amount } = req.body;
   const { id } = req.params;
@@ -225,7 +201,6 @@ module.exports = {
   getUserByAuthId,
   getUserRequests,
   getUserPredictions,
-  getLastUserPrediction,
   postUser,
   postUpdateWallet,
   updateUsersPhone,

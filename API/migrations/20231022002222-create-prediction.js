@@ -22,6 +22,22 @@ module.exports = {
         allowNull: false,
         defaultValue: 'pending'
       },
+      prediction: {
+        type: Sequelize.FLOAT,
+        allowNull: false,
+      },
+      timeFrame: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      data: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      symbol: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

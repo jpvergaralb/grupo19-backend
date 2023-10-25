@@ -38,7 +38,23 @@ module.exports = (sequelize, DataTypes) => {
         isIn: [['pending', 'completed', 'failed']]
       },
       defaultValue: 'pending'
-    }
+    },
+    prediction: {
+      type: DataTypes.FLOAT,
+      allowNull: false,
+    },
+    timeFrame: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    data: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    symbol: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
   }, {
     sequelize,
     modelName: 'prediction',
