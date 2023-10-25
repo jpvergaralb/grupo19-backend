@@ -391,7 +391,7 @@ async def create_another_task(job: CeleryJob) -> JSONResponse:
         "company_symbol": job.symbol,
         "times": {
             "prediction_starting_time": job.startingDate,
-            "run_at": "1970-01-01T00:00:00Z",
+            "ran_at": "1970-01-01T00:00:00Z",
             "prediction_future_time": "1970-01-01T00:00:00Z",
             "delta_time_seconds": 0,
         },
@@ -496,7 +496,7 @@ async def job_status(job_id: str) -> JSONResponse:
             "company_symbol": "AMZN",
             "times": {
                 "prediction_starting_time": "2022-10-22T12:34:56Z",
-                "run_at": "2022-10-23T14:56:11Z",
+                "ran_at": "2022-10-23T14:56:11Z",
                 "prediction_future_time": "2022-10-24T16:32:12Z",
                 "delta_time_seconds": 12345,
             },
@@ -522,7 +522,7 @@ async def job_status(job_id: str) -> JSONResponse:
             "company_symbol": "UNKNOWN",
             "times": {
                 "prediction_starting_time": "1970-01-01T00:00:00Z",
-                "run_at": "1970-01-01T00:00:00Z",
+                "ran_at": "1970-01-01T00:00:00Z",
                 "prediction_future_time": "1970-01-01T00:00:00Z",
                 "delta_time_seconds": 0,
             },
@@ -576,14 +576,14 @@ async def job_status(job_id: str) -> JSONResponse:
         content = {
             "message": "Job not found",
             "status": "UNKNOWN",
-            "job_id": "a1234bc5-d6e7-890f-ghij-klmno1234567",
+            "job_id": job_id,
             "job_data": {
                 "stocks_predictions": -2147483648,
                 "amount_bought": -2147483648,
                 "company_symbol": "UNKNOWN",
                 "times": {
                     "prediction_starting_time": "1970-01-01T00:00:00Z",
-                    "run_at": "1970-01-01T00:00:00Z",
+                    "ran_at": "1970-01-01T00:00:00Z",
                     "prediction_future_time": "1970-01-01T00:00:00Z",
                     "delta_time_seconds": 0,
                 },
@@ -607,7 +607,7 @@ async def job_status(job_id: str) -> JSONResponse:
         job_data = job_data.decode("utf-8")
         job_data = json.loads(job_data)
 
-        log.debug(f"Trabajo encontrado: {job_data}")
+        log.debug(f"Trabajo encontrado: {str(job_data)[:100]}")
 
         status_code = 200
 
@@ -621,7 +621,7 @@ async def job_status(job_id: str) -> JSONResponse:
         #         "company_symbol": "AMZN",
         #         "times": {
         #             "prediction_starting_time": "2022-10-22T12:34:56Z",
-        #             "run_at": "2022-10-23T14:56:11Z",
+        #             "ran_at": "2022-10-23T14:56:11Z",
         #             "prediction_future_time": "2022-10-24T16:32:12Z",
         #             "delta_time_seconds": 12345,
         #         },
@@ -636,7 +636,7 @@ async def job_status(job_id: str) -> JSONResponse:
         content = {
             "message": "Job found",
             "status": status_converter(job_data["status"]),
-            "job_id": job_id.strip("celery-task-meta-"),
+            "job_id": job_id.replace("celery-task-meta-", ""),
             "job_data": job_data["result"]
         }
 

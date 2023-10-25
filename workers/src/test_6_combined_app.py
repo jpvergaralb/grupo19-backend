@@ -1,15 +1,12 @@
-import pytest
-from httpx import AsyncClient
-from app import app
-from tasks import app as celery_app
-from logs import logger as log
-from logs import print
-from environment import env
-from time import sleep
-import pytest
-from httpx import AsyncClient
 import asyncio
 import uuid
+from time import sleep
+
+import pytest
+from httpx import AsyncClient
+
+from app import app
+from tasks import app as celery_app
 
 
 @pytest.mark.asyncio
@@ -52,7 +49,8 @@ async def test_post_dummy_task_multithreaded():
 
         # Verifica que cada tarea se haya completado exitosamente
         for task_id in task_ids:
-            assert isinstance(celery_app.AsyncResult(task_id).result, str)
+            assert isinstance(celery_app.AsyncResult(task_id).result,
+                              str)
 
 # ----------------------------------------
 

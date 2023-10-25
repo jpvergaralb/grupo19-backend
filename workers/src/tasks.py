@@ -255,7 +255,7 @@ def linear_regression(job_id: str,
     #     "company_symbol": company_symbol,
     #     "times": {
     #         "starting_time": starting_time_epoch,
-    #         "run_at": now,
+    #         "ran_at": now,
     #         "delta_time": delta_time
     #     }
     # }
@@ -267,7 +267,7 @@ def linear_regression(job_id: str,
     #     "company_symbol": {company_symbol},
     #     "times": <[
     #         "starting_time": {starting_time_epoch},
-    #         "run_at": {now},
+    #         "ran_at": {now},
     #         "delta_time": {delta_time}
     #     ]>
     # ]>
@@ -303,7 +303,7 @@ def linear_regression(job_id: str,
     #     "company_symbol": "AMZN",
     #     "times": {
     #         "prediction_starting_time": "2022-10-22T12:34:56Z",
-    #         "run_at": "2022-10-23T14:56:11Z",
+    #         "ran_at": "2022-10-23T14:56:11Z",
     #         "prediction_future_time": "2022-10-24T16:32:12Z",
     #         "delta_time_seconds": 12345,
     #     },
