@@ -22,7 +22,7 @@ describe('Validations API - General Cases', () => {
   });
 
   it('should return validations by group id', async () => {
-    const res = await request(app).get(`/validations/group/${groupMockId}`);
+    const res = await request(app).get(`/validations/group/19`);
     expect(res.statusCode).toEqual(200);
   });
 

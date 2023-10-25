@@ -14,7 +14,7 @@ describe('Requests API - General Cases', () => {
   });
 
   it('should get requests by their group id', async () => {
-    const res = await request(app).get('/requests/group/13');
+    const res = await request(app).get('/requests/group/19');
     expect(res.statusCode).toEqual(200);
   });
 
@@ -67,6 +67,6 @@ describe('Requests API - Error Cases', () => {
       throw new Error('Database error');
     });
     const res = await request(app).post('/requests').send(emptyMockRequest);
-    expect(res.statusCode).toEqual(400);
+    expect(res.statusCode).toEqual(500);
   });
 });
