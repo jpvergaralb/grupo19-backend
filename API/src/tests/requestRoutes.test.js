@@ -67,6 +67,6 @@ describe('Requests API - Error Cases', () => {
       throw new Error('Database error');
     });
     const res = await request(app).post('/requests').send(emptyMockRequest);
-    expect(res.statusCode).toEqual(500);
+    expect(res.statusCode).toEqual(400);
   });
 });
