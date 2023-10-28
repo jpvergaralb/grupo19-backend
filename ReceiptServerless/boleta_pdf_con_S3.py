@@ -1,6 +1,3 @@
-import os
-import tempfile
-import boto3
 from fpdf import FPDF
 
 
@@ -27,45 +24,33 @@ class BoletaPDF(FPDF):
         self.ln()
 
 
-def crear_boleta(group_name, user_name, user_email, stock_symbol, stock_quantity, stock_price):
-    # Inicializar el cliente de S3
-    s3 = boto3.client('s3')
-
+def crear_boleta(transaction_id, group_name, user_name, user_email, stock_symbol, stock_quantity,
+                 stock_price):
     # Crear una instancia de BoletaPDF
     pdf = BoletaPDF()
     pdf.add_page()
 
     # Agregar contenido a la boleta
     pdf.chapter_title("Información de la Empresa:")
-    pdf.chapter_body("Nombre de la Empresa: Mi Empresa\n\n")
+    pdf.chapter_body(f"Nombre de la Empresa: {group_name}\n\n")
 
     pdf.chapter_title("Información del Cliente:")
-    pdf.chapter_body("Nombre del Cliente: Juan Pérez\n"
-                     "Correo Electrónico: juan@example.com\n\n")
+    pdf.chapter_body(f"Nombre del Cliente: {user_name}\n"
+                     f"Correo Electrónico: {user_email}\n\n")
 
     pdf.chapter_title("Detalles de la Compra:")
-    pdf.chapter_body("Producto 1:\n"
-                     "  - Nombre: Producto A\n"
-                     "  - Cantidad: 2\n"
-                     "  - Precio Unitario: $10.00\n\n"
-                     "Producto 2:\n"
-                     "  - Nombre: Producto B\n"
-                     "  - Cantidad: 1\n"
-                     "  - Precio Unitario: $15.00\n\n")
+    pdf.chapter_body("Stocks comprados:\n"
+                     f"  - Nombre: {stock_symbol}\n"
+                     f"  - Cantidad: {stock_quantity}\n"
+                     f"  - Precio Total: {stock_price} CLP\n\n")
 
     # Crear un archivo temporal para el PDF
-    temp_file = tempfile.NamedTemporaryFile(delete=False)
+    pdf_file_name = f"boleta_{transaction_id}.pdf"
 
     # Guardar el PDF en el archivo temporal
-    pdf.output(temp_file)
-
-    # Nombre del archivo PDF en S3
-    s3_bucket = 'tu-bucket-s3'
-    s3_key = 'ruta/del/archivo/boleta.pdf'
-
-    # Subir el archivo PDF a S3
-    s3.upload_file(temp_file.name, s3_bucket, s3_key)
+    pdf.output("/tmp/" + pdf_file_name, 'F')
 
     # Devolver la URL del archivo en S3
-    pdf_url = f"https://{s3_bucket}.s3.amazonaws.com/{s3_key}"
-    return pdf_url
+    # pdf_url = f"https://{s3_bucket}.s3.amazonaws.com/{s3_key}"
+
+    return pdf_file_name
