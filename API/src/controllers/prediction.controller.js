@@ -37,6 +37,7 @@ const makePrediction = async (req, res) => {
     const body = {
       jobId, symbol, amountValidated, startingDate,
     };
+
     const response = await axios.post(process.env.WORKERS_API_JOB_URL, body);
 
     if (response.status === 201) {

@@ -78,11 +78,12 @@ module.exports = function (client) {
     }
     try {
       console.log(`📨| Enviando datos a ${url}`);
+      console.log(data)
       const response = await axios.post(url, data);
       console.log("📫| Se recibió respuesta", response.data);
     } catch (error) {
-      console.log(`⛔ | Error enviando datos a ${url}`);
-      console.log(error);
+      console.log(`⛔ MQTT | Error enviando datos a ${url}`);
+      console.log(error.message, error.response.data);
     }
   });
 };

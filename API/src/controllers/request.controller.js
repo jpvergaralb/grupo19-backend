@@ -4,8 +4,6 @@ const db = require('../../models');
 const Request = db.request;
 const User = db.user;
 const Stock = db.stock;
-const MOCK_USER_UUID = '7459cf2b-2d9f-48a2-99a3-0a3958fc9931';
-const GROUP_NUMBER = 19;
 
 const getRequests = async (req, res) => {
   console.log('📠| GET request recibida a /requests');
@@ -124,30 +122,28 @@ const postRequests = async (req, res) => {
 
   try {
     const request = req.body;
+    console.log("🐜🦗🦗🐜🦗🐜🐜🐝🐜🦗🐜🦗")
+    console.log(request)
 
+    // -----------------> VALIDACIONES DE INPUT <-----------------
     if (!request) {
       return res.status(400).json({ message: 'Request body is missing' });
     }
 
     const {
-      user_id, group_id, symbol, datetime, deposit_token, quantity, seller,
+      request_id, user_id, group_id, symbol, datetime, deposit_token, quantity, seller,
     } = request;
 
-    if (!user_id
-      || !group_id
+    if (!group_id
       || !symbol
       || !datetime
-      || deposit_token !== ''
+      || deposit_token === null
       || !quantity
       || seller === undefined
     ) {
       return res.status(400).json({ message: 'Missing required fields' });
     }
 
-    const user = await User.findByPk(user_id);
-    if (!user) {
-      return res.status(404).json({ message: `User ${user_id} not found` });
-    }
     const lastStock = await Stock.findOne({
       where: { symbol },
       order: [['createdAt', 'DESC']],
@@ -156,29 +152,43 @@ const postRequests = async (req, res) => {
       return res.status(404).json({ message: `Stock ${symbol} not found` });
     }
 
-    if (group_id !== GROUP_NUMBER) {
-      if (
-        !group_id
-        || !symbol
-        || !datetime
-        || deposit_token !== ''
-        || !quantity
-        || seller === undefined
-      ) {
-        await Request.create({
-          user_id: MOCK_USER_UUID,
-          stock_id: lastStock.id,
-          group_id,
-          symbol,
-          datetime,
-          deposit_token,
-          quantity,
-          seller,
-          location: 'unknown',
-        });
+    if (request_id) {
+      const didRequestExist = await Request.findOne({
+        where: { id: request_id },
+      });
+      if (didRequestExist) {
+        console.log(`🚨 | Request ${request_id} already exists from group ${group_id}`);
+        return res.status(400).json({ message: `Request ${request_id} already exists from group ${group_id}` });
       }
     }
+    // -----------------> FIN VALIDACIONES DE INPUT <-----------------
 
+    const OUR_GROUP = '19';
+    const MOCK_USER = "8a04cb0b-9c2a-4895-8e5c-95626ad9d1f0"
+    if (group_id != OUR_GROUP) {
+      console.log(`❗ | Received a request from group ${group_id}`);
+      const newRequest = await Request.create({
+        id: request_id,
+        user_id: MOCK_USER,
+        stock_id: lastStock.id,
+        group_id,
+        symbol,
+        datetime,
+        deposit_token,
+        quantity,
+        seller,
+        location: "unknown",
+      });
+      console.log(`😎🤯💰 | Request ${newRequest.id} (${request_id}) from group ${group_id}: @ ${datetime} created successfully`)
+      return res.status(201).json({ message: `😎 | Request ${newRequest.id} (${request_id}) from group ${group_id}: @ ${datetime} created successfully` });
+    }
+    
+
+    const user = await User.findByPk(user_id);
+    if (!user) {
+      return res.status(404).json({ message: `User ${user_id} not found` });
+    }
+    
     if (await user.CanAffordThisTransaction(quantity, lastStock.price) === false) {
       console.log(`🚨🚔 | User ${user.username} cannot afford ${quantity} stocks of ${symbol} at ${lastStock.price}$`);
       return res.status(400).json({ message: 'error' });
@@ -198,15 +208,16 @@ const postRequests = async (req, res) => {
       location,
     });
 
-    const url = `${process.env.MQTT_PROTOCOL}://${process.env.MQTT_API_HOST}:${process.env.MQTT_API_PORT}/${process.env.MQTT_API_REQUESTS_PATH}`;
-    console.log(`Posting to ${url}`);
-    const response = await axios.post(url, newRequest);
+      const url = `${process.env.MQTT_PROTOCOL}://${process.env.MQTT_API_HOST}:${process.env.MQTT_API_PORT}/${process.env.MQTT_API_REQUESTS_PATH}`;
+      console.log(`Posting to ${url}`);
+      const response = await axios.post(url, newRequest);
 
     if (response.status !== 201) {
       return res.status(500).json({ message: 'Internal Server Error: couldnt post the buy request.' });
     }
     return res.status(201).json({ message: `Request ${newRequest.id} from user ${user_id}: @ ${datetime} created successfully` });
   } catch (error) {
+    console.log(error)
     res.status(500).json({ message: 'Internal Server Error from API', error });
   }
 

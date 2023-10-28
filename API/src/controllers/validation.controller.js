@@ -137,10 +137,12 @@ const getValidationsByValid = async (req, res) => {
 
 const postValidation = async (req, res) => {
   console.log('📠| POST request recibida a /validations');
+  console.log(`->>>>>>>>>>> Printeando el body recibido`)
+  console.log(req.body)
   const transaction = await sequelize.transaction();
+
   try {
     const validation = req.body;
-
     if (!validation) {
       await transaction.rollback();
       return res.status(400).json({ message: 'Request body is missing. Rolling back ...' });
@@ -150,10 +152,19 @@ const postValidation = async (req, res) => {
       request_id, group_id, seller, valid,
     } = validation;
 
+    console.log(validation)
+    if (valid === null) {
+      await transaction.rollback();
+      return res.status(400).json({ message: `Received null as validity for request ${request_id} from group ${group_id}. Rolling back ...` });
+    }
+
     if (!request_id || !group_id || seller === undefined || valid === undefined) {
       await transaction.rollback();
+      console.log(`Received a validation that we couldnt verify from group ${group_id}`);
       return res.status(400).json({ message: 'Missing required fields. Rolling back ...' });
     }
+
+    console.log(`😎 | recvied a validation from group ${group_id} for request ${request_id} with validity ${valid}`)
 
     const createdValidation = await Validation.create({
       request_id,
@@ -161,6 +172,8 @@ const postValidation = async (req, res) => {
       seller,
       valid,
     }, { transaction });
+
+    console.log(`Created a validation for request ${request_id} from group ${group_id} with validity ${valid}`)
 
     if (!createdValidation) {
       await transaction.rollback();
@@ -186,12 +199,13 @@ const postValidation = async (req, res) => {
         await validationRequests.update({ status: 'cancelled' }, { transaction });
       }
     } else {
-      console.log('🤔 | This request comes from another group.');
-      await transaction.commit();
-      return res.status(201).json({ message: 'This request comes from another group.' });
+      await transaction.rollback();
+      console.log(`Validation ${request_id} (group ${group_id}) didnt have an associated request.`);
+      return res.status(201).json({ message: 'This validation didnt have an associated request.' });
     }
 
     await transaction.commit();
+    console.log(`🐞🐞🐞🐞🐞🐞🐞🐞🐞 | Se valido todo perfecto para la request ${request_id} (group ${group_id})`);
     res.status(201).json({ message: `Validation ${request_id} (group ${group_id}) changed to status: ${validationRequests.status}` });
   } catch (error) {
     await transaction.rollback();
