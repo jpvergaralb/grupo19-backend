@@ -176,6 +176,7 @@ const postRequests = async (req, res) => {
           seller,
           location: 'unknown',
         });
+        return res.status(201).json({ message: 'Request from another group created successfully' });
       }
     }
 
