@@ -289,7 +289,7 @@ const createRequestToWebpay = async (req, res) => {
       deposit_token: trx.token,
       quantity,
       seller,
-    }
+    };
 
     // Llamado al broker para enviar el request
     const url = `${process.env.MQTT_PROTOCOL}://${process.env.MQTT_API_HOST}:${process.env.MQTT_API_PORT}/${process.env.MQTT_API_REQUESTS_PATH}`;
@@ -351,7 +351,7 @@ const commitRequestToWebpay = async (req, res) => {
         group_id: request.group_id,
         seller: 0,
         valid: false,
-      }
+      };
 
       // Llamado al broker para enviar la validación
       const url = `${process.env.MQTT_PROTOCOL}://${process.env.MQTT_API_HOST}:${process.env.MQTT_API_PORT}/${process.env.MQTT_API_VALIDATIONS_PATH}`;
@@ -377,7 +377,7 @@ const commitRequestToWebpay = async (req, res) => {
         group_id: request.group_id,
         seller: 0,
         valid: true,
-      }
+      };
 
       // Llamado al broker para enviar la validación
       const url = `${process.env.MQTT_PROTOCOL}://${process.env.MQTT_API_HOST}:${process.env.MQTT_API_PORT}/${process.env.MQTT_API_VALIDATIONS_PATH}`;
@@ -390,7 +390,7 @@ const commitRequestToWebpay = async (req, res) => {
     // Create a new Promise representing the ongoing transaction and store it in commitLock
     commitLock[token_ws] = commitTransaction();
     await commitLock[token_ws]; // Wait for the transaction to finish
-    res.status(200).json({ message })
+    res.status(200).json({ message });
   } catch (error) {
     res.status(500).json({ message: 'Internal Server Error from API', error });
   } finally {
