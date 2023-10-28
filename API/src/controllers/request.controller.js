@@ -280,6 +280,22 @@ const createRequestToWebpay = async (req, res) => {
       },
     });
 
+    const requestMessage = {
+      id: newRequest.id,
+      stock_id: lastStock.id,
+      group_id,
+      symbol,
+      datetime,
+      deposit_token: trx.token,
+      quantity,
+      seller,
+    }
+
+    // Llamado al broker para enviar el request
+    const url = `${process.env.MQTT_PROTOCOL}://${process.env.MQTT_API_HOST}:${process.env.MQTT_API_PORT}/${process.env.MQTT_API_REQUESTS_PATH}`;
+    console.log(`Posting to ${url}`);
+    await axios.post(url, requestMessage);
+
     const data = {
       token: trx.token,
       url: trx.url,
@@ -323,6 +339,24 @@ const commitRequestToWebpay = async (req, res) => {
         },
       });
       message = 'Transaction has been rejected';
+
+      const request = await Request.findOne({
+        where: {
+          deposit_token: token_ws,
+        },
+      });
+
+      const validationBody = {
+        request_id: request.id,
+        group_id: request.group_id,
+        seller: 0,
+        valid: false,
+      }
+
+      // Llamado al broker para enviar la validación
+      const url = `${process.env.MQTT_PROTOCOL}://${process.env.MQTT_API_HOST}:${process.env.MQTT_API_PORT}/${process.env.MQTT_API_VALIDATIONS_PATH}`;
+      console.log(`Posting to ${url}`);
+      await axios.post(url, validationBody);
     } else {
       // Accept the purchase
       await db.transaction.update({ status: 'filled' }, {
@@ -331,6 +365,24 @@ const commitRequestToWebpay = async (req, res) => {
         },
       });
       message = 'Transaction has been accepted';
+
+      const request = await Request.findOne({
+        where: {
+          deposit_token: token_ws,
+        },
+      });
+
+      const validationBody = {
+        request_id: request.id,
+        group_id: request.group_id,
+        seller: 0,
+        valid: true,
+      }
+
+      // Llamado al broker para enviar la validación
+      const url = `${process.env.MQTT_PROTOCOL}://${process.env.MQTT_API_HOST}:${process.env.MQTT_API_PORT}/${process.env.MQTT_API_VALIDATIONS_PATH}`;
+      console.log(`Posting to ${url}`);
+      await axios.post(url, validationBody);
     }
   };
 
@@ -338,17 +390,7 @@ const commitRequestToWebpay = async (req, res) => {
     // Create a new Promise representing the ongoing transaction and store it in commitLock
     commitLock[token_ws] = commitTransaction();
     await commitLock[token_ws]; // Wait for the transaction to finish
-
-    // Se envia la solicitud al broker MQTT
-    const newRequest = await Request.findOne({
-      where: {
-        deposit_token: token_ws,
-      },
-    });
-
-    const url = `${process.env.MQTT_PROTOCOL}://${process.env.MQTT_API_HOST}:${process.env.MQTT_API_PORT}/${process.env.MQTT_API_REQUESTS_PATH}`;
-    console.log(`Posting to ${url}`);
-    await axios.post(url, newRequest);
+    res.status(200).json({ message })
   } catch (error) {
     res.status(500).json({ message: 'Internal Server Error from API', error });
   } finally {
@@ -357,7 +399,7 @@ const commitRequestToWebpay = async (req, res) => {
   }
 
   console.log('📞| End of request to /requests/webpay/commit');
-  return res.status(200).json({ message });
+  return res;
 };
 
 const updateRequestStatus = async (req, res) => {
