@@ -2,53 +2,60 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('predictions', {
+    await queryInterface.createTable('transactions', {
       id: {
         allowNull: false,
         defaultValue: Sequelize.UUIDV4,
         primaryKey: true,
-        type: Sequelize.UUID
-      },    
-      userId: {
+        type: Sequelize.UUID,
+      },
+      user_id: {
         type: Sequelize.UUID,
         allowNull: false,
+        references: {
+          model: 'users',
+          key: 'id',
+        },
       },
-      jobId: {
+      request_id: {
         type: Sequelize.UUID,
+        allowNull: false,
+        references: {
+          model: 'requests',
+          key: 'id',
+        },
+      },
+      stock_symbol: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      quantity: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+      },
+      amount: {
+        type: Sequelize.FLOAT,
         allowNull: false,
       },
       status: {
         type: Sequelize.STRING,
-        allowNull: false,
-        defaultValue: 'pending'
-      },
-      prediction: {
-        type: Sequelize.FLOAT,
+        defaultValue: 'pending',
         allowNull: false,
       },
-      timeFrame: {
+      token: {
         type: Sequelize.STRING,
-        allowNull: false,
-      },
-      data: {
-        type: Sequelize.TEXT,
-        allowNull: false,
-      },
-      symbol: {
-        type: Sequelize.STRING,
-        allowNull: false,
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE
-      }
+        type: Sequelize.DATE,
+      },
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('predictions');
-  }
+    await queryInterface.dropTable('validations');
+  },
 };

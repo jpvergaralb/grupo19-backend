@@ -10,8 +10,9 @@ const { sequelize } = db;
 const makePrediction = async (req, res) => {
   const transaction = await sequelize.transaction();
   try {
-    const { timeFrame, symbol } = req.query;
-    const { userId } = req.body;
+    console.log(req.query);
+    // const { timeFrame, symbol } = req.query;
+    const { userId, timeFrame, symbol } = req.body;
 
     if (!timeFrame || !symbol || !userId) {
       return res.status(400).json({ message: 'Missing fields' });
@@ -38,7 +39,6 @@ const makePrediction = async (req, res) => {
       jobId, symbol, amountValidated, startingDate,
     };
     const response = await axios.post(process.env.WORKERS_API_JOB_URL, body);
-
     if (response.status === 201) {
       res.status(200).json({ response: response.data, message: 'Prediction created successfully. Now polling for results.' });
       // eslint-disable-next-line no-use-before-define
@@ -66,9 +66,10 @@ const getValidatedPurchasesCount = async (symbol) => {
       },
     },
   });
-
   const requests = await Promise.all(validations.map((validation) => validation.getRequest()));
-  const validationsRequests = requests.filter((request) => request.symbol === symbol);
+  const validationsRequests = requests.filter((request) => {
+    return request ? request.symbol === symbol : false;
+  });
 
   return validationsRequests.length;
 };
@@ -118,10 +119,12 @@ const updatePredictionInDatabase = async (jobId, data, transaction) => {
       return;
     }
 
-    const { status, stocks_predictions } = data;
+    const { status } = data;
+    const { stocks_predictions, price_history } = data.job_data;
 
     await prediction.update({
       prediction: stocks_predictions,
+      data: JSON.stringify(price_history),
       status: status === 'SUCCESS' ? 'completed'
         : (status === 'PENDING' ? 'pending'
           : (status === 'FAILURE' ? 'failed' : 'unknown')),
@@ -134,6 +137,7 @@ const updatePredictionInDatabase = async (jobId, data, transaction) => {
 
 const getPredictionPolling = async (jobId, startTime = Date.now()) => {
   const transaction = await sequelize.transaction();
+  console.log('xsadasf');
   try {
     console.log(`Polling for jobId: ${jobId}`);
     const MAX_WAIT_TIME = 1 * 60 * 1000;

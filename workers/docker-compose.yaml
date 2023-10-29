@@ -60,18 +60,18 @@ services:
     container_name: celery_workers_4
     <<: *celery-worker-defaults
 
-  pytest_workers:
-    container_name: pytest_workers
-    command: /bin/bash -c "/app/entrypoint.pytest.sh"
-    <<: *python-defaults
-    depends_on:
-      - redis_workers
-      - celery_workers_1
-      - celery_workers_2
-      - celery_workers_3
-      - celery_workers_4
-      - api_workers
-    restart: no
+#  pytest_workers:
+#    container_name: pytest_workers
+#    command: /bin/bash -c "/app/entrypoint.pytest.sh"
+#    <<: *python-defaults
+#    depends_on:
+#      - redis_workers
+#      - celery_workers_1
+#      - celery_workers_2
+#      - celery_workers_3
+#      - celery_workers_4
+#      - api_workers
+#    restart: no
 
   redis_workers:
     container_name: redis_workers
@@ -82,62 +82,62 @@ services:
       - 6379:6379
     restart: unless-stopped
 
-#  nginx_workers:
-#    container_name: nginx_workers
-#    image: nginx:1.25.2-alpine
-#    ports:
-#      - 8080:80
-#      - 8443:443
-#    volumes:
-#      # Logs
-#      - './nginx/logs:/var/log/nginx'
-#      # Certificados
-#      - './nginx/templates/letsencrypt:/etc/nginx/templates/letsencrypt'
-#      # Configs Sitios
-#      - './nginx/templates:/etc/nginx/templates'
-#      restart: unless-stopped
-#      stop_grace_period: 3s
-#    #depends_on:
-#    #  - cloudflare-ddns_workers
+  nginx_workers:
+    container_name: nginx_workers
+    image: nginx:1.25.2-alpine
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      # Logs
+      - './nginx/logs:/var/log/nginx'
+      # Certificados
+      - './nginx/templates/letsencrypt:/etc/nginx/templates/letsencrypt'
+      # Configs Sitios
+      - './nginx/templates:/etc/nginx/templates'
+    restart: unless-stopped
+    stop_grace_period: 3s
+    #depends_on:
+    #  - cloudflare-ddns_workers
 #
-#  # https://github.com/favonia/cloudflare-ddns/blob/main/README.markdown
-#  cloudflare-ddns:
-#    image: favonia/cloudflare-ddns
-#    container_name: cloudflare-ddns
-#    # This makes IPv6 easier; see below
-#    network_mode: host
-#    # Restart the updater after reboot
-#    restart: always
-#    cap_add:
-#      # Capability to change user ID; needed for using PUID
-#      - SETUID
-#      # Capability to change group ID; needed for using PGID
-#      - SETGID
-#    # Make the container filesystem read-only
-#    read_only: true
-#    security_opt:
-#      # Another protection to restrict superuser privileges
-#      - no-new-privileges:true
-#    environment:
-#      # Run the updater with user ID 1000
-#      - PUID=1000
-#      # Run the updater with group ID 1000
-#      - PGID=1000
-#      # Your Cloudflare API token
-#      - CF_API_TOKEN=${CLOUDFLARE_API_KEY}
-#      # Your domains (separated by commas)
-#      #- DOMAINS=${DDNS_DOMAINS}
-#      - IP4_DOMAINS=${DDNS_DOMAINS}
-#      # Tell Cloudflare to cache webpages and hide your IP
-#      - PROXIED=false
-#      - CACHE_EXPIRATION=6h0m0s
-#      - DETECTION_TIMEOUT=15s
-#      - TZ=America/Santiago
-#      - UPDATE_CRON=@every 15m
-#      - UPDATE_ON_START=true
-#      - UPDATE_TIMEOUT=30s
-#      - TTL=1
-#      - EMOJI=true
+  # https://github.com/favonia/cloudflare-ddns/blob/main/README.markdown
+  cloudflare-ddns:
+    image: favonia/cloudflare-ddns
+    container_name: cloudflare-ddns
+    # This makes IPv6 easier; see below
+    network_mode: host
+    # Restart the updater after reboot
+    restart: always
+    cap_add:
+      # Capability to change user ID; needed for using PUID
+      - SETUID
+      # Capability to change group ID; needed for using PGID
+      - SETGID
+    # Make the container filesystem read-only
+    read_only: true
+    security_opt:
+      # Another protection to restrict superuser privileges
+      - no-new-privileges:true
+    environment:
+      # Run the updater with user ID 1000
+      - PUID=1000
+      # Run the updater with group ID 1000
+      - PGID=1000
+      # Your Cloudflare API token
+      - CF_API_TOKEN=${CLOUDFLARE_API_KEY}
+      # Your domains (separated by commas)
+      #- DOMAINS=${DDNS_DOMAINS}
+      - IP4_DOMAINS=${DDNS_DOMAINS}
+      # Tell Cloudflare to cache webpages and hide your IP
+      - PROXIED=false
+      - CACHE_EXPIRATION=6h0m0s
+      - DETECTION_TIMEOUT=15s
+      - TZ=America/Santiago
+      - UPDATE_CRON=@every 15m
+      - UPDATE_ON_START=true
+      - UPDATE_TIMEOUT=30s
+      - TTL=1
+      - EMOJI=true
 
 volumes:
   redis:

@@ -116,7 +116,9 @@ const getUserPredictions = async (req, res) => {
   try {
     const user = await User.findByPk(id);
     if (user) {
-      const predictions = await user.getPredictions();
+      const predictions = await user.getPredictions({
+        attributes: { exclude: ['data'] },
+      });
       return res.status(200).json({ predictions });
     }
     return res.status(404).json({ message: 'No user found' });

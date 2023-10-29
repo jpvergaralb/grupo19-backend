@@ -146,6 +146,10 @@ const postValidation = async (req, res) => {
       return res.status(400).json({ message: 'Request body is missing. Rolling back ...' });
     }
 
+    if (validation.valid === null) {
+      return res.status(400).json({ message: 'Null recieved on valid status.' });
+    }
+
     const {
       request_id, group_id, seller, valid,
     } = validation;
@@ -173,12 +177,12 @@ const postValidation = async (req, res) => {
       if (valid) {
         await validationRequests.update({ status: 'filled' }, { transaction });
         const requestStock = await validationRequests.getStock({ transaction });
-        const requestUser = await validationRequests.getUser({ transaction });
-        await requestUser.updateBalance(
-          requestStock.price,
-          validationRequests.quantity,
-          transaction,
-        );
+        // const requestUser = await validationRequests.getUser({ transaction });
+        // await requestUser.updateBalance(
+        //   requestStock.price,
+        //   validationRequests.quantity,
+        //   transaction,
+        // );
         console.log(`😁 | User ${validationRequests.user_id} bought ${validationRequests.quantity}
         stocks of ${requestStock.symbol} @ ${requestStock.price}$ 
         (total: ${validationRequests.quantity * requestStock.price}$)`);
@@ -186,9 +190,9 @@ const postValidation = async (req, res) => {
         await validationRequests.update({ status: 'cancelled' }, { transaction });
       }
     } else {
-      console.log('🤔 | This request comes from another group.');
+      console.log('🤔 | This validation didnt have an associated request.');
       await transaction.commit();
-      return res.status(201).json({ message: 'This request comes from another group.' });
+      return res.status(201).json({ message: '🤔 | This validation didnt have an associated request' });
     }
 
     await transaction.commit();
