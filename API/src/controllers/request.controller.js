@@ -4,7 +4,7 @@ const db = require('../../models');
 const Request = db.request;
 const User = db.user;
 const Stock = db.stock;
-const MOCK_USER_UUID = '7459cf2b-2d9f-48a2-99a3-0a3958fc9931';
+const MOCK_USER_UUID = '8a04cb0b-9c2a-4895-8e5c-95626ad9d1f0';
 const GROUP_NUMBER = 19;
 
 const getRequests = async (req, res) => {
@@ -152,7 +152,9 @@ const postRequests = async (req, res) => {
       return res.status(404).json({ message: `Stock ${symbol} not found` });
     }
 
+    console.log(`🍷 | Received a request from group ${group_id} !`)
     if (group_id != GROUP_NUMBER) {
+      console.log(`🍷🍷 | Request from another group received by group ${group_id} !`)
       if (
         !request_id
         || !group_id
@@ -176,6 +178,9 @@ const postRequests = async (req, res) => {
         });
         console.log(`🚨🚔 | Request from another group created by group ${group_id} with id ${request_id}`);
         return res.status(201).json({ message: 'Request from another group created successfully' });
+      } else {
+        console.log(`🚨🚔 | Couldnt create request from another group created by group ${group_id} with id ${request_id}`);
+        return res.status(400).json({ message: 'error' });
       }
     }
 
