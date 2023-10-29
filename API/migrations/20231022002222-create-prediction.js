@@ -31,7 +31,7 @@ module.exports = {
         allowNull: false,
       },
       data: {
-        type: Sequelize.STRING,
+        type: Sequelize.TEXT,
         allowNull: false,
       },
       symbol: {

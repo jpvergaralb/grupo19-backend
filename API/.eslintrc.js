@@ -27,5 +27,7 @@ module.exports = {
     "camelcase": "off",
     "no-nested-ternary": "off",
     "consistent-return": "off",
+    "eqeqeq": "off",
+    "arrow-body-style": "off",
   },
 };
