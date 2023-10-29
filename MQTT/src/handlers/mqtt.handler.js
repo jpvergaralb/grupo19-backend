@@ -46,6 +46,7 @@ module.exports = function (client) {
   
   client.on('message', async (topic, message) => {
     let msg = message.toString();
+    let ignoreMessage = false;
     
     // Dirigir el post en función de canal al que se suscribió
     const topicToApiPath = {
@@ -75,11 +76,17 @@ module.exports = function (client) {
       // ... caso genérico
       msg = JSON.parse(message.toString());
       data = msg;
+      if (!message.request_id || !message.group_id || message.seller === undefined || message.seller === null || message.valid === undefined || message.valid === null){
+        ignoreMessage = true;
+      }
     }
+
     try {
-      console.log(`📨| Enviando datos a ${url}`);
-      const response = await axios.post(url, data);
-      console.log("📫| Se recibió respuesta", response.data);
+      if (!ignoreMessage){
+        console.log(`📨| Enviando datos a ${url}`);
+        const response = await axios.post(url, data);
+        console.log("📫| Se recibió respuesta", response.data);
+      }
     } catch (error) {
       console.log(`⛔ | Error enviando datos a ${url}`);
       console.log(error);
