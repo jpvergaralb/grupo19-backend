@@ -71,14 +71,20 @@ module.exports = function (client) {
       // ... está hardcodeado
       data = {message: msg};
       
-    } else {
+    } else if (topic === process.env.MQTT_API_VALIDATION_CHANNEL) {
       // ... caso contraro, va como JSON.
       // ... caso genérico
       msg = JSON.parse(message.toString());
       data = msg;
-      if (!message.request_id || !message.group_id || message.seller === undefined || message.seller === null || message.valid === undefined || message.valid === null){
+      
+      console.log(data)
+      if (!data.request_id || !data.group_id || data.seller === undefined || data.seller === null || data.valid === undefined || data.valid === null){
         ignoreMessage = true;
+        console.log("Validación rechazada por falta de datos");
       }
+    } else {
+      msg = JSON.parse(message.toString());
+      data = msg;
     }
 
     try {
