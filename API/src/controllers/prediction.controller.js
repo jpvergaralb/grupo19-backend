@@ -39,7 +39,6 @@ const makePrediction = async (req, res) => {
       jobId, symbol, amountValidated, startingDate,
     };
     const response = await axios.post(process.env.WORKERS_API_JOB_URL, body);
-
     if (response.status === 201) {
       res.status(200).json({ response: response.data, message: 'Prediction created successfully. Now polling for results.' });
       // eslint-disable-next-line no-use-before-define

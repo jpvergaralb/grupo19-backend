@@ -154,9 +154,9 @@ const postRequests = async (req, res) => {
       return res.status(404).json({ message: `Stock ${symbol} not found` });
     }
 
-    console.log(`🍷 | Received a request from group ${group_id} !`)
+    console.log(`🍷 | Received a request from group ${group_id} !`);
     if (group_id != GROUP_NUMBER) {
-      console.log(`🍷🍷 | Request from another group received by group ${group_id} !`)
+      console.log(`🍷🍷 | Request from another group received by group ${group_id} !`);
       if (
         !request_id
         || !group_id
@@ -180,10 +180,9 @@ const postRequests = async (req, res) => {
         });
         console.log(`🚨🚔 | Request from another group created by group ${group_id} with id ${request_id}`);
         return res.status(201).json({ message: 'Request from another group created successfully' });
-      } else {
-        console.log(`🚨🚔 | Couldnt create request from another group created by group ${group_id} with id ${request_id}`);
-        return res.status(400).json({ message: 'error' });
       }
+      console.log(`🚨🚔 | Couldnt create request from another group created by group ${group_id} with id ${request_id}`);
+      return res.status(400).json({ message: 'error' });
     }
 
     const user = await User.findByPk(user_id);
