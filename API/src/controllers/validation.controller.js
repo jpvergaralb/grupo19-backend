@@ -190,9 +190,9 @@ const postValidation = async (req, res) => {
         await validationRequests.update({ status: 'cancelled' }, { transaction });
       }
     } else {
-      console.log('🤔 | This request comes from another group.');
+      console.log('🤔 | This validation didnt have an associated request.');
       await transaction.commit();
-      return res.status(201).json({ message: 'This request comes from another group.' });
+      return res.status(201).json({ message: '🤔 | This validation didnt have an associated request' });
     }
 
     await transaction.commit();

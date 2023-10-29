@@ -25,5 +25,9 @@ module.exports = {
   rules: {
     "no-console": "off",
     "camelcase": "off",
+    "no-nested-ternary": "off",
+    "consistent-return": "off",
+    "eqeqeq": "off",
+    "arrow-body-style": "off",
   },
 };

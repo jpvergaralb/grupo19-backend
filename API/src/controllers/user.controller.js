@@ -107,6 +107,24 @@ const getUserRequests = async (req, res) => {
   console.log('📞| Fin del mensaje a /users/:id/requests');
 };
 
+const getUserPredictions = async (req, res) => {
+  const { id } = req.params;
+  if (!id) {
+    return res.status(400).json({ message: 'Missing parameters: id.' });
+  }
+
+  try {
+    const user = await User.findByPk(id);
+    if (user) {
+      const predictions = await user.getPredictions();
+      return res.status(200).json({ predictions });
+    }
+    return res.status(404).json({ message: 'No user found' });
+  } catch (error) {
+    return res.status(500).json({ error });
+  }
+};
+
 const postUpdateWallet = async (req, res) => {
   const { amount } = req.body;
   const { id } = req.params;
@@ -182,6 +200,7 @@ module.exports = {
   getUser,
   getUserByAuthId,
   getUserRequests,
+  getUserPredictions,
   postUser,
   postUpdateWallet,
   updateUsersPhone,

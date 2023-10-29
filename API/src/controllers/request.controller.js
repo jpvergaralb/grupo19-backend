@@ -7,6 +7,9 @@ const User = db.user;
 const Stock = db.stock;
 const Transaction = db.transaction;
 
+const MOCK_USER_UUID = '7459cf2b-2d9f-48a2-99a3-0a3958fc9931';
+const GROUP_NUMBER = 19;
+
 const getRequests = async (req, res) => {
   console.log('📠| GET request recibida a /requests');
 
@@ -130,30 +133,58 @@ const postRequests = async (req, res) => {
     }
 
     const {
-      user_id, group_id, symbol, datetime, deposit_token, quantity, seller,
+      request_id, user_id, group_id, symbol, datetime, deposit_token, quantity, seller,
     } = request;
 
-    if (!user_id
-      || !group_id
+    if (
+      !group_id
       || !symbol
       || !datetime
-      || deposit_token !== ''
+      || deposit_token == ''
       || !quantity
       || seller === undefined
     ) {
       return res.status(400).json({ message: 'Missing required fields' });
     }
 
-    const user = await User.findByPk(user_id);
-    if (!user) {
-      return res.status(404).json({ message: `User ${user_id} not found` });
-    }
     const lastStock = await Stock.findOne({
       where: { symbol },
       order: [['createdAt', 'DESC']],
     });
     if (!lastStock) {
       return res.status(404).json({ message: `Stock ${symbol} not found` });
+    }
+
+    if (group_id != GROUP_NUMBER) {
+      if (
+        !request_id
+        || !group_id
+        || !symbol
+        || !datetime
+        || deposit_token !== ''
+        || !quantity
+        || seller === undefined
+      ) {
+        await Request.create({
+          id: request_id,
+          user_id: MOCK_USER_UUID,
+          stock_id: lastStock.id,
+          group_id,
+          symbol,
+          datetime,
+          deposit_token,
+          quantity,
+          seller,
+          location: 'unknown',
+        });
+        console.log(`🚨🚔 | Request from another group created by group ${group_id} with id ${request_id}`);
+        return res.status(201).json({ message: 'Request from another group created successfully' });
+      }
+    }
+
+    const user = await User.findByPk(user_id);
+    if (!user) {
+      return res.status(404).json({ message: `User ${user_id} not found` });
     }
 
     if (await user.CanAffordThisTransaction(quantity, lastStock.price) === false) {
