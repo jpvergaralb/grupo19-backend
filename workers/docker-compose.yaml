@@ -86,8 +86,8 @@ services:
     container_name: nginx_workers
     image: nginx:1.25.2-alpine
     ports:
-      - 8080:80
-      - 8443:443
+      - 80:80
+      - 443:443
     volumes:
       # Logs
       - './nginx/logs:/var/log/nginx'
