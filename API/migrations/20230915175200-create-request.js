@@ -7,14 +7,14 @@ module.exports = {
         allowNull: false,
         defaultValue: Sequelize.UUIDV4,
         primaryKey: true,
-        type: Sequelize.UUID
+        type: Sequelize.UUID,
       },
       user_id: {
         type: Sequelize.UUID,
         allowNull: false,
         references: {
           model: 'users',
-          key: 'id'
+          key: 'id',
         },
       },
       stock_id: {
@@ -22,32 +22,32 @@ module.exports = {
         allowNull: false,
         references: {
           model: 'stocks',
-          key: 'id'
+          key: 'id',
         },
       },
       group_id: {
         type: Sequelize.STRING,
-        allowNull: false
+        allowNull: false,
       },
       symbol: {
         type: Sequelize.STRING,
-        allowNull: false
+        allowNull: false,
       },
       datetime: {
         type: Sequelize.STRING,
-        allowNull: false
+        allowNull: false,
       },
       deposit_token: {
         type: Sequelize.STRING,
-        allowNull: false
+        allowNull: false,
       },
       quantity: {
         type: Sequelize.INTEGER,
-        allowNull: false
+        allowNull: false,
       },
       seller: {
         type: Sequelize.INTEGER,
-        allowNull: false
+        allowNull: false,
       },
       status: {
         type: Sequelize.STRING,
@@ -56,16 +56,23 @@ module.exports = {
       },
       location: {
         type: Sequelize.STRING,
-        allowNull: false
+        allowNull: false,
+      },
+      total_price: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+      },
+      receipt_url: {
+        type: Sequelize.STRING,
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE
-      }
+        type: Sequelize.DATE,
+      },
     });
   },
   async down(queryInterface, Sequelize) {
