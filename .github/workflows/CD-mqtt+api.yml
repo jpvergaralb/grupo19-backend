@@ -1,8 +1,8 @@
-name: Docker Image CI
+name: CD MQTT y Main API
 
 on:
   push:
-    branches: 
+    branches:
       - "main"
 
 jobs:
