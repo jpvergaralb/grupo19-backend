@@ -1,4 +1,4 @@
-name: Node.js CI/CD Workflow
+name: Node.js CI Workflow
 
 on:
   pull_request:
@@ -39,7 +39,7 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: '16.x'
-        
+
     - name: Install dependencies
       run: cd API && npm install
 
