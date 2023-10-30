@@ -1,14 +1,44 @@
 'use strict';
 
+const possibleSymbols = [
+  'AAPL',
+  'GOOGL',
+  'AMZN',
+  'MSFT',
+  'TSLA',
+]
+
+const generateRandomDate = () => {
+  const start = new Date(2021, 0, 1);
+  const end = new Date();
+  return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
+}
+
+const generateRandomStocks = (count) => {
+  const stocks = [];
+  for (let i = 0; i < count; i++) {
+    const randomDate = generateRandomDate()
+    const stock = {
+      symbol: possibleSymbols[Math.floor(Math.random() * possibleSymbols.length)],
+      shortName: `Stock ${i}`,
+      price: Math.random() * 100,
+      currency: 'USD',
+      source: 'NASDAQ',
+      createdAt: randomDate,
+      updatedAt: randomDate,
+    };
+
+    stocks.push(stock);
+  }
+
+  return stocks;
+}
+
 module.exports = {
   async up (queryInterface, Sequelize) {
-    await queryInterface.bulkInsert('stocks', [
-      { symbol: 'AAPL', shortName: 'Apple Inc.', price: 150.69, currency: 'USD', source: 'NASDAQ', createdAt: new Date(), updatedAt: new Date() },
-      { symbol: 'GOOGL', shortName: 'Alphabet Inc.', price: 2753.49, currency: 'USD', source: 'NASDAQ', createdAt: new Date(), updatedAt: new Date() },
-      { symbol: 'AMZN', shortName: 'Amazon.com Inc.', price: 3352.15, currency: 'USD', source: 'NASDAQ', createdAt: new Date(), updatedAt: new Date() },
-      { symbol: 'MSFT', shortName: 'Microsoft Corp.', price: 287.12, currency: 'USD', source: 'NASDAQ', createdAt: new Date(), updatedAt: new Date() },
-      { symbol: 'TSLA', shortName: 'Tesla Inc.', price: 687.20, currency: 'USD', source: 'NASDAQ', createdAt: new Date(), updatedAt: new Date() },
-    ], {});
+
+    const stocks = generateRandomStocks(20000);
+    await queryInterface.bulkInsert('stocks', stocks, {});
   },
 
   async down (queryInterface, Sequelize) {

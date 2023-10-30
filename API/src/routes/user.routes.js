@@ -5,6 +5,7 @@ const {
   getUser,
   getUserByAuthId,
   getUserRequests,
+  getUserPredictions,
   postUser,
   postUpdateWallet,
   updateUsersPhone,
@@ -24,6 +25,9 @@ userRoutes.route('/auth/:id')
 
 userRoutes.route('/update')
   .post(updateUsersPhone);
+
+userRoutes.route('/predictions/:id')
+  .get(getUserPredictions);
 
 userRoutes.route('/wallet/:id')
   .post(postUpdateWallet);

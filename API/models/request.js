@@ -12,8 +12,9 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       request.belongsTo(models.user, { foreignKey: 'user_id'});
-      request.hasOne(models.validation, { foreignKey: 'request_id'});
       request.belongsTo(models.stock, { foreignKey: 'stock_id'})
+      request.hasOne(models.validation, { foreignKey: 'request_id'});
+      request.hasOne(models.transaction, { foreignKey: 'request_id'});
     }
   }
   request.init(

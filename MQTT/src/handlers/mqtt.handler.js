@@ -32,7 +32,8 @@ module.exports = function (client) {
     
     // Suscribirse a los canales usando la función
     [process.env.MQTT_API_INFO_CHANNEL,
-      process.env.MQTT_API_VALIDATION_CHANNEL
+      process.env.MQTT_API_VALIDATION_CHANNEL, 
+      process.env.MQTT_API_REQUEST_CHANNEL
     ].forEach(subscribeToChannel);
   });
   
@@ -45,11 +46,13 @@ module.exports = function (client) {
   
   client.on('message', async (topic, message) => {
     let msg = message.toString();
+    let ignoreMessage = false;
     
     // Dirigir el post en función de canal al que se suscribió
     const topicToApiPath = {
       [process.env.MQTT_API_INFO_CHANNEL]: '/stocks',
-      [process.env.MQTT_API_VALIDATION_CHANNEL]: '/validations'
+      [process.env.MQTT_API_VALIDATION_CHANNEL]: '/validations',
+      [process.env.MQTT_API_REQUEST_CHANNEL]: '/requests',
     };
     
     const apiPath = topicToApiPath[topic];
@@ -68,17 +71,28 @@ module.exports = function (client) {
       // ... está hardcodeado
       data = {message: msg};
       
-    } else {
+    } else if (topic === process.env.MQTT_API_VALIDATION_CHANNEL) {
       // ... caso contraro, va como JSON.
       // ... caso genérico
       msg = JSON.parse(message.toString());
       data = msg;
+      
+      console.log(data)
+      if (!data.request_id || !data.group_id || data.seller === undefined || data.seller === null || data.valid === undefined || data.valid === null){
+        ignoreMessage = true;
+        console.log("Validación rechazada por falta de datos");
+      }
+    } else {
+      msg = JSON.parse(message.toString());
+      data = msg;
     }
-    
+
     try {
-      console.log(`📨| Enviando datos a ${url}`);
-      const response = await axios.post(url, data);
-      console.log("📫| Se recibió respuesta", response.data);
+      if (!ignoreMessage){
+        console.log(`📨| Enviando datos a ${url}`);
+        const response = await axios.post(url, data);
+        console.log("📫| Se recibió respuesta", response.data);
+      }
     } catch (error) {
       console.log(`⛔ | Error enviando datos a ${url}`);
       console.log(error);

@@ -1,29 +1,37 @@
 'use strict';
 
+const db = require('../models');
+const Request = db.request;
+
+const generateRandomDate = () => {
+  const start = new Date(2021, 0, 1);
+  const end = new Date();
+  return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
+}
+
+
+const generateRandomValidations = async (count) => {
+  const validations = [];
+
+  for (let i = 0; i < count; i++) {
+    const request = await Request.findOne({ order: db.sequelize.random()})
+    const validation = {
+      request_id: request.id,
+      group_id: 19,
+      seller: 0,
+      valid: true,
+      createdAt: generateRandomDate(),
+      updatedAt: generateRandomDate()
+    };
+    validations.push(validation);
+  }
+  return validations;
+}
+
+
 module.exports = {
   async up (queryInterface, Sequelize) {
-    await queryInterface.bulkInsert('validations', [
-      { request_id: '8a04cb0b-9c2a-4895-1e5c-95626ad9d1f0',
-        group_id: '13',
-        seller: 0,
-        valid: false,
-        createdAt: new Date(),
-        updatedAt: new Date() },
-      
-      { request_id: 'd976f86a-4f94-11ee-be56-0242ac120002',
-        group_id: '2',
-        seller: 0,
-        valid: false,
-        createdAt: new Date(),
-        updatedAt: new Date() },
-      
-      { request_id: 'dd7dc22c-4f94-11ee-be56-0242ac120002',
-        group_id: '1',
-        seller: 0,
-        valid: true,
-        createdAt: new Date(),
-        updatedAt: new Date() },
-    ], {});
+    await queryInterface.bulkInsert('validations', await generateRandomValidations(1000), {});
   },
   
   async down (queryInterface, Sequelize) {

@@ -1,6 +1,6 @@
 const sellerMockId = 0;
 
-const groupMockId = 13;
+const groupMockId = 19;
 
 const statusMock = true;
 
