@@ -1,4 +1,5 @@
 const axios = require('axios');
+const AWS = require('aws-sdk');
 const db = require('../../models');
 const tx = require('../../utils/trx');
 
@@ -308,7 +309,10 @@ const createRequestToWebpay = async (req, res) => {
       },
     });
 
-    await Request.update({ deposit_token: trx.token }, {
+    await Request.update({
+      deposit_token: trx.token,
+      total_price: precio_clp,
+    }, {
       where: {
         id: newRequest.id,
       },
@@ -361,6 +365,7 @@ const commitRequestToWebpay = async (req, res) => {
   }
 
   let message;
+  let receipt_url;
 
   const commitTransaction = async () => {
     const confirmedTx = await tx.commit(token_ws);
@@ -417,6 +422,48 @@ const commitRequestToWebpay = async (req, res) => {
       const url = `${process.env.MQTT_PROTOCOL}://${process.env.MQTT_API_HOST}:${process.env.MQTT_API_PORT}/${process.env.MQTT_API_VALIDATIONS_PATH}`;
       console.log(`Posting to ${url}`);
       await axios.post(url, validationBody);
+
+      AWS.config.update({
+        region: process.env.BUCKET_REGION,
+        accessKeyId: process.env.AWS_ACCESS_KEY_S3,
+        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY_S3,
+      });
+
+      const user = await User.findByPk(request.user_id);
+
+      let lambdaPayload = {
+        body: {
+          'transaction-id': token_ws,
+          'group-name': 19,
+          'user-name': user.username,
+          'user-email': user.email,
+          symbol: request.symbol,
+          quantity: request.quantity,
+          price: request.total_price,
+        },
+      };
+      lambdaPayload = JSON.stringify(lambdaPayload);
+
+      const lambda = new AWS.Lambda();
+      const params = {
+        FunctionName: process.env.PDF_LAMBDA_FUNCTION,
+        Payload: lambdaPayload,
+      };
+
+      console.log('Intentando obtener url del pdf mediante lambda.');
+
+      const lambdaResult = await lambda.invoke(params).promise();
+
+      console.log(lambdaResult);
+
+      const Payload = JSON.parse(lambdaResult.Payload);
+      const Body = JSON.parse(Payload.body);
+
+      receipt_url = Body.url;
+
+      await Request.update({ receipt_url }, {
+        where: { deposit_token: token_ws },
+      });
     }
   };
 
@@ -424,7 +471,7 @@ const commitRequestToWebpay = async (req, res) => {
     // Create a new Promise representing the ongoing transaction and store it in commitLock
     commitLock[token_ws] = commitTransaction();
     await commitLock[token_ws]; // Wait for the transaction to finish
-    res.status(200).json({ message });
+    res.status(200).json({ message, receipt_url });
   } catch (error) {
     res.status(500).json({ message: 'Internal Server Error from API', error });
   } finally {

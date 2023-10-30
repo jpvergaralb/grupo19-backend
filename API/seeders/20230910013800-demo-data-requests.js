@@ -27,6 +27,7 @@ const generateRandomRequest = async (count) => {
       deposit_token: 'rHagzMPLwfJCXDXW2sNJZRxygCaYmaO6',
       quantity: Math.floor(Math.random() * 3) + 1,
       seller: 0,
+      total_price: Math.floor(Math.random() * 3) + 1,
       location: '-34.603722, -58.381592',
       createdAt: new Date(),
       updatedAt: new Date()
