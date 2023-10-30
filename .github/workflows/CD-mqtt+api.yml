@@ -24,4 +24,4 @@ jobs:
         echo "EC2PASSWD=${{ secrets.EC2PASSWD }}" >> $GITHUB_ENV
 
     - name: Update and reload containers
-      run: sshpass -p "${EC2PASSWD}" ssh -o StrictHostKeyChecking=no -p ${EC2PORT} ${EC2USER}@${EC2HOST} -Ct "cd /home/ubuntu/backend && git fetch && git checkout development && git pull && ./deploy.production.unix.sh"
+      run: sshpass -p "${EC2PASSWD}" ssh -o StrictHostKeyChecking=no -p ${EC2PORT} ${EC2USER}@${EC2HOST} -Ct "cd /home/ubuntu/backend && git fetch && git checkout main && git pull && docker system prune -a -f && ./deploy.production.unix.sh"
