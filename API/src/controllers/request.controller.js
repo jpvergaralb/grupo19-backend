@@ -431,7 +431,7 @@ const commitRequestToWebpay = async (req, res) => {
 
       const user = await User.findByPk(request.user_id);
 
-      const lambdaPayload = {
+      let lambdaPayload = {
         body: {
           'transaction-id': token_ws,
           'group-name': 19,
@@ -442,11 +442,12 @@ const commitRequestToWebpay = async (req, res) => {
           price: request.total_price,
         },
       };
+      lambdaPayload = JSON.stringify(lambdaPayload);
 
       const lambda = new AWS.Lambda();
       const params = {
         FunctionName: process.env.PDF_LAMBDA_FUNCTION,
-        Payload: JSON.stringify(lambdaPayload),
+        Payload: lambdaPayload,
       };
 
       console.log('Intentando obtener url del pdf mediante lambda.');
