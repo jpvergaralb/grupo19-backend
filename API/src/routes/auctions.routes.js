@@ -12,22 +12,21 @@ const {
 } = require('../controllers/auction.controller');
 
 auctionRoutes.route('/proposals')
-  .post(saveProposal)
+  .post(saveProposal);
 
 auctionRoutes.route('/proposals/own')
-  .get(getOwnProposals)
+  .get(getOwnProposals);
 
 auctionRoutes.route('/proposals/received')
-  .get(getReceivedProposals)
+  .get(getReceivedProposals);
 
 auctionRoutes.route('/offers')
-  .post(createOffer)
+  .post(createOffer);
 
 auctionRoutes.route('/offers/own')
-  .get(getOurOffers)
+  .get(getOurOffers);
 
 auctionRoutes.route('/offers/other')
-  .get(getOtherOffers)
-
+  .get(getOtherOffers);
 
 module.exports = auctionRoutes;

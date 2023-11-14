@@ -5,7 +5,7 @@ const ErrorHandler = require('./ErrorHandler');
 const errorHandler = (err, req, res, next) => {
   // eslint-disable-next-line no-console
   console.log(`Error 🚨 | ${err.message} while sending a ${req.method} to ${req.originalUrl}`);
-  console.log(err)
+  console.log(err);
   if (err instanceof ValidationError) {
     const messages = err.errors.map((error) => error.message);
     return res.status(400).json({ errors: messages });
@@ -21,7 +21,7 @@ const errorHandler = (err, req, res, next) => {
 
   if (err instanceof DatabaseError) {
     return res.status(400).json({ error: err.message });
-  } 
+  }
 
   return res.status(500).json({ error: err.message });
 };
