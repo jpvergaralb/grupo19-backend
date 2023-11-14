@@ -33,7 +33,8 @@ module.exports = function (client) {
     // Suscribirse a los canales usando la función
     [process.env.MQTT_API_INFO_CHANNEL,
       process.env.MQTT_API_VALIDATION_CHANNEL, 
-      process.env.MQTT_API_REQUEST_CHANNEL
+      process.env.MQTT_API_REQUEST_CHANNEL,
+      process.env.MQTT_API_AUCTIONS_CHANNEL,
     ].forEach(subscribeToChannel);
   });
   
@@ -53,6 +54,7 @@ module.exports = function (client) {
       [process.env.MQTT_API_INFO_CHANNEL]: '/stocks',
       [process.env.MQTT_API_VALIDATION_CHANNEL]: '/validations',
       [process.env.MQTT_API_REQUEST_CHANNEL]: '/requests',
+      [process.env.MQTT_API_AUCTIONS_CHANNEL]: '/auctions',
     };
     
     const apiPath = topicToApiPath[topic];
@@ -82,7 +84,16 @@ module.exports = function (client) {
         ignoreMessage = true;
         console.log("Validación rechazada por falta de datos");
       }
-    } else {
+    } else if (topic === process.env.MQTT_API_AUCTIONS_CHANNEL){
+        msg = JSON.parse(message.toString());
+        if (msg.type === "offer"){
+          url += "/offers";
+        } else {
+          url += "/proposals";
+        }
+        data = msg;
+      }
+    else {
       msg = JSON.parse(message.toString());
       data = msg;
     }

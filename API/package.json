@@ -12,7 +12,8 @@
     "lint:fix": "eslint 'src/**/*.{js,jsx}' --fix",
     "dev": "nodemon src/server.js",
     "run": "node src/server.js",
-    "start": "node src/server.js"
+    "start": "node src/server.js",
+    "reset:db": "npx sequelize-cli db:drop; npx sequelize-cli db:create; npx sequelize-cli db:migrate; npx sequelize-cli db:seed:all"
   },
   "keywords": [],
   "author": "",

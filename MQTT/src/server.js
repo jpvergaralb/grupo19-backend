@@ -7,6 +7,7 @@ const mqttHandler = require('./handlers/mqtt.handler')
 const rootRoutes = require('./routes/root.route')
 const requestRoutes = require('./routes/request.route')
 const validationRoutes = require('./routes/validation.route')
+const auctionRoutes = require('./routes/auctions.route')
 
 // const { publishDataMQTT } = require('./testers/mqtt.test')
 
@@ -26,6 +27,7 @@ app.use(express.json())
 app.use('/', rootRoutes)
 app.use('/requests', attachMQTTClient, requestRoutes)
 app.use('/validations', attachMQTTClient, validationRoutes)
+app.use('/auctions', attachMQTTClient, auctionRoutes)
 
 app.listen(process.env.MQTT_API_PORT, () => {
     console.log(`▶️| Servidor MQTT Listener corriendo en puerto ${process.env.MQTT_API_PORT}`)

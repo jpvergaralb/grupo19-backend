@@ -45,6 +45,10 @@ module.exports = {
         type: Sequelize.DECIMAL,
         defaultValue: 0.00
       },
+      role: {
+        type: Sequelize.STRING,
+        defaultValue: 'user'
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
