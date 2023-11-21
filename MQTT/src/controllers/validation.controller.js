@@ -1,9 +1,9 @@
 const axios = require('axios');
 
-function publishDataMQTT(client, request) {
+function publishDataMQTT(client, validation) {
 	console.log("📰| Publicando datos al broker MQTT...");
-	client.publish(process.env.MQTT_API_REQUEST_CHANNEL,
-	  JSON.stringify(request))
+	client.publish(process.env.MQTT_API_VALIDATION_CHANNEL,
+	  JSON.stringify(validation))
 	console.log("🗞️| Publicación de datos al broker MQTT finalizada...");
   }
   
