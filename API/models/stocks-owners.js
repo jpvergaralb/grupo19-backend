@@ -16,6 +16,7 @@ module.exports = (sequelize, DataTypes) => {
   stocksOwners.init({
     user_id: {
       type: DataTypes.UUID,
+      primaryKey: true,
       allowNull: false,
       validate: {
         notEmpty: {
@@ -28,9 +29,12 @@ module.exports = (sequelize, DataTypes) => {
     },
     stock_symbol: {
       type: DataTypes.STRING,
+      primaryKey: true,
+      allowNull: false,
     },
     quantity: {
       type: DataTypes.FLOAT,
+      allowNull: false,
     },
   }, {
     sequelize,

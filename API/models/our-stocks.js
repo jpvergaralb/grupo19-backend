@@ -12,12 +12,15 @@ module.exports = (sequelize, DataTypes) => {
   ourStocks.init({
     stock_symbol: {
       type: DataTypes.STRING,
+      primaryKey: true,
+      allowNull: false,
     },
     stock_name: {
       type: DataTypes.STRING,
     },
     quantity: {
       type: DataTypes.FLOAT,
+      allowNull: false,
     },
   }, {
     sequelize,
