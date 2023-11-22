@@ -20,7 +20,7 @@ const postProposalToMQTT = async (req, res) => {
   try {
     console.log(req.body)       
     const mqttClient = req.mqttClient;
-    const response = publishDataMQTT(mqttClient, console.log(req.body));
+    const response = publishDataMQTT(mqttClient, req.body);
     res.status(200).json(response)
   } catch (error) {
     
