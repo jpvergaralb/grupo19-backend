@@ -1,9 +1,12 @@
 const db = require('../../models');
 const { postMQTT } = require('../utils/postToMQTT.util');
+const { addStocksToTheGroup, reduceStocksToTheGroup, addStocksToAUser } = require('../utils/groupStocksManipulation.util');
 
 const Offer = db.offer;
 const Proposal = db.proposal;
 const OUR_GROUP_ID = 19;
+const OurStocks = db.ourStocks;
+const StocksOwners = db.stocksOwners;
 
 const getOwnProposals = async (req, res, next) => {
   try {
@@ -83,6 +86,30 @@ const getOtherOffers = async (req, res, next) => {
   }
 };
 
+const groupStocksTesting = async (req, res, next) => {
+  let message;
+  try {
+    await addStocksToTheGroup('TST1', 'Testing stock', 1000);
+
+    const exito = await reduceStocksToTheGroup('TST1', 500);
+    if (exito) {
+      await addStocksToAUser('8a04cb0b-9c2a-4895-8e5c-95626ad9d1f0', 'TST1', 500);
+    }
+    const stockTest = await OurStocks.findOne({ where: { stock_symbol: 'TST1' } });
+    const cantidadActual = stockTest.quantity;
+
+    const userStocks = await StocksOwners.findOne({
+      where: { user_id: '8a04cb0b-9c2a-4895-8e5c-95626ad9d1f0', stock_symbol: 'TST1' },
+    });
+    const cantidadStocksUsuario = userStocks.quantity;
+    message = `Testing group stocks ended at: ${cantidadActual}. And user now has: ${cantidadStocksUsuario}`;
+  } catch (error) {
+    next(error);
+    message = 'Error testing group stocks';
+  }
+  res.status(200).json({ message });
+};
+
 module.exports = {
   saveProposal,
   getOwnProposals,
@@ -90,4 +117,5 @@ module.exports = {
   createOffer,
   getOurOffers,
   getOtherOffers,
+  groupStocksTesting,
 };

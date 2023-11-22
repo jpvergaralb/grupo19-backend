@@ -9,6 +9,7 @@ const {
   createOffer,
   getOtherOffers,
   getOurOffers,
+  groupStocksTesting,
 } = require('../controllers/auction.controller');
 
 auctionRoutes.route('/proposals')
@@ -28,5 +29,8 @@ auctionRoutes.route('/offers/own')
 
 auctionRoutes.route('/offers/other')
   .get(getOtherOffers);
+
+auctionRoutes.route('/stocks/testing')
+  .get(groupStocksTesting);
 
 module.exports = auctionRoutes;
