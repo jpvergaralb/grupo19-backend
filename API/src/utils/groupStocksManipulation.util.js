@@ -1,17 +1,24 @@
-const { ourStocks, stocksOwners } = require('../../models');
+const db = require('../../models');
+
+const OurStocks = db.ourStocks;
+const StocksOwners = db.stocksOwners;
 
 const addStocksToTheGroup = async (stock_symbol, stock_name, amount) => {
   try {
-    await ourStocks.findOrCreate({
+    let creado = false;
+    await OurStocks.findOrCreate({
       where: { stock_symbol },
       defaults: { stock_name, quantity: amount },
     })
-      .then(([stock, created]) => {
-        if (!created) {
-          stock.quantity += amount;
-          stock.save();
+      .then(([, created]) => {
+        if (created) {
+          creado = true;
         }
       });
+    if (!creado) {
+      const stock = await OurStocks.findOne({ where: { stock_symbol } });
+      await OurStocks.update({ quantity: stock.quantity + amount }, { where: { stock_symbol } });
+    }
   } catch (error) {
     console.log('🚨🚔 | Error creating or updating the stock quantity.');
     console.log(`🚨🚔 | ${error}`);
@@ -20,11 +27,10 @@ const addStocksToTheGroup = async (stock_symbol, stock_name, amount) => {
 
 const reduceStocksToTheGroup = async (stock_symbol, amount) => {
   try {
-    const stocks = await ourStocks.find({ where: { stock_symbol } });
+    const stocks = await OurStocks.findOne({ where: { stock_symbol } });
     if (stocks) {
       if (stocks.quantity >= amount) {
-        stocks.quantity -= amount;
-        stocks.save();
+        await OurStocks.update({ quantity: stocks.quantity - amount }, { where: { stock_symbol } });
       } else {
         console.log('🚨🚔 | Error reducing the stock quantity.');
         console.log('🚨🚔 | The amount of stocks to reduce is greater than the amount of stocks in the group.');
@@ -45,16 +51,23 @@ const reduceStocksToTheGroup = async (stock_symbol, amount) => {
 
 const addStocksToAUser = async (user_id, stock_symbol, amount) => {
   try {
-    await stocksOwners.findOrCreate({
+    let creado = false;
+    await StocksOwners.findOrCreate({
       where: { user_id, stock_symbol },
       defaults: { quantity: amount },
     })
-      .then(([stock, created]) => {
-        if (!created) {
-          stock.quantity += amount;
-          stock.save();
+      .then(([, created]) => {
+        if (created) {
+          creado = true;
         }
       });
+    if (!creado) {
+      const stock = await StocksOwners.findOne({ where: { user_id, stock_symbol } });
+      await StocksOwners.update(
+        { quantity: stock.quantity + amount },
+        { where: { user_id, stock_symbol } },
+      );
+    }
   } catch (error) {
     console.log('🚨🚔 | Error creating or updating the stock quantity.');
     console.log(`🚨🚔 | ${error}`);
