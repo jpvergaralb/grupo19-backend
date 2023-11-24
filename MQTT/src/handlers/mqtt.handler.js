@@ -89,7 +89,7 @@ module.exports = function (client) {
         if (msg.type === "offer"){
           url += "/offers/others";
         } else {
-          url += "/proposals";
+          url += "/proposals/others";
         }
         data = msg;
       }
