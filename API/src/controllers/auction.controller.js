@@ -8,7 +8,6 @@ const OUR_GROUP_ID = 19;
 const OurStocks = db.ourStocks;
 const StocksOwners = db.stocksOwners;
 
-// * UNUSED
 const getOwnProposals = async (req, res, next) => {
   try {
     const proposals = await Proposal.findAll({
@@ -22,7 +21,6 @@ const getOwnProposals = async (req, res, next) => {
   }
 };
 
-// * UNUSED
 const getReceivedProposals = async (req, res, next) => {
   try {
     const proposals = await Proposal.findAll({
@@ -38,18 +36,102 @@ const getReceivedProposals = async (req, res, next) => {
   }
 };
 
-// * UNUSED
 const saveProposal = async (req, res, next) => {
   try {
-    console.log(req.body);
     const newProposal = await Proposal.create(req.body);
     const response = await postMQTT('auctions/proposals', newProposal);
-    console.log(`Recibi del posteo a mqtt/auctions/proposal: ${response}`);
-    res.status(201).json(newProposal);
+    res.status(201).json({created: newProposal, mqttResponseStatus: response.status});
   } catch (error) {
     next(error);
   }
 };
+
+const saveAnothersGroupProposal = async (req, res, next) => {
+  const group_id = req.body.group_id;
+  const type = req.body.type;
+  const proposal_id = req.body.proposal_id;
+  console.log(`😊😊😊😊😊😊 | Recibi una proposal del grupo ${group_id} a mqtt/auctions/proposals`)
+  try {
+    if (group_id === OUR_GROUP_ID) {
+      return res.status(200).json({ message: 'Es nuestra oferta, no la guardo.' });
+    }
+    const offer = await Offer.findOne({
+      where: {
+        auction_id,
+      },
+    });
+    if (!offer) {
+      return res.status(404).json({ message: 'No existe la oferta' });
+    }
+    
+    if (type === 'proposal'){
+      const newProposal = await Proposal.create(req.body);
+      console.log(`Recibi el posteo a mqtt/auctions/proposal del grupo ${group_id}}`);
+      res.status(201).json(newProposal);
+    } 
+
+    if ( type === 'acceptance') {
+      const newProposal = await Proposal.findOne({
+        where: {
+          proposal_id,
+        },
+      });
+      if (!newProposal) {
+        return res.status(404).json({ message: 'No existe la proposal' });
+      }
+      newProposal.type = type;
+      await newProposal.save();
+
+      const allProposals = await Proposal.findAll({
+        where: {
+          auction_id,
+          group_id: OUR_GROUP_ID,
+        },
+      });
+      allProposals.forEach(async (proposal) => {
+        if (proposal.id !== newProposal.id) {
+          proposal.type = 'rejection';
+          await proposal.save();
+        }
+      })
+      res.status(201).json({updatedProposal: newProposal, type});
+    }
+
+    if ( type === 'rejection') {
+      const newProposal = await Proposal.findOne({
+        where: {
+          proposal_id,
+        },
+      });
+      if (!newProposal) {
+        return res.status(404).json({ message: 'No existe la proposal' });
+      }
+      newProposal.type = type;
+      await newProposal.save();
+      res.status(201).json({updatedProposal: newProposal, type});
+    }
+    else {
+      return res.status(400).json({ message: 'Invalid type' });
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
+const simulateProposal = async (req, res, next) => {
+  console.log('😪 No te enojes | Simulando una proposal.');
+  try {
+    const simulatedProposal = req.body;
+    const response = await postMQTT('auctions/proposals', simulatedProposal);
+    if (response.status !== 200) {
+      return res.status(500).json({ message: 'Error posting to MQTT' });
+    }
+    res.status(201).json({ created: simulatedProposal, mqttResponseStatus: response.status });
+  } catch (error) {
+    next(error);
+  }
+};
+
 
 const createOurOffer = async (req, res, next) => {
   console.log('😪 No te enojes | Creando una offer.');
@@ -79,7 +161,6 @@ const simulateOffer = async (req, res, next) => {
   }
 };
 
-// doing
 const saveOthersOffer = async (req, res, next) => {
   console.log(`😊😊😊😊😊😊 | Recibi del posteo a mqtt/auctions/offers: ${req.body}`);
   const { group_id } = req.body;
@@ -95,7 +176,7 @@ const saveOthersOffer = async (req, res, next) => {
   }
 };
 
-// * UNUSED
+
 const getOurOffers = async (req, res, next) => {
   try {
     const offers = await Offer.findAll({
@@ -109,7 +190,6 @@ const getOurOffers = async (req, res, next) => {
   }
 };
 
-// * UNUSED
 const getOtherOffers = async (req, res, next) => {
   try {
     const offers = await Offer.findAll({
@@ -159,4 +239,6 @@ module.exports = {
   groupStocksTesting,
   createOurOffer,
   simulateOffer,
+  saveAnothersGroupProposal,
+  simulateProposal,
 };

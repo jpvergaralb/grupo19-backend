@@ -14,6 +14,11 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   proposal.init({
+    id: {
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
+      primaryKey: true
+    },
     auction_id: {
       type: DataTypes.UUIDV4
     },
