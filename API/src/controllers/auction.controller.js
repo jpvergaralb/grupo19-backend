@@ -41,7 +41,7 @@ const getReceivedProposals = async (req, res, next) => {
 // * UNUSED
 const saveProposal = async (req, res, next) => {
   try {
-    console.log(req.body)
+    console.log(req.body);
     const newProposal = await Proposal.create(req.body);
     const response = await postMQTT('auctions/proposals', newProposal);
     console.log(`Recibi del posteo a mqtt/auctions/proposal: ${response}`);
@@ -52,28 +52,28 @@ const saveProposal = async (req, res, next) => {
 };
 
 const createOurOffer = async (req, res, next) => {
-  console.log(`😪 No te enojes | Creando una offer.`)
+  console.log('😪 No te enojes | Creando una offer.');
   try {
     const newOffer = await Offer.create(req.body);
     const response = await postMQTT('auctions/offers', newOffer);
     if (response.status !== 200) {
-      return res.status(500).json({message: 'Error posting to MQTT'});
+      return res.status(500).json({ message: 'Error posting to MQTT' });
     }
-    res.status(201).json({created: newOffer, mqttResponseStatus: response.status});
+    res.status(201).json({ created: newOffer, mqttResponseStatus: response.status });
   } catch (error) {
     next(error);
   }
 };
 
 const simulateOffer = async (req, res, next) => {
-  console.log(`😪 No te enojes | Simulando una offer.`)
+  console.log('😪 No te enojes | Simulando una offer.');
   try {
-    const simulatedOffer = req.body
+    const simulatedOffer = req.body;
     const response = await postMQTT('auctions/offers', simulatedOffer);
     if (response.status !== 200) {
-      return res.status(500).json({message: 'Error posting to MQTT'});
+      return res.status(500).json({ message: 'Error posting to MQTT' });
     }
-    res.status(201).json({created: simulatedOffer, mqttResponseStatus: response.status});
+    res.status(201).json({ created: simulatedOffer, mqttResponseStatus: response.status });
   } catch (error) {
     next(error);
   }
@@ -81,8 +81,8 @@ const simulateOffer = async (req, res, next) => {
 
 // doing
 const saveOthersOffer = async (req, res, next) => {
-  console.log(`😊😊😊😊😊😊 | Recibi del posteo a mqtt/auctions/offers: ${req.body}`)
-  const group_id = req.body.group_id;
+  console.log(`😊😊😊😊😊😊 | Recibi del posteo a mqtt/auctions/offers: ${req.body}`);
+  const { group_id } = req.body;
   try {
     if (group_id === OUR_GROUP_ID) {
       return res.status(200).json({ message: 'Es nuestra oferta, no la guardo.' });

@@ -26,7 +26,6 @@ auctionRoutes.route('/proposals/own')
 auctionRoutes.route('/proposals/received')
   .get(getReceivedProposals);
 
-
 auctionRoutes.route('/offers/simulate')
   .post(simulateOffer);
 

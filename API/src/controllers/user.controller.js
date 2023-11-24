@@ -1,5 +1,6 @@
 const db = require('../../models');
 const allowedAdminEmails = require('../../config/adminList');
+
 const User = db.user;
 
 const postUser = async (req, res) => {
@@ -197,9 +198,9 @@ const updateUsersPhone = async (req, res) => {
   }
 };
 
-const updateUserRole = async (req, res) =>{
+const updateUserRole = async (req, res) => {
   try {
-    console.log(allowedAdminEmails)
+    console.log(allowedAdminEmails);
     const { id } = req.params;
     const user = await User.findOne({
       where: {
@@ -213,10 +214,10 @@ const updateUserRole = async (req, res) =>{
       res.status(401).json({ message: 'User not allowed.' });
     }
   } catch (error) {
-    console.log(error)
+    console.log(error);
     res.status(500).json({ error });
   }
-}
+};
 
 module.exports = {
   getUsers,
