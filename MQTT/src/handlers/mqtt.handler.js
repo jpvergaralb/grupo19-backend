@@ -64,7 +64,7 @@ module.exports = function (client) {
       return;
     }
     
-    const url = `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.API_PORT}${apiPath}`;
+    let url = `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.API_PORT}${apiPath}`;
     
     let data = {}
     
@@ -87,7 +87,7 @@ module.exports = function (client) {
     } else if (topic === process.env.MQTT_API_AUCTIONS_CHANNEL){
         msg = JSON.parse(message.toString());
         if (msg.type === "offer"){
-          url += "/offers";
+          url += "/offers/others";
         } else {
           url += "/proposals";
         }
