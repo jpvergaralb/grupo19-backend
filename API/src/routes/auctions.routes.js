@@ -16,7 +16,6 @@ const {
   simulateProposal,
 } = require('../controllers/auction.controller');
 
-
 auctionRoutes.route('/proposals/own')
   .post(saveProposal);
 

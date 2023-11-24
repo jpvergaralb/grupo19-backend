@@ -40,17 +40,17 @@ const saveProposal = async (req, res, next) => {
   try {
     const newProposal = await Proposal.create(req.body);
     const response = await postMQTT('auctions/proposals', newProposal);
-    res.status(201).json({created: newProposal, mqttResponseStatus: response.status});
+    res.status(201).json({ created: newProposal, mqttResponseStatus: response.status });
   } catch (error) {
     next(error);
   }
 };
 
 const saveAnothersGroupProposal = async (req, res, next) => {
-  const group_id = req.body.group_id;
-  const type = req.body.type;
-  const proposal_id = req.body.proposal_id;
-  console.log(`😊😊😊😊😊😊 | Recibi una proposal del grupo ${group_id} a mqtt/auctions/proposals`)
+  const { group_id, auction_id } = req.body;
+  const { type } = req.body;
+  const { proposal_id } = req.body;
+  console.log(`😊😊😊😊😊😊 | Recibi una proposal del grupo ${group_id} a mqtt/auctions/proposals`);
   try {
     if (group_id === OUR_GROUP_ID) {
       return res.status(200).json({ message: 'Es nuestra oferta, no la guardo.' });
@@ -63,14 +63,14 @@ const saveAnothersGroupProposal = async (req, res, next) => {
     if (!offer) {
       return res.status(404).json({ message: 'No existe la oferta' });
     }
-    
-    if (type === 'proposal'){
+
+    if (type === 'proposal') {
       const newProposal = await Proposal.create(req.body);
       console.log(`Recibi el posteo a mqtt/auctions/proposal del grupo ${group_id}}`);
       res.status(201).json(newProposal);
-    } 
+    }
 
-    if ( type === 'acceptance') {
+    if (type === 'acceptance') {
       const newProposal = await Proposal.findOne({
         where: {
           proposal_id,
@@ -90,14 +90,15 @@ const saveAnothersGroupProposal = async (req, res, next) => {
       });
       allProposals.forEach(async (proposal) => {
         if (proposal.id !== newProposal.id) {
+          // eslint-disable-next-line no-param-reassign
           proposal.type = 'rejection';
           await proposal.save();
         }
-      })
-      res.status(201).json({updatedProposal: newProposal, type});
+      });
+      res.status(201).json({ updatedProposal: newProposal, type });
     }
 
-    if ( type === 'rejection') {
+    if (type === 'rejection') {
       const newProposal = await Proposal.findOne({
         where: {
           proposal_id,
@@ -108,9 +109,8 @@ const saveAnothersGroupProposal = async (req, res, next) => {
       }
       newProposal.type = type;
       await newProposal.save();
-      res.status(201).json({updatedProposal: newProposal, type});
-    }
-    else {
+      res.status(201).json({ updatedProposal: newProposal, type });
+    } else {
       return res.status(400).json({ message: 'Invalid type' });
     }
   } catch (error) {
@@ -131,7 +131,6 @@ const simulateProposal = async (req, res, next) => {
     next(error);
   }
 };
-
 
 const createOurOffer = async (req, res, next) => {
   console.log('😪 No te enojes | Creando una offer.');
@@ -175,7 +174,6 @@ const saveOthersOffer = async (req, res, next) => {
     next(error);
   }
 };
-
 
 const getOurOffers = async (req, res, next) => {
   try {
