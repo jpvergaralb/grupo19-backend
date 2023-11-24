@@ -1,5 +1,5 @@
 const db = require('../../models');
-
+const allowedAdminEmails = require('../../config/adminList');
 const User = db.user;
 
 const postUser = async (req, res) => {
@@ -197,6 +197,27 @@ const updateUsersPhone = async (req, res) => {
   }
 };
 
+const updateUserRole = async (req, res) =>{
+  try {
+    console.log(allowedAdminEmails)
+    const { id } = req.params;
+    const user = await User.findOne({
+      where: {
+        id,
+      },
+    });
+    if (user && allowedAdminEmails.includes(user.email)) {
+      const updatedUser = await user.update({ role: 'admin' });
+      res.status(200).json({ updatedUser });
+    } else {
+      res.status(401).json({ message: 'User not allowed.' });
+    }
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({ error });
+  }
+}
+
 module.exports = {
   getUsers,
   getUser,
@@ -205,5 +226,6 @@ module.exports = {
   getUserPredictions,
   postUser,
   postUpdateWallet,
+  updateUserRole,
   updateUsersPhone,
 };
