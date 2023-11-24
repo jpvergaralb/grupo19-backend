@@ -7,10 +7,6 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      stock_name: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      },
       quantity: {
         type: Sequelize.FLOAT,
         defaultValue: 0,
