@@ -3,7 +3,6 @@ const AWS = require('aws-sdk');
 const db = require('../../models');
 const tx = require('../../utils/trx');
 const { addStocksToTheGroup, reduceStocksToTheGroup, addStocksToAUser } = require('../utils/groupStocksManipulation.util');
-const ourStocks = require('../../models/our-stocks');
 
 const Request = db.request;
 const User = db.user;
@@ -259,8 +258,8 @@ const createRequestToWebpayAsUser = async (req, res) => {
       return res.status(404).json({ message: `User ${user_id} not found` });
     }
 
-    const availableStocks = await ourStocks.findOne({ where: { stock_symbol: symbol } });
-    if (availableStocks.quantity < quantity) {
+    const availableStocks = await OurStocks.findOne({ where: { stock_symbol: symbol } });
+    if (!availableStocks || availableStocks.quantity < quantity) {
       return res.status(404).json({ message: `Not enough stocks of ${symbol} available` });
     }
 

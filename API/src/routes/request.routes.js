@@ -37,10 +37,10 @@ requestRoutes.route('/webpay/create')
 requestRoutes.route('/webpay/commit')
   .post(commitRequestToWebpayAsUser);
 
-  requestRoutes.route('/webpay/admin/create')
-    .post(createRequestToWebpayAsAdmin);
-  
-  requestRoutes.route('/webpay/admin/commit')
-    .post(commitRequestToWebpayAsAdmin);
+requestRoutes.route('/webpay/admin/create')
+  .post(createRequestToWebpayAsAdmin);
+
+requestRoutes.route('/webpay/admin/commit')
+  .post(commitRequestToWebpayAsAdmin);
 
 module.exports = requestRoutes;
