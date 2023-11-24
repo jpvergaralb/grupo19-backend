@@ -5,9 +5,8 @@ module.exports = {
     await queryInterface.createTable('offers', {
       id: {
         allowNull: false,
-        autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.UUID
       },
       auction_id: {
         type: Sequelize.UUID,
