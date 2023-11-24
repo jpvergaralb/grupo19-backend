@@ -65,7 +65,7 @@ services:
   db:
     image: postgres:12.8
     volumes:
-      - postgres_data4615316514651:/var/lib/postgresql/data
+      - postgres_data4615316514652:/var/lib/postgresql/data
     environment:
       POSTGRES_DB: ${DB_NAME:-postgres}
       POSTGRES_USER: ${DB_USERNAME}
@@ -131,4 +131,4 @@ services:
 #      - nginx
 
 volumes:
-  postgres_data4615316514651:
+  postgres_data4615316514652:
