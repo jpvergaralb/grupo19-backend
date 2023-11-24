@@ -325,21 +325,21 @@ const createRequestToWebpayAsUser = async (req, res) => {
       },
     });
 
-    const requestMessage = {
-      id: newRequest.id,
-      stock_id: lastStock.id,
-      group_id,
-      symbol,
-      datetime,
-      deposit_token: trx.token,
-      quantity,
-      seller,
-    };
+    // const requestMessage = {
+    //   id: newRequest.id,
+    //   stock_id: lastStock.id,
+    //   group_id,
+    //   symbol,
+    //   datetime,
+    //   deposit_token: trx.token,
+    //   quantity,
+    //   seller,
+    // };
 
     // Llamado al broker para enviar el request
-    const url = `${process.env.MQTT_PROTOCOL}://${process.env.MQTT_API_HOST}:${process.env.MQTT_API_PORT}/${process.env.MQTT_API_REQUESTS_PATH}`;
-    console.log(`Posting to ${url}`);
-    await axios.post(url, requestMessage);
+    // const url = `${process.env.MQTT_PROTOCOL}://${process.env.MQTT_API_HOST}:${process.env.MQTT_API_PORT}/${process.env.MQTT_API_REQUESTS_PATH}`;
+    // console.log(`Posting to ${url}`);
+    // await axios.post(url, requestMessage);
 
     const data = {
       token: trx.token,
@@ -390,23 +390,23 @@ const commitRequestToWebpayAsUser = async (req, res) => {
       });
       message = 'Transaction has been rejected';
 
-      const request = await Request.findOne({
-        where: {
-          deposit_token: token_ws,
-        },
-      });
+      // const request = await Request.findOne({
+      //   where: {
+      //     deposit_token: token_ws,
+      //   },
+      // });
 
-      const validationBody = {
-        request_id: request.id,
-        group_id: request.group_id,
-        seller: 0,
-        valid: false,
-      };
+      // const validationBody = {
+      //   request_id: request.id,
+      //   group_id: request.group_id,
+      //   seller: 0,
+      //   valid: false,
+      // };
 
       // Llamado al broker para enviar la validación
-      const url = `${process.env.MQTT_PROTOCOL}://${process.env.MQTT_API_HOST}:${process.env.MQTT_API_PORT}/${process.env.MQTT_API_VALIDATIONS_PATH}`;
-      console.log(`Posting to ${url}`);
-      await axios.post(url, validationBody);
+      // const url = `${process.env.MQTT_PROTOCOL}://${process.env.MQTT_API_HOST}:${process.env.MQTT_API_PORT}/${process.env.MQTT_API_VALIDATIONS_PATH}`;
+      // console.log(`Posting to ${url}`);
+      // await axios.post(url, validationBody);
     } else {
       // Accept the purchase
       await db.transaction.update({ status: 'filled' }, {
@@ -420,6 +420,7 @@ const commitRequestToWebpayAsUser = async (req, res) => {
       user_id = transaction.user_id;
       stock_symbol = transaction.stock_symbol;
       quantity = transaction.quantity;
+      const total_price = transaction.amount;
 
       const request = await Request.findOne({
         where: {
@@ -434,10 +435,14 @@ const commitRequestToWebpayAsUser = async (req, res) => {
         valid: true,
       };
 
-      // Llamado al broker para enviar la validación
-      const url = `${process.env.MQTT_PROTOCOL}://${process.env.MQTT_API_HOST}:${process.env.MQTT_API_PORT}/${process.env.MQTT_API_VALIDATIONS_PATH}`;
-      console.log(`Posting to ${url}`);
-      await axios.post(url, validationBody);
+      // // Llamado al broker para enviar la validación
+      // const url = `${process.env.MQTT_PROTOCOL}://${process.env.MQTT_API_HOST}:${process.env.MQTT_API_PORT}/${process.env.MQTT_API_VALIDATIONS_PATH}`;
+      // console.log(`Posting to ${url}`);
+      // await axios.post(url, validationBody);
+
+      // Llamado a la API para enviar la validación
+      const urlApi = `${process.env.API_PROTOCOL}://${process.env.API_HOST}:${process.env.API_PORT}/validations`;
+      await axios.post(urlApi, validationBody);
 
       AWS.config.update({
         region: process.env.BUCKET_REGION,
@@ -445,7 +450,7 @@ const commitRequestToWebpayAsUser = async (req, res) => {
         secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY_S3,
       });
 
-      const user = await User.findByPk(request.user_id);
+      const user = await User.findByPk(user_id);
 
       let lambdaPayload = {
         body: {
@@ -453,9 +458,9 @@ const commitRequestToWebpayAsUser = async (req, res) => {
           'group-name': 19,
           'user-name': user.username,
           'user-email': user.email,
-          symbol: request.symbol,
-          quantity: request.quantity,
-          price: request.total_price,
+          symbol: stock_symbol,
+          quantity,
+          price: total_price,
         },
       };
       lambdaPayload = JSON.stringify(lambdaPayload);
