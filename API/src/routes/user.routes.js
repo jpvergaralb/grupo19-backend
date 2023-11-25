@@ -7,6 +7,7 @@ const {
   getUserRequests,
   getUserPredictions,
   postUser,
+  updateUserRole,
   postUpdateWallet,
   updateUsersPhone,
 } = require('../controllers/user.controller');
@@ -31,6 +32,9 @@ userRoutes.route('/predictions/:id')
 
 userRoutes.route('/wallet/:id')
   .post(postUpdateWallet);
+
+userRoutes.route('/role/:id')
+  .patch(updateUserRole);
 
 userRoutes.route('/:id')
   .get(getUser);

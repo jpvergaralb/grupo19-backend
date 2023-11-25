@@ -6,29 +6,41 @@ const {
   saveProposal,
   getOwnProposals,
   getReceivedProposals,
-  createOffer,
+  saveOthersOffer,
   getOtherOffers,
   getOurOffers,
   groupStocksTesting,
+  createOurOffer,
+  simulateOffer,
+  saveAnothersGroupProposal,
+  simulateProposal,
 } = require('../controllers/auction.controller');
 
-auctionRoutes.route('/proposals')
+auctionRoutes.route('/proposals/own')
   .post(saveProposal);
 
 auctionRoutes.route('/proposals/own')
   .get(getOwnProposals);
 
+auctionRoutes.route('/proposals/others')
+  .post(saveAnothersGroupProposal);
+
+auctionRoutes.route('/proposals/simulate')
+  .post(simulateProposal);
+
 auctionRoutes.route('/proposals/received')
   .get(getReceivedProposals);
 
-auctionRoutes.route('/offers')
-  .post(createOffer);
+auctionRoutes.route('/offers/simulate')
+  .post(simulateOffer);
 
 auctionRoutes.route('/offers/own')
-  .get(getOurOffers);
+  .get(getOurOffers)
+  .post(createOurOffer);
 
-auctionRoutes.route('/offers/other')
-  .get(getOtherOffers);
+auctionRoutes.route('/offers/others')
+  .get(getOtherOffers)
+  .post(saveOthersOffer);
 
 auctionRoutes.route('/stocks/testing')
   .get(groupStocksTesting);

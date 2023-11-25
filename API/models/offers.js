@@ -14,14 +14,25 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   offer.init({
+    id: {
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
+      primaryKey: true
+    },
     auction_id: {
       type: DataTypes.UUID
     },
     proposal_id: {
-      type: DataTypes.STRING
+      type: DataTypes.STRING,
+      validate: {
+        is: {
+          args: ["^$"],
+          msg: 'proposal_id must be an empty string',
+        },
+      }
     },
     stock_id: {
-      type: DataTypes.UUID
+      type: DataTypes.UUID,
     },
     quantity:{
       type: DataTypes.INTEGER
