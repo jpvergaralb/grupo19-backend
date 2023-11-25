@@ -2,6 +2,7 @@ version: "3.8"
 
 x-celery-worker-defaults: &celery-worker-defaults
   command: /bin/bash -c "/app/entrypoint.celery.sh"
+  image: registry.docker.ljgonzalez.cl/arqui-sis/async-tech/backend/celery-worker:latest
   build:
     context: .
     dockerfile: Dockerfile
@@ -14,11 +15,12 @@ x-celery-worker-defaults: &celery-worker-defaults
 #    - nginx_workers
   restart: unless-stopped
   # TODO: Sacar
-  volumes:
-    - ./src:/app
+  #volumes:
+  #  - ./src:/app
   stop_grace_period: 5s
 
 x-python-defaults: &python-defaults
+  image: registry.docker.ljgonzalez.cl/arqui-sis/async-tech/backend/api-worker:latest
   build:
     context: .
     dockerfile: Dockerfile
