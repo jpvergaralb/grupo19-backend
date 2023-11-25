@@ -21,7 +21,7 @@ stockRoutes.route('/companies')
 stockRoutes.route('/:name')
   .get(getStocksByName);
 
-stockRoutes.route('/ourStocks')
+stockRoutes.route('/ourStocks/all')
   .get(getAllOurStocks);
 
 stockRoutes.route('/ourStocks/:name')
