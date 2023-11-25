@@ -4,11 +4,43 @@ on:
   push:
     branches:
       - "main"
+      - "feat/cd_build_locally"
+  workflow_dispatch:
 
 jobs:
+  build-and-push-mqtt:
+    runs-on: ubuntu-latest
 
-  build:
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v3
 
+      - name: Setup environment variables
+        run: |
+          echo "TIMESTAMP=$(date +"%Y-%d-%m_%H-%M-%S")" >> $GITHUB_ENV
+
+      - name: Install docker
+        run: |
+          echo "deb [arch=$(dpkg --print-architecture) trusted=true] https://download.docker.com/linux/ubuntu $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+          sudo apt-get update
+          sudo apt-get install -y ca-certificates curl gnupg docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
+      - name: Build MQTT Image
+        run: |
+          sudo docker compose build --no-cache mqtt
+
+      - name: Tag image
+        run: |
+          sudo docker tag registry.docker.ljgonzalez.cl/arqui-sis/async-tech/backend/main-api:latest registry.docker.ljgonzalez.cl/arqui-sis/async-tech/backend/main-api:latest:github-${TIMESTAMP}
+          sudo docker tag registry.docker.ljgonzalez.cl/arqui-sis/async-tech/backend/main-api:latest registry.docker.ljgonzalez.cl/arqui-sis/async-tech/backend/main-api:latest:github-latest
+
+      - name: Push image
+        run: |
+          sudo docker push registry.docker.ljgonzalez.cl/arqui-sis/async-tech/backend/main-api:latest
+          sudo docker push registry.docker.ljgonzalez.cl/arqui-sis/async-tech/backend/main-api:latest:github-latest
+          sudo docker push registry.docker.ljgonzalez.cl/arqui-sis/async-tech/backend/main-api:latest:github-${TIMESTAMP}
+
+  update-and-reload:
     runs-on: ubuntu-latest
 
     steps:
@@ -23,5 +55,21 @@ jobs:
         echo "EC2USER=ubuntu" >> $GITHUB_ENV
         echo "EC2PASSWD=${{ secrets.EC2PASSWD }}" >> $GITHUB_ENV
 
+    - name: Take container down
+      run: |
+        connect_ssh() { sshpass -p "${EC2PASSWD}" ssh -o StrictHostKeyChecking=no -p ${EC2PORT} ${EC2USER}@${EC2HOST} -Ct " cd /home/ubuntu/backend && $@" ; }
+        connect_ssh "sudo docker compose down"
+
+    - name: Update repo
+      run: |
+        connect_ssh() { sshpass -p "${EC2PASSWD}" ssh -o StrictHostKeyChecking=no -p ${EC2PORT} ${EC2USER}@${EC2HOST} -Ct " cd /home/ubuntu/backend && $@" ; }
+        connect_ssh "git fetch"
+        connect_ssh "git reset --hard && git checkout main && git pull "
+        connect_ssh "sudo docker system prune -a -f && ./deploy.production.unix.sh"
+
     - name: Update and reload containers
-      run: sshpass -p "${EC2PASSWD}" ssh -o StrictHostKeyChecking=no -p ${EC2PORT} ${EC2USER}@${EC2HOST} -Ct "cd /home/ubuntu/backend && git fetch && git reset --hard && git checkout main && git pull && sudo docker system prune -a -f && ./deploy.production.unix.sh"
+      run: |
+        connect_ssh() { sshpass -p "${EC2PASSWD}" ssh -o StrictHostKeyChecking=no -p ${EC2PORT} ${EC2USER}@${EC2HOST} -Ct " cd /home/ubuntu/backend && $@" ; }
+        connect_ssh "sudo docker system prune -a -f"
+        connect_ssh "sudo docker compose pull"
+        connect_ssh "sudo docker compose up -d"

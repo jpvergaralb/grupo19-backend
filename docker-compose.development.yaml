@@ -24,6 +24,7 @@ services:
       - cloudflare-ddns
 
   api:
+    image: registry.docker.ljgonzalez.cl/arqui-sis/async-tech/backend/main-api:latest
     build:
       context: ./API
       dockerfile: development.Dockerfile
@@ -43,6 +44,7 @@ services:
     <<: *container-defaults
 
   mqtt:
+    image: registry.docker.ljgonzalez.cl/arqui-sis/async-tech/backend/mqtt:latest
     build:
       context: ./MQTT
       dockerfile: development.Dockerfile
