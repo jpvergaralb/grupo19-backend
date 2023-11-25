@@ -27,7 +27,7 @@ jobs:
 
       - name: Build MQTT Image
         run: |
-          sudo docker compose build --no-cache mqtt
+          sudo docker compose -f ./docker-compose.production.yaml build --no-cache mqtt
 
       - name: Tag image
         run: |
@@ -59,7 +59,7 @@ jobs:
 
       - name: Build Main API Image
         run: |
-          sudo docker compose build --no-cache api
+          sudo docker compose -f ./docker-compose.production.yaml build --no-cache api
 
       - name: Tag image
         run: |
@@ -72,11 +72,47 @@ jobs:
           sudo docker push registry.docker.ljgonzalez.cl/arqui-sis/async-tech/backend/main-api:latest:github-latest
           sudo docker push registry.docker.ljgonzalez.cl/arqui-sis/async-tech/backend/main-api:latest:github-${TIMESTAMP}
 
-  update-and-reload:
+  update-repo:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
+      - name: Install ssh
+        run: sudo apt-get install openssh-client sshpass -y
+
+      - name: Setup environment variables
+        run: |
+          echo "EC2HOST=arqui.ljg.cl" >> $GITHUB_ENV
+          echo "EC2PORT=22" >> $GITHUB_ENV
+          echo "EC2USER=ubuntu" >> $GITHUB_ENV
+          echo "EC2PASSWD=${{ secrets.EC2PASSWD }}" >> $GITHUB_ENV
+
+      - name: Take containers down
+        id: take-stack-down
+        run: |
+          connect_ssh() { sshpass -p "${EC2PASSWD}" ssh -o StrictHostKeyChecking=no -p ${EC2PORT} ${EC2USER}@${EC2HOST} -Ct " cd /home/ubuntu/backend && $@" ; }
+          connect_ssh "sudo docker compose -f ./docker-compose.production.yaml down"
+
+      - name: FAILURE - Raise containers back up
+        if: failure() && steps.take-stack-down.outcome == 'failure'
+        run: |
+          connect_ssh() { sshpass -p "${EC2PASSWD}" ssh -o StrictHostKeyChecking=no -p ${EC2PORT} ${EC2USER}@${EC2HOST} -Ct " cd /home/ubuntu/backend && $@" ; }
+          connect_ssh "sudo docker compose -f ./docker-compose.production.yaml up -d"
+          exit 1
+
+      - name: Update repo
+        run: |
+          connect_ssh() { sshpass -p "${EC2PASSWD}" ssh -o StrictHostKeyChecking=no -p ${EC2PORT} ${EC2USER}@${EC2HOST} -Ct " cd /home/ubuntu/backend && $@" ; }
+          connect_ssh "git fetch"
+          connect_ssh "git reset --hard && git checkout main && git pull "
+
+  update-and-reload-containers:
+    needs:
+      - build-and-push-mqtt
+      - build-and-push-main-api
+      - update-repo
+    runs-on: ubuntu-latest
+
+    steps:
     - name: Install ssh
       run: sudo apt-get install openssh-client sshpass -y
 
@@ -87,20 +123,33 @@ jobs:
         echo "EC2USER=ubuntu" >> $GITHUB_ENV
         echo "EC2PASSWD=${{ secrets.EC2PASSWD }}" >> $GITHUB_ENV
 
-    - name: Take container down
-      run: |
-        connect_ssh() { sshpass -p "${EC2PASSWD}" ssh -o StrictHostKeyChecking=no -p ${EC2PORT} ${EC2USER}@${EC2HOST} -Ct " cd /home/ubuntu/backend && $@" ; }
-        connect_ssh "sudo docker compose down"
-
-    - name: Update repo
-      run: |
-        connect_ssh() { sshpass -p "${EC2PASSWD}" ssh -o StrictHostKeyChecking=no -p ${EC2PORT} ${EC2USER}@${EC2HOST} -Ct " cd /home/ubuntu/backend && $@" ; }
-        connect_ssh "git fetch"
-        connect_ssh "git reset --hard && git checkout main && git pull "
-
     - name: Update and reload containers
       run: |
         connect_ssh() { sshpass -p "${EC2PASSWD}" ssh -o StrictHostKeyChecking=no -p ${EC2PORT} ${EC2USER}@${EC2HOST} -Ct " cd /home/ubuntu/backend && $@" ; }
         connect_ssh "sudo docker system prune -a -f"
         connect_ssh "sudo docker compose pull"
-        connect_ssh "sudo docker compose up -d"
+        connect_ssh "sudo docker compose -f ./docker-compose.production.yaml up -d"
+
+  backup-containers:
+    needs:
+      - update-and-reload-containers
+    runs-on: ubuntu-latest
+    if: failure()
+    steps:
+      - name: Setup environment variables
+        run: |
+          echo "EC2HOST=arqui.ljg.cl" >> $GITHUB_ENV
+          echo "EC2PORT=22" >> $GITHUB_ENV
+          echo "EC2USER=ubuntu" >> $GITHUB_ENV
+          echo "EC2PASSWD=${{ secrets.EC2PASSWD }}" >> $GITHUB_ENV
+
+      - name: FAILURE - Raise containers back up on old checkout
+        run:
+          sudo apt-get install openssh-client sshpass -y
+
+          connect_ssh() { sshpass -p "${EC2PASSWD}" ssh -o StrictHostKeyChecking=no -p ${EC2PORT} ${EC2USER}@${EC2HOST} -Ct " cd /home/ubuntu/backend && $@" ; }
+          
+          connect_ssh "rm -r ./{a-zA-Z0-9}*"
+          connect_ssh "git reset --hard && git checkout f5d6b2a6 && git pull "
+          connect_ssh "sudo docker compose -f ./docker-compose.production.yaml down"
+          connect_ssh "sudo docker compose -f ./docker-compose.production.yaml down"
