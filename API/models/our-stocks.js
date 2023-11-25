@@ -15,9 +15,6 @@ module.exports = (sequelize, DataTypes) => {
       primaryKey: true,
       allowNull: false,
     },
-    stock_name: {
-      type: DataTypes.STRING,
-    },
     quantity: {
       type: DataTypes.FLOAT,
       allowNull: false,

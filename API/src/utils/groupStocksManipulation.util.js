@@ -3,12 +3,12 @@ const db = require('../../models');
 const OurStocks = db.ourStocks;
 const StocksOwners = db.stocksOwners;
 
-const addStocksToTheGroup = async (stock_symbol, stock_name, amount) => {
+const addStocksToTheGroup = async (stock_symbol, amount) => {
   try {
     let creado = false;
     await OurStocks.findOrCreate({
       where: { stock_symbol },
-      defaults: { stock_name, quantity: amount },
+      defaults: { quantity: amount },
     })
       .then(([, created]) => {
         if (created) {

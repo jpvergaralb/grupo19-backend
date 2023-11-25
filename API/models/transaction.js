@@ -59,7 +59,7 @@ module.exports = (sequelize, DataTypes) => {
       },
     },
     quantity: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.FLOAT,
       allowNull: false,
       validate: {
         notEmpty: {
@@ -68,8 +68,8 @@ module.exports = (sequelize, DataTypes) => {
         notNull: {
           msg: 'quantity cannot be null',
         },
-        isInt: {
-          msg: 'quantity must be an integer',
+        isFloat: {
+          msg: 'quantity must be a float',
         },
       },
     },

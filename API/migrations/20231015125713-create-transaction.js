@@ -30,7 +30,7 @@ module.exports = {
         allowNull: false,
       },
       quantity: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.FLOAT,
         allowNull: false,
       },
       amount: {

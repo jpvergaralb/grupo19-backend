@@ -206,7 +206,7 @@ const getOtherOffers = async (req, res, next) => {
 const groupStocksTesting = async (req, res, next) => {
   let message;
   try {
-    await addStocksToTheGroup('TST1', 'Testing stock', 1000);
+    await addStocksToTheGroup('TST1', 1000);
 
     const exito = await reduceStocksToTheGroup('TST1', 500);
     if (exito) {
