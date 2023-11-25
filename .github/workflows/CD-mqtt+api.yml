@@ -155,6 +155,6 @@ jobs:
           connect_ssh "rm -r ./*" ;
           connect_ssh "git reset --hard && git checkout f5d6b2a6 " ;
           connect_ssh "sudo docker compose -f ./docker-compose.production.yaml down" ;
-          connect_ssh "sudo docker compose -f ./docker-compose.production.yaml --no-cache build" ;
+          connect_ssh "sudo docker compose -f ./docker-compose.production.yaml build --no-cache" ;
           connect_ssh "sudo docker compose -f ./docker-compose.production.yaml pull" ;
           connect_ssh "sudo docker compose -f ./docker-compose.production.yaml up" ;
