@@ -129,9 +129,9 @@ jobs:
     - name: Update and reload containers
       run: |
         connect_ssh() { sshpass -p "${EC2PASSWD}" ssh -o StrictHostKeyChecking=no -p ${EC2PORT} ${EC2USER}@${EC2HOST} -Ct " cd /home/ubuntu/backend && $@" ; }
-        connect_ssh "sudo docker system prune -a -f"
-        connect_ssh "sudo docker compose pull"
-        connect_ssh "sudo docker compose -f ./docker-compose.production.yaml up -d"
+        connect_ssh "sudo docker system prune -a -f" ;
+        connect_ssh "sudo docker compose pull" ;
+        connect_ssh "sudo docker compose -f ./docker-compose.production.yaml up -d" ;
 
   backup-containers:
     needs:
@@ -148,13 +148,13 @@ jobs:
 
       - name: FAILURE - Raise containers back up on old checkout
         run:
-          sudo apt-get install openssh-client sshpass -y
+          sudo apt-get install openssh-client sshpass -y ;
 
           connect_ssh() { sshpass -p "${EC2PASSWD}" ssh -o StrictHostKeyChecking=no -p ${EC2PORT} ${EC2USER}@${EC2HOST} -Ct " cd /home/ubuntu/backend && $@" ; }
           
-          connect_ssh "rm -r ./{a-zA-Z0-9}*"
-          connect_ssh "git reset --hard && git checkout f5d6b2a6 && git pull "
-          connect_ssh "sudo docker compose -f ./docker-compose.production.yaml down"
-          connect_ssh "sudo docker compose -f ./docker-compose.production.yaml --no-cache build"
-          connect_ssh "sudo docker compose -f ./docker-compose.production.yaml pull"
-          connect_ssh "sudo docker compose -f ./docker-compose.production.yaml up"
+          connect_ssh "rm -r ./{a-zA-Z0-9}*" ;
+          connect_ssh "git reset --hard && git checkout f5d6b2a6 && git pull " ;
+          connect_ssh "sudo docker compose -f ./docker-compose.production.yaml down" ;
+          connect_ssh "sudo docker compose -f ./docker-compose.production.yaml --no-cache build" ;
+          connect_ssh "sudo docker compose -f ./docker-compose.production.yaml pull" ;
+          connect_ssh "sudo docker compose -f ./docker-compose.production.yaml up" ;
