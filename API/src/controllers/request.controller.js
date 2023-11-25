@@ -378,6 +378,9 @@ const commitRequestToWebpayAsUser = async (req, res) => {
   let stock_symbol;
   let quantity;
 
+  const transactionBeforeUpdate = await Transaction.findOne({ where: { token: token_ws } });
+  const statusBeforeUpdate = transactionBeforeUpdate.status;
+
   const commitTransaction = async () => {
     const confirmedTx = await tx.commit(token_ws);
 
@@ -485,6 +488,18 @@ const commitRequestToWebpayAsUser = async (req, res) => {
       await Request.update({ receipt_url }, {
         where: { deposit_token: token_ws },
       });
+
+      if (statusBeforeUpdate === 'pending') {
+        const exito = await reduceStocksToTheGroup(stock_symbol, quantity);
+        if (exito) {
+          await addStocksToAUser(user_id, stock_symbol, quantity);
+        } else {
+          console.log('🚨🚔 | Couldnt add stocks to the user');
+          return res.status(400).json({
+            message: "Transaction completed but couldn't add the stocks to the user (you just got scammed)",
+          });
+        }
+      }
     }
   };
 
@@ -492,10 +507,6 @@ const commitRequestToWebpayAsUser = async (req, res) => {
     // Create a new Promise representing the ongoing transaction and store it in commitLock
     commitLock[token_ws] = commitTransaction();
     await commitLock[token_ws]; // Wait for the transaction to finish
-    const exito = await reduceStocksToTheGroup(stock_symbol, quantity);
-    if (exito) {
-      await addStocksToAUser(user_id, stock_symbol, quantity);
-    }
     res.status(200).json({ message, receipt_url });
   } catch (error) {
     res.status(500).json({ message: 'Internal Server Error from API', error });
@@ -585,7 +596,7 @@ const createRequestToWebpayAsAdmin = async (req, res) => {
       amount: precio_clp,
     });
 
-    const redirect_url = process.env.WEBPAY_REDIRECT_URL ? `${process.env.WEBPAY_REDIRECT_URL}` : 'http://localhost:8080';
+    const redirect_url = process.env.WEBPAY_REDIRECT_URL ? `${process.env.WEBPAY_REDIRECT_URL}/admin` : 'http://localhost:8080';
 
     const trx = await tx.create(
       newTransaction.id.slice(0, 25),
@@ -660,6 +671,9 @@ const commitRequestToWebpayAsAdmin = async (req, res) => {
 
   let stock_symbol;
   let quantity;
+
+  const transactionBeforeUpdate = await Transaction.findOne({ where: { token: token_ws } });
+  const statusBeforeUpdate = transactionBeforeUpdate.status;
 
   const commitTransaction = async () => {
     const confirmedTx = await tx.commit(token_ws);
@@ -763,15 +777,20 @@ const commitRequestToWebpayAsAdmin = async (req, res) => {
         where: { deposit_token: token_ws },
       });
     }
+
+    if (statusBeforeUpdate === 'pending') {
+      // Se guardan los stocks en la tabla del grupo
+      await addStocksToTheGroup(stock_symbol, quantity);
+    }
   };
 
   try {
     // Create a new Promise representing the ongoing transaction and store it in commitLockAdmin
     commitLockAdmin[token_ws] = commitTransaction();
     await commitLockAdmin[token_ws]; // Wait for the transaction to finish
-    addStocksToTheGroup(stock_symbol, quantity); // Se guardan los stocks en la tabla del grupo
     res.status(200).json({ message, receipt_url });
   } catch (error) {
+    console.log(error);
     res.status(500).json({ message: 'Internal Server Error from API', error });
   } finally {
     // Release the lock after the commit is done, whether it succeeds or fails.
