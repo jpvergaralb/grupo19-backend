@@ -5,6 +5,7 @@ const {
   postStock,
   getStocksByName,
   getCompaniesSymbol,
+  getAllOurStocks,
   getOurStocksByName,
 } = require('../controllers/stock.controller');
 
@@ -19,6 +20,9 @@ stockRoutes.route('/companies')
 
 stockRoutes.route('/:name')
   .get(getStocksByName);
+
+stockRoutes.route('/ourStocks/all')
+  .get(getAllOurStocks);
 
 stockRoutes.route('/ourStocks/:name')
   .get(getOurStocksByName);
