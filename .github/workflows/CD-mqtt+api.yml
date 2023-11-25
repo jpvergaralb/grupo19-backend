@@ -27,7 +27,8 @@ jobs:
 
       - name: Build MQTT Image
         run: |
-          sudo docker compose -f ./docker-compose.production.yaml build --no-cache mqtt
+          sudo chmod -R a+x ./
+          sudo docker compose -f ./docker-compose.production.yaml build mqtt
 
       - name: Tag image
         run: |
@@ -59,7 +60,8 @@ jobs:
 
       - name: Build Main API Image
         run: |
-          sudo docker compose -f ./docker-compose.production.yaml build --no-cache api
+          sudo chmod -R a+x ./
+          sudo docker compose -f ./docker-compose.production.yaml build api
 
       - name: Tag image
         run: |
@@ -152,4 +154,6 @@ jobs:
           connect_ssh "rm -r ./{a-zA-Z0-9}*"
           connect_ssh "git reset --hard && git checkout f5d6b2a6 && git pull "
           connect_ssh "sudo docker compose -f ./docker-compose.production.yaml down"
-          connect_ssh "sudo docker compose -f ./docker-compose.production.yaml down"
+          connect_ssh "sudo docker compose -f ./docker-compose.production.yaml --no-cache build"
+          connect_ssh "sudo docker compose -f ./docker-compose.production.yaml pull"
+          connect_ssh "sudo docker compose -f ./docker-compose.production.yaml up"
