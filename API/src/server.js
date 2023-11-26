@@ -31,6 +31,7 @@ wsServer.on('connection', (connection) => {
   clients[userId] = connection;
   console.log(`${userId} connected.`);
   // --> AQUÍ <--
+  
 });
 
 /* ------------------------------------------------------ */
