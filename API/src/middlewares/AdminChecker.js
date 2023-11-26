@@ -5,9 +5,15 @@ const User = db.user;
 const checkAdmin = async (req, res, next) => {
   console.log('👮‍♂️👮‍♂️👮‍♂️👮‍♂️👮‍♂️ | Checking admin');
   try {
-    const { user_id } = req.body;
+    let { user_id } = req.body;
     if (!user_id) {
-      return res.status(403).json({ message: 'user_id missing' });
+      console.log(req.query);
+      user_id = req.query.user_id;
+      console.log(`📝 | user_id from query: ${user_id}`);
+    }
+
+    if (!user_id) {
+      return res.status(403).json({ message: 'missing user_id in body or user-id in query' });
     }
     const user = await User.findByPk(user_id);
     if (!user) {
