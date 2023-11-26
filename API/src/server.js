@@ -1,6 +1,7 @@
 /* ------------------------------------------------------ */
 // Añadir módulos de websocket
 const { WebSocketServer } = require('ws');
+const pollDatabase = require('./utils/dbPolling');
 const http = require('http');
 
 const { uuidv4 } = require('uuid');
@@ -32,6 +33,7 @@ wsServer.on('connection', (connection) => {
   console.log(`${userId} connected.`);
   // --> AQUÍ <--
   
+  setInterval(() => pollDatabase(connection), 10000);
 });
 
 /* ------------------------------------------------------ */
