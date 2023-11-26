@@ -7,6 +7,7 @@ const StocksOwners = db.stocksOwners;
  * --> Intercambiamos con otro grupo
  * --> Compra a los ayudantes (broker)
  * TODO: Poner un toast notification que digan "Han aumentado/disminuido los stocks de <SYMBOL> en <CANTIDAD>"
+ * TODO: DECIRLE AL CLIENTE QUE ACTUALICE LA PÁGINA (solución parche)
  */
 const addStocksToTheGroup = async (stock_symbol, amount) => {
   try {
@@ -34,6 +35,7 @@ const addStocksToTheGroup = async (stock_symbol, amount) => {
 /* Admin disminuyó stocks del grupo
 * --> Un usuario de nuestra aplicacion nos compra acciones de nuetro pool o cuando nosotros subastamos
 * TODO: Poner un toast notification que digan "Han aumentado/disminuido los stocks de <SYMBOL> en <CANTIDAD>"
+* TODO: DECIRLE AL CLIENTE QUE ACTUALICE LA PÁGINA (solución parche)
 * */
 
 const reduceStocksToTheGroup = async (stock_symbol, amount) => {
