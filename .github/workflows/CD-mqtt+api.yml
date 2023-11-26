@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - "main"
+      - "production"
       - "feat/cd_build_locally"
   workflow_dispatch:
 
