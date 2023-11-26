@@ -2,6 +2,8 @@ const express = require('express');
 
 const auctionRoutes = express.Router();
 
+const { checkAdmin } = require('../middlewares/AdminChecker');
+
 const {
   saveProposal,
   getOwnProposals,
@@ -15,36 +17,40 @@ const {
   saveAnothersGroupProposal,
   simulateProposal,
   getOfferByAuctionId,
+  respondToAnothersGroupProposal,
 } = require('../controllers/auction.controller');
 
 auctionRoutes.route('/proposals/own')
-  .post(saveProposal)
-  .get(getOwnProposals);
+  .post(checkAdmin, saveProposal)
+  .get(checkAdmin, getOwnProposals);
 
 auctionRoutes.route('/proposals/others')
   .post(saveAnothersGroupProposal);
 
+auctionRoutes.route('/proposals/others/respond')
+  .post(checkAdmin, respondToAnothersGroupProposal);
+
 auctionRoutes.route('/proposals/simulate')
-  .post(simulateProposal);
+  .post(checkAdmin, simulateProposal);
 
 auctionRoutes.route('/proposals/received')
-  .get(getReceivedProposals);
+  .get(checkAdmin, getReceivedProposals);
 
 auctionRoutes.route('/offers/simulate')
-  .post(simulateOffer);
+  .post(checkAdmin, simulateOffer);
 
 auctionRoutes.route('/offers/own')
-  .get(getOurOffers)
-  .post(createOurOffer);
+  .get(checkAdmin, getOurOffers)
+  .post(checkAdmin, createOurOffer);
 
 auctionRoutes.route('/offers/others')
   .get(getOtherOffers)
   .post(saveOthersOffer);
 
 auctionRoutes.route('/offers/:auction_id')
-  .get(getOfferByAuctionId);
+  .get(checkAdmin, getOfferByAuctionId);
 
 auctionRoutes.route('/stocks/testing')
-  .get(groupStocksTesting);
+  .get(checkAdmin, groupStocksTesting);
 
 module.exports = auctionRoutes;

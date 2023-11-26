@@ -25,6 +25,7 @@ const getOwnProposals = async (req, res, next) => {
 };
 
 const getReceivedProposals = async (req, res, next) => {
+  console.log('😊😊😊😊😊😊 | Recibi un get a mqtt/auctions/proposals')
   try {
     const proposals = await Proposal.findAll({
       where: {
@@ -67,8 +68,11 @@ const getReceivedProposals = async (req, res, next) => {
 const saveProposal = async (req, res, next) => {
   const transaction = await db.sequelize.transaction();
   try {
-    const { quantity, stock_id } = req.body.data;
+    console.log('😊😊😊😊😊😊 | Recibi una proposal')
+    console.log(req.body)
+    const { quantity, stock_id } = req.body.data || req.body;
     const stock = await OurStocks.findOne({ where: { stock_symbol: stock_id } }, { transaction });
+    console.log(stock)
     if (stock.quantity < quantity) {
       await transaction.rollback();
       return res.status(400).json({ message: 'There are not enough stocks.' });
@@ -172,6 +176,60 @@ const saveAnothersGroupProposal = async (req, res, next) => {
     next(error);
   }
 };
+
+const respondToAnothersGroupProposal = async (req, res, next) => {
+  try {
+    const { type, proposal_id } = req.body.data.proposal;
+    const { auction_id } = req.body.data.offer;
+    if (type === 'acceptance') {
+      const newProposal = await Proposal.findOne({
+        where: {
+          proposal_id,
+        },
+      });
+      if (!newProposal) {
+        return res.status(404).json({ message: 'No existe la proposal' });
+      }
+      newProposal.type = type;
+      await newProposal.save();
+      const offer = await Offer.findOne({
+        where: {
+          auction_id,
+        },
+      });
+
+      await addStocksToTheGroup(newProposal.stock_id, newProposal.quantity);
+      
+      const allProposals = await Proposal.findAll({
+        where: {
+          auction_id,
+        },
+      });
+
+      allProposals.forEach(async (proposal) => {
+        if (proposal.id !== newProposal.id) {
+          // eslint-disable-next-line no-param-reassign
+          proposal.type = 'rejection';
+          await proposal.save();
+        }
+      });
+      await offer.destroy();
+      return res.status(201).json({ updatedProposal: newProposal, type });
+    }
+    
+    const proposal = await Proposal.findOne({
+      where: {
+        proposal_id,
+      },
+    });
+    proposal.type = type;
+    await proposal.save();
+
+    res.status(200).send("all good")
+  } catch (error) {
+    next(error)
+  }
+}
 
 const simulateProposal = async (req, res, next) => {
   console.log('😪 No te enojes | Simulando una proposal.');
@@ -338,4 +396,5 @@ module.exports = {
   simulateOffer,
   saveAnothersGroupProposal,
   simulateProposal,
+  respondToAnothersGroupProposal,
 };
