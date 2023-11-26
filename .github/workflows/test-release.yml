@@ -38,7 +38,7 @@ jobs:
 
       - name: Create and push new test tag
         run: |
-          git remote set-url origin https://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@github.com/jpvergaralb/grupo19-backend.git  
+          git remote set-url origin  ${{ secrets.GITHUB_TOKEN }}@github.com/jpvergaralb/grupo19-backend.git  
           NEW_TAG=${{ steps.newtag.outputs.new_test_version }}
           git tag $NEW_TAG
           git push origin $NEW_TAG
@@ -46,7 +46,7 @@ jobs:
       - name: Create a GitHub Test Release
         uses: actions/create-release@v1
         env:
-          GITHUB_TOKEN: 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
+          GITHUB_TOKEN:  ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: ${{ steps.newtag.outputs.new_test_version }}
           release_name: Test Release ${{ steps.newtag.outputs.new_test_version }}
