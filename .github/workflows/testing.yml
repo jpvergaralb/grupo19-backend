@@ -8,7 +8,11 @@ on:
       - production
       - master
       - feat/semantic_versioning
-
+  push:
+    branches:
+      - development
+      - feat/semantic_versioning
+      -
 jobs:
   build:
     runs-on: ubuntu-latest
