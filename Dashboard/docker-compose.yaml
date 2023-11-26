@@ -36,10 +36,12 @@ services:
 
   node_exporter:
     image: quay.io/prometheus/node-exporter:latest
-    container_name: node_exporter_prometheus_exporter
+    container_name: node_exporter
+    ports:
+      - 9100:9100
     command:
       - '--path.rootfs=/host'
-    network_mode: host
+    #network_mode: host
     pid: host
     restart: unless-stopped
     volumes:
