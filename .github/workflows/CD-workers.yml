@@ -167,14 +167,19 @@ jobs:
           echo "MQTT_BROKER_USERNAME=${{ secrets.MQTT_BROKER_USERNAME }}" >> .env
           echo "MQTT_BROKER_PASSWORD=${{ secrets.MQTT_BROKER_PASSWORD }}" >> .env
           echo "CLOUDFLARE_API_KEY=${{ secrets.CLOUDFLARE_API_KEY }}" >> .env
+          
+          echo -e "${{ secrets.CHAIN1_ARQUIWORKERS }}" > "./workers/nginx/templates/letsencrypt/arqui-workers.ljg.cl/chain1.pem"
+          echo -e "${{ secrets.PRIVKEY1_ARQUIWORKERS }}" > "./workers/nginx/templates/letsencrypt/arqui-workers.ljg.cl/privkey1.pem"
+          echo -e "${{ secrets.FULLCHAIN1_ARQUIWORKERS }}" > "./workers/nginx/templates/letsencrypt/arqui-workers.ljg.cl/privkey1.pem"
+          echo -e "${{ secrets.CERT1_ARQUIWORKERS }}" > "./workers/nginx/templates/letsencrypt/arqui-workers.ljg.cl/cert1.pem"
 
       - name: Save .env
         run: |
-          sshpass -p "${EC2PASSWD}" scp -o StrictHostKeyChecking=no -p ${EC2PORT} ./.env ${EC2USER}@${EC2HOST}:/home/${EC2USER}/grupo19-backend/workers/
+          sshpass -p "${EC2PASSWD}" scp -o StrictHostKeyChecking=no ./.env ${EC2USER}@${EC2HOST}:/home/${EC2USER}/grupo19-backend/workers/
 
       - name: Save SSL Certificates
         run: |
-          sshpass -p "${EC2PASSWD}" scp -o StrictHostKeyChecking=no -p ${EC2PORT} ./workers/nginx/templates/letsencrypt/arqui-workers.ljg.cl/* ${EC2USER}@${EC2HOST}:/home/${EC2USER}/grupo19-backend/workers/nginx/templates/letsencrypt/arqui-workers.ljg.cl
+          sshpass -p "${EC2PASSWD}" scp -o StrictHostKeyChecking=no ./workers/nginx/templates/letsencrypt/arqui-workers.ljg.cl/* ${EC2USER}@${EC2HOST}:/home/${EC2USER}/grupo19-backend/workers/nginx/templates/letsencrypt/arqui-workers.ljg.cl
 
   update-and-reload-containers:
     needs:
