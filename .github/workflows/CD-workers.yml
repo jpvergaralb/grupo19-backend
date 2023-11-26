@@ -93,9 +93,9 @@ jobs:
 
       - name: Tag image
         run: |
-          sudo docker tag registry.docker.ljgonzalez.cl/arqui-sis/async-tech/backend/celery-worker:latest registry.docker.ljgonzalez.cl/arqui-sis/async-tech/backend/celery-worker:github-${TIMESTAMP}
-          #sudo docker tag registry.docker.ljgonzalez.cl/arqui-sis/async-tech/backend/celery-worker:latest registry.docker.ljgonzalez.cl/arqui-sis/async-tech/backend/celery-worker:github-latest
-          sudo docker tag registry.docker.ljgonzalez.cl/arqui-sis/async-tech/backend/celery-worker:latest registry.docker.ljgonzalez.cl/arqui-sis/async-tech/backend/celery-worker:latest
+          sudo docker tag registry.docker.ljgonzalez.cl/arqui-sis/async-tech/backend/celery-worker:latest registry.docker.ljgonzalez.cl/arqui-sis/async-tech/backend/celery-worker:github-${TIMESTAMP} ;
+          sudo docker tag registry.docker.ljgonzalez.cl/arqui-sis/async-tech/backend/celery-worker:latest registry.docker.ljgonzalez.cl/arqui-sis/async-tech/backend/celery-worker:github-latest ;
+          # sudo docker tag registry.docker.ljgonzalez.cl/arqui-sis/async-tech/backend/celery-worker:latest registry.docker.ljgonzalez.cl/arqui-sis/async-tech/backend/celery-worker:latest
 
       - name: Push image
         run: |
@@ -107,6 +107,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+
       - name: Install ssh
         run: sudo apt-get install openssh-client sshpass -y
 
@@ -144,6 +147,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+
       - name: Setup environment variables
         run: |
           echo "EC2HOST=arqui-workers.ljg.cl" >> $GITHUB_ENV
@@ -178,6 +184,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+
       - name: Install ssh
         run: sudo apt-get install openssh-client sshpass -y
 
@@ -195,7 +204,7 @@ jobs:
           connect_ssh "sudo docker compose pull" ;
           connect_ssh "sudo docker compose -f ./docker-compose.yaml up -d" ;
 
-  backup-containers:
+  raising-backup-containers:
     needs:
       - update-and-reload-containers
     runs-on: ubuntu-latest
