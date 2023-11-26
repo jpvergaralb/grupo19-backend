@@ -19,7 +19,7 @@ jobs:
         run: |
           echo "TIMESTAMP=$(date +"%Y-%d-%m_%H-%M-%S")" >> $GITHUB_ENV
 
-          cp ./template.env /workers/.env
+          cp ./template.env ./workers/.env
           cd workers
           echo "IP_INFO_TOKEN=${{ secrets.IP_INFO_TOKEN }}" >> .env
           echo "CURRENCY_CONVERSION_KEY=${{ secrets.CURRENCY_CONVERSION_KEY }}" >> .env
@@ -66,7 +66,7 @@ jobs:
         run: |
           echo "TIMESTAMP=$(date +"%Y-%d-%m_%H-%M-%S")" >> $GITHUB_ENV
 
-          cp ./template.env /workers/.env
+          cp ./template.env ./workers/.env
           cd workers
 
           echo "IP_INFO_TOKEN=${{ secrets.IP_INFO_TOKEN }}" >> .env
@@ -89,7 +89,7 @@ jobs:
         run: |
           sudo chmod -R a+x ./
           cd workers
-          sudo docker compose -f ./docker-compose.production.yaml build celery_workers_2
+          sudo docker compose -f ./docker-compose.yaml build celery_workers_2
 
       - name: Tag image
         run: |
@@ -193,7 +193,7 @@ jobs:
           connect_ssh() { sshpass -p "${EC2PASSWD}" ssh -o StrictHostKeyChecking=no -p ${EC2PORT} ${EC2USER}@${EC2HOST} -Ct " cd /home/ubuntu/grupo19-backend/workers && $@" ; }
           connect_ssh "sudo docker system prune -a -f" ;
           connect_ssh "sudo docker compose pull" ;
-          connect_ssh "sudo docker compose -f ./docker-compose.production.yaml up -d" ;
+          connect_ssh "sudo docker compose -f ./docker-compose.yaml up -d" ;
 
   backup-containers:
     needs:
@@ -215,8 +215,8 @@ jobs:
           connect_ssh() { sshpass -p "${EC2PASSWD}" ssh -o StrictHostKeyChecking=no -p ${EC2PORT} ${EC2USER}@${EC2HOST} -Ct " cd /home/ubuntu/grupo19-backend/workers && $@" ; }
           
           connect_ssh "cd .. ; git reset --hard && git checkout f5d6b2a6 " ;
-          connect_ssh "sudo docker compose -f ./docker-compose.production.yaml down" ;
+          connect_ssh "sudo docker compose -f ./docker-compose.yaml down" ;
           connect_ssh "sudo docker system prune -a -f" ;
-          connect_ssh "sudo docker compose -f ./docker-compose.production.yaml build --no-cache" ;
-          connect_ssh "sudo docker compose -f ./docker-compose.production.yaml pull" ;
-          connect_ssh "sudo docker compose -f ./docker-compose.production.yaml up -d" ;
+          connect_ssh "sudo docker compose -f ./docker-compose.yaml build --no-cache" ;
+          connect_ssh "sudo docker compose -f ./docker-compose.yaml pull" ;
+          connect_ssh "sudo docker compose -f ./docker-compose.yaml up -d" ;
