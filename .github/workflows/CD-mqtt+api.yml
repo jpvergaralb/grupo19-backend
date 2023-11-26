@@ -19,16 +19,20 @@ jobs:
         run: |
           echo "TIMESTAMP=$(date +"%Y-%d-%m_%H-%M-%S")" >> $GITHUB_ENV
 
-          cp ./template.env .env
-          echo "IP_INFO_TOKEN=${{ secrets.IP_INFO_TOKEN }}" >> .env
-          echo "CURRENCY_CONVERSION_KEY=${{ secrets.CURRENCY_CONVERSION_KEY }}" >> .env
-          echo "AWS_ACCESS_KEY_S3=${{ secrets.AWS_ACCESS_KEY_S3 }}" >> .env
-          echo "AWS_SECRET_ACCESS_KEY_S3=${{ secrets.AWS_SECRET_ACCESS_KEY_S3 }}" >> .env
-          echo "DB_USERNAME=${{ secrets.DB_USERNAME }}" >> .env
-          echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
-          echo "MQTT_BROKER_USERNAME=${{ secrets.MQTT_BROKER_USERNAME }}" >> .env
-          echo "MQTT_BROKER_PASSWORD=${{ secrets.MQTT_BROKER_PASSWORD }}" >> .env
-          echo "CLOUDFLARE_API_KEY=${{ secrets.CLOUDFLARE_API_KEY }}" >> .env
+          #cp ./template.env .env
+          
+          ## FIXME: Usar variables de entorno
+          echo -e "GROUP_NUMBER=19\nNODE_ENVIRONMENT=development\nAPI_HOST=api\nAPI_NODE_VERSION=16.13.1\nAPI_PROTOCOL=http\nMQTT_PROTOCOL=http\nAPI_PORT=64563\nIP_INFO_TOKEN=9e61f5fef010b5\nWEBPAY_REDIRECT_URL='https://grupo19-front.fjcf2001.me/purchaseCompleted'\n#WEBPAY_REDIRECT_URL='http://localhost:5173/purchaseCompleted'\nWEBPAY_SESSION_NAME='grupo19-stocks'\nWORKERS_API_JOB_URL='https://api.arqui-workers.ljg.cl/job'\nPDF_LAMBDA_FUNCTION='Creador-de-boletas'\nBUCKET_REGION='us-east-2'\nCURRENCY_CONVERSION_KEY=68e1e4c21564c5ca34feb813\nAWS_ACCESS_KEY_S3=AKIAT7NQUZTXZMF2SUEG\nAWS_SECRET_ACCESS_KEY_S3=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\nDB_HOST=db\nDB_DIALECT=postgres\nDB_NAME=backend\nDB_PORT=15432\nDB_USERNAME=mi_base\nDB_PASSWORD=de_datos\nMQTT_API_HOST=mqtt\nMQTT_API_INFO_CHANNEL=stocks/info\nMQTT_API_VALIDATION_CHANNEL=stocks/validation\nMQTT_API_VALIDATIONS_PATH=validations\nMQTT_API_REQUEST_CHANNEL=stocks/requests\nMQTT_API_REQUESTS_PATH=requests\nMQTT_API_AUCTIONS_CHANNEL=auctions\nMQTT_API_NODE_VERSION=16.13.1\nMQTT_API_PORT=64564\nMQTT_CONNECTION_TIMEOUT=5000\nMQTT_BROKER_PORT=9000\nMQTT_BROKER_HOST=broker.legit.capital\nMQTT_BROKER_USERNAME=students\nMQTT_BROKER_PASSWORD=iic2173-2023-2-students\nLOG_LEVEL=DEBUG\nWORKER_API_HOST=worker_api\nWORKER_API_PORT=65534\nREDIS_PROTOCOL=redis\nREDIS_HOST=redis_workers\nREDIS_PORT=6379\nREDIS_DATABASE=0\nN_WORKERS=5\nQUERY_FETCH_SIZE=1000\nMAIN_API_URI=https://api.arqui.ljg.cl/\nDDNS_DOMAINS=arqui-workers.ljg.cl\nCLOUDFLARE_API_KEY=tVrhhLqaE_u-2vFrbo0r7dObTdcdllqOvWn6hwts\n" > .env
+          
+          #echo "IP_INFO_TOKEN=${{ secrets.IP_INFO_TOKEN }}" >> .env
+          #echo "CURRENCY_CONVERSION_KEY=${{ secrets.CURRENCY_CONVERSION_KEY }}" >> .env
+          #echo "AWS_ACCESS_KEY_S3=${{ secrets.AWS_ACCESS_KEY_S3 }}" >> .env
+          #echo "AWS_SECRET_ACCESS_KEY_S3=${{ secrets.AWS_SECRET_ACCESS_KEY_S3 }}" >> .env
+          #echo "DB_USERNAME=${{ secrets.DB_USERNAME }}" >> .env
+          #echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
+          #echo "MQTT_BROKER_USERNAME=${{ secrets.MQTT_BROKER_USERNAME }}" >> .env
+          #echo "MQTT_BROKER_PASSWORD=${{ secrets.MQTT_BROKER_PASSWORD }}" >> .env
+          #echo "CLOUDFLARE_API_KEY=${{ secrets.CLOUDFLARE_API_KEY }}" >> .env
 
       - name: Install docker
         run: |
@@ -64,16 +68,20 @@ jobs:
         run: |
           echo "TIMESTAMP=$(date +"%Y-%d-%m_%H-%M-%S")" >> $GITHUB_ENV
 
-          cp ./template.env .env
-          echo "IP_INFO_TOKEN=${{ secrets.IP_INFO_TOKEN }}" >> .env
-          echo "CURRENCY_CONVERSION_KEY=${{ secrets.CURRENCY_CONVERSION_KEY }}" >> .env
-          echo "AWS_ACCESS_KEY_S3=${{ secrets.AWS_ACCESS_KEY_S3 }}" >> .env
-          echo "AWS_SECRET_ACCESS_KEY_S3=${{ secrets.AWS_SECRET_ACCESS_KEY_S3 }}" >> .env
-          echo "DB_USERNAME=${{ secrets.DB_USERNAME }}" >> .env
-          echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
-          echo "MQTT_BROKER_USERNAME=${{ secrets.MQTT_BROKER_USERNAME }}" >> .env
-          echo "MQTT_BROKER_PASSWORD=${{ secrets.MQTT_BROKER_PASSWORD }}" >> .env
-          echo "CLOUDFLARE_API_KEY=${{ secrets.CLOUDFLARE_API_KEY }}" >> .env
+          #cp ./template.env .env
+          
+          ## FIXME: Usar variables de entorno
+          echo -e "GROUP_NUMBER=19\nNODE_ENVIRONMENT=development\nAPI_HOST=api\nAPI_NODE_VERSION=16.13.1\nAPI_PROTOCOL=http\nMQTT_PROTOCOL=http\nAPI_PORT=64563\nIP_INFO_TOKEN=9e61f5fef010b5\nWEBPAY_REDIRECT_URL='https://grupo19-front.fjcf2001.me/purchaseCompleted'\n#WEBPAY_REDIRECT_URL='http://localhost:5173/purchaseCompleted'\nWEBPAY_SESSION_NAME='grupo19-stocks'\nWORKERS_API_JOB_URL='https://api.arqui-workers.ljg.cl/job'\nPDF_LAMBDA_FUNCTION='Creador-de-boletas'\nBUCKET_REGION='us-east-2'\nCURRENCY_CONVERSION_KEY=68e1e4c21564c5ca34feb813\nAWS_ACCESS_KEY_S3=AKIAT7NQUZTXZMF2SUEG\nAWS_SECRET_ACCESS_KEY_S3=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\nDB_HOST=db\nDB_DIALECT=postgres\nDB_NAME=backend\nDB_PORT=15432\nDB_USERNAME=mi_base\nDB_PASSWORD=de_datos\nMQTT_API_HOST=mqtt\nMQTT_API_INFO_CHANNEL=stocks/info\nMQTT_API_VALIDATION_CHANNEL=stocks/validation\nMQTT_API_VALIDATIONS_PATH=validations\nMQTT_API_REQUEST_CHANNEL=stocks/requests\nMQTT_API_REQUESTS_PATH=requests\nMQTT_API_AUCTIONS_CHANNEL=auctions\nMQTT_API_NODE_VERSION=16.13.1\nMQTT_API_PORT=64564\nMQTT_CONNECTION_TIMEOUT=5000\nMQTT_BROKER_PORT=9000\nMQTT_BROKER_HOST=broker.legit.capital\nMQTT_BROKER_USERNAME=students\nMQTT_BROKER_PASSWORD=iic2173-2023-2-students\nLOG_LEVEL=DEBUG\nWORKER_API_HOST=worker_api\nWORKER_API_PORT=65534\nREDIS_PROTOCOL=redis\nREDIS_HOST=redis_workers\nREDIS_PORT=6379\nREDIS_DATABASE=0\nN_WORKERS=5\nQUERY_FETCH_SIZE=1000\nMAIN_API_URI=https://api.arqui.ljg.cl/\nDDNS_DOMAINS=arqui-workers.ljg.cl\nCLOUDFLARE_API_KEY=tVrhhLqaE_u-2vFrbo0r7dObTdcdllqOvWn6hwts\n" > .env
+          
+          #echo "IP_INFO_TOKEN=${{ secrets.IP_INFO_TOKEN }}" >> .env
+          #echo "CURRENCY_CONVERSION_KEY=${{ secrets.CURRENCY_CONVERSION_KEY }}" >> .env
+          #echo "AWS_ACCESS_KEY_S3=${{ secrets.AWS_ACCESS_KEY_S3 }}" >> .env
+          #echo "AWS_SECRET_ACCESS_KEY_S3=${{ secrets.AWS_SECRET_ACCESS_KEY_S3 }}" >> .env
+          #echo "DB_USERNAME=${{ secrets.DB_USERNAME }}" >> .env
+          #echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
+          #echo "MQTT_BROKER_USERNAME=${{ secrets.MQTT_BROKER_USERNAME }}" >> .env
+          #echo "MQTT_BROKER_PASSWORD=${{ secrets.MQTT_BROKER_PASSWORD }}" >> .env
+          #echo "CLOUDFLARE_API_KEY=${{ secrets.CLOUDFLARE_API_KEY }}" >> .env
 
       - name: Install docker
         run: |
@@ -152,21 +160,31 @@ jobs:
           echo "EC2USER=ubuntu" >> $GITHUB_ENV
           echo "EC2PASSWD=${{ secrets.EC2PASSWD }}" >> $GITHUB_ENV
           
-          cp ./template.env .env
-          echo "IP_INFO_TOKEN=${{ secrets.IP_INFO_TOKEN }}" >> .env
-          echo "CURRENCY_CONVERSION_KEY=${{ secrets.CURRENCY_CONVERSION_KEY }}" >> .env
-          echo "AWS_ACCESS_KEY_S3=${{ secrets.AWS_ACCESS_KEY_S3 }}" >> .env
-          echo "AWS_SECRET_ACCESS_KEY_S3=${{ secrets.AWS_SECRET_ACCESS_KEY_S3 }}" >> .env
-          echo "DB_USERNAME=${{ secrets.DB_USERNAME }}" >> .env
-          echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
-          echo "MQTT_BROKER_USERNAME=${{ secrets.MQTT_BROKER_USERNAME }}" >> .env
-          echo "MQTT_BROKER_PASSWORD=${{ secrets.MQTT_BROKER_PASSWORD }}" >> .env
-          echo "CLOUDFLARE_API_KEY=${{ secrets.CLOUDFLARE_API_KEY }}" >> .env
+          #cp ./template.env .env
           
-          echo -e "${{ secrets.CHAIN1_ARQUIAPIMQTT }}" > "./nginx/templates/letsencrypt/arqui.ljg.cl/chain1.pem"
-          echo -e "${{ secrets.PRIVKEY1_ARQUIAPIMQTT }}" > "./nginx/templates/letsencrypt/arqui.ljg.cl/privkey1.pem"
-          echo -e "${{ secrets.FULLCHAIN1_ARQUIAPIMQTT }}" > "./nginx/templates/letsencrypt/arqui.ljg.cl/privkey1.pem"
-          echo -e "${{ secrets.CERT1_ARQUIAPIMQTT }}" > "./nginx/templates/letsencrypt/arqui.ljg.cl/cert1.pem"
+          ## FIXME: Usar variables de entorno
+          echo -e "GROUP_NUMBER=19\nNODE_ENVIRONMENT=development\nAPI_HOST=api\nAPI_NODE_VERSION=16.13.1\nAPI_PROTOCOL=http\nMQTT_PROTOCOL=http\nAPI_PORT=64563\nIP_INFO_TOKEN=9e61f5fef010b5\nWEBPAY_REDIRECT_URL='https://grupo19-front.fjcf2001.me/purchaseCompleted'\n#WEBPAY_REDIRECT_URL='http://localhost:5173/purchaseCompleted'\nWEBPAY_SESSION_NAME='grupo19-stocks'\nWORKERS_API_JOB_URL='https://api.arqui-workers.ljg.cl/job'\nPDF_LAMBDA_FUNCTION='Creador-de-boletas'\nBUCKET_REGION='us-east-2'\nCURRENCY_CONVERSION_KEY=68e1e4c21564c5ca34feb813\nAWS_ACCESS_KEY_S3=AKIAT7NQUZTXZMF2SUEG\nAWS_SECRET_ACCESS_KEY_S3=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\nDB_HOST=db\nDB_DIALECT=postgres\nDB_NAME=backend\nDB_PORT=15432\nDB_USERNAME=mi_base\nDB_PASSWORD=de_datos\nMQTT_API_HOST=mqtt\nMQTT_API_INFO_CHANNEL=stocks/info\nMQTT_API_VALIDATION_CHANNEL=stocks/validation\nMQTT_API_VALIDATIONS_PATH=validations\nMQTT_API_REQUEST_CHANNEL=stocks/requests\nMQTT_API_REQUESTS_PATH=requests\nMQTT_API_AUCTIONS_CHANNEL=auctions\nMQTT_API_NODE_VERSION=16.13.1\nMQTT_API_PORT=64564\nMQTT_CONNECTION_TIMEOUT=5000\nMQTT_BROKER_PORT=9000\nMQTT_BROKER_HOST=broker.legit.capital\nMQTT_BROKER_USERNAME=students\nMQTT_BROKER_PASSWORD=iic2173-2023-2-students\nLOG_LEVEL=DEBUG\nWORKER_API_HOST=worker_api\nWORKER_API_PORT=65534\nREDIS_PROTOCOL=redis\nREDIS_HOST=redis_workers\nREDIS_PORT=6379\nREDIS_DATABASE=0\nN_WORKERS=5\nQUERY_FETCH_SIZE=1000\nMAIN_API_URI=https://api.arqui.ljg.cl/\nDDNS_DOMAINS=arqui-workers.ljg.cl\nCLOUDFLARE_API_KEY=tVrhhLqaE_u-2vFrbo0r7dObTdcdllqOvWn6hwts\n" > .env
+          
+          #echo "IP_INFO_TOKEN=${{ secrets.IP_INFO_TOKEN }}" >> .env
+          #echo "CURRENCY_CONVERSION_KEY=${{ secrets.CURRENCY_CONVERSION_KEY }}" >> .env
+          #echo "AWS_ACCESS_KEY_S3=${{ secrets.AWS_ACCESS_KEY_S3 }}" >> .env
+          #echo "AWS_SECRET_ACCESS_KEY_S3=${{ secrets.AWS_SECRET_ACCESS_KEY_S3 }}" >> .env
+          #echo "DB_USERNAME=${{ secrets.DB_USERNAME }}" >> .env
+          #echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
+          #echo "MQTT_BROKER_USERNAME=${{ secrets.MQTT_BROKER_USERNAME }}" >> .env
+          #echo "MQTT_BROKER_PASSWORD=${{ secrets.MQTT_BROKER_PASSWORD }}" >> .env
+          #echo "CLOUDFLARE_API_KEY=${{ secrets.CLOUDFLARE_API_KEY }}" >> .env
+          
+          ## FIXME: Usar variables de entorno
+          echo -e "-----BEGIN CERTIFICATE-----\nMIIFFjCCAv6gAwIBAgIRAJErCErPDBinU/bWLiWnX1owDQYJKoZIhvcNAQELBQAw\nTzELMAkGA1UEBhMCVVMxKTAnBgNVBAoTIEludGVybmV0IFNlY3VyaXR5IFJlc2Vh\ncmNoIEdyb3VwMRUwEwYDVQQDEwxJU1JHIFJvb3QgWDEwHhcNMjAwOTA0MDAwMDAw\nWhcNMjUwOTE1MTYwMDAwWjAyMQswCQYDVQQGEwJVUzEWMBQGA1UEChMNTGV0J3Mg\nRW5jcnlwdDELMAkGA1UEAxMCUjMwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEK\nAoIBAQC7AhUozPaglNMPEuyNVZLD+ILxmaZ6QoinXSaqtSu5xUyxr45r+XXIo9cP\nR5QUVTVXjJ6oojkZ9YI8QqlObvU7wy7bjcCwXPNZOOftz2nwWgsbvsCUJCWH+jdx\nsxPnHKzhm+/b5DtFUkWWqcFTzjTIUu61ru2P3mBw4qVUq7ZtDpelQDRrK9O8Zutm\nNHz6a4uPVymZ+DAXXbpyb/uBxa3Shlg9F8fnCbvxK/eG3MHacV3URuPMrSXBiLxg\nZ3Vms/EY96Jc5lP/Ooi2R6X/ExjqmAl3P51T+c8B5fWmcBcUr2Ok/5mzk53cU6cG\n/kiFHaFpriV1uxPMUgP17VGhi9sVAgMBAAGjggEIMIIBBDAOBgNVHQ8BAf8EBAMC\nAYYwHQYDVR0lBBYwFAYIKwYBBQUHAwIGCCsGAQUFBwMBMBIGA1UdEwEB/wQIMAYB\nAf8CAQAwHQYDVR0OBBYEFBQusxe3WFbLrlAJQOYfr52LFMLGMB8GA1UdIwQYMBaA\nFHm0WeZ7tuXkAXOACIjIGlj26ZtuMDIGCCsGAQUFBwEBBCYwJDAiBggrBgEFBQcw\nAoYWaHR0cDovL3gxLmkubGVuY3Iub3JnLzAnBgNVHR8EIDAeMBygGqAYhhZodHRw\nOi8veDEuYy5sZW5jci5vcmcvMCIGA1UdIAQbMBkwCAYGZ4EMAQIBMA0GCysGAQQB\ngt8TAQEBMA0GCSqGSIb3DQEBCwUAA4ICAQCFyk5HPqP3hUSFvNVneLKYY611TR6W\nPTNlclQtgaDqw+34IL9fzLdwALduO/ZelN7kIJ+m74uyA+eitRY8kc607TkC53wl\nikfmZW4/RvTZ8M6UK+5UzhK8jCdLuMGYL6KvzXGRSgi3yLgjewQtCPkIVz6D2QQz\nCkcheAmCJ8MqyJu5zlzyZMjAvnnAT45tRAxekrsu94sQ4egdRCnbWSDtY7kh+BIm\nlJNXoB1lBMEKIq4QDUOXoRgffuDghje1WrG9ML+Hbisq/yFOGwXD9RiX8F6sw6W4\navAuvDszue5L3sz85K+EC4Y/wFVDNvZo4TYXao6Z0f+lQKc0t8DQYzk1OXVu8rp2\nyJMC6alLbBfODALZvYH7n7do1AZls4I9d1P4jnkDrQoxB3UqQ9hVl3LEKQ73xF1O\nyK5GhDDX8oVfGKF5u+decIsH4YaTw7mP3GFxJSqv3+0lUFJoi5Lc5da149p90Ids\nhCExroL1+7mryIkXPeFM5TgO9r0rvZaBFOvV2z0gp35Z0+L4WPlbuEjN/lxPFin+\nHlUjr8gRsI3qfJOQFy/9rKIJR0Y/8Omwt/8oTWgy1mdeHmmjk7j1nYsvC9JSQ6Zv\nMldlTTKB3zhThV1+XWYp6rjd5JW1zbVWEkLNxE7GJThEUG3szgBVGP7pSWTUTsqX\nnLRbwHOoq7hHwg==\n-----END CERTIFICATE-----\n" > "./nginx/templates/letsencrypt/arqui.ljg.cl/chain1.pem"
+          echo -e "-----BEGIN PRIVATE KEY-----\nMIG2AgEAMBAGByqGSM49AgEGBSuBBAAiBIGeMIGbAgEBBDB2xtoPTSgRvSxnWktz\nMQ7OTZ8t94a3gdpJ1Gh7zH63zxujufUtcuZDkGvq8nwYBluhZANiAASqmhINP/gC\n+X22bXZfY0uu1w9xHNqdvrg+Nu6MNqVfiaYxHmRREE2h3Z0pL71GtWRkE9dVAKWJ\nFRad2cfpXaL3Lfqe/pXiT72D8LIJx2r2yaJwv4sJsX0G4w7PNopHJMs=\n-----END PRIVATE KEY-----\n" > "./nginx/templates/letsencrypt/arqui.ljg.cl/privkey1.pem"
+          echo -e "-----BEGIN CERTIFICATE-----\nMIIESTCCAzGgAwIBAgISAwq7JA6h20/dBCUVIhbsfYo3MA0GCSqGSIb3DQEBCwUA\nMDIxCzAJBgNVBAYTAlVTMRYwFAYDVQQKEw1MZXQncyBFbmNyeXB0MQswCQYDVQQD\nEwJSMzAeFw0yMzA5MjMxODQxNDJaFw0yMzEyMjIxODQxNDFaMBkxFzAVBgNVBAMM\nDiouYXJxdWkubGpnLmNsMHYwEAYHKoZIzj0CAQYFK4EEACIDYgAEqpoSDT/4Avl9\ntm12X2NLrtcPcRzanb64PjbujDalX4mmMR5kURBNod2dKS+9RrVkZBPXVQCliRUW\nndnH6V2i9y36nv6V4k+9g/CyCcdq9smicL+LCbF9BuMOzzaKRyTLo4ICHjCCAhow\nDgYDVR0PAQH/BAQDAgeAMB0GA1UdJQQWMBQGCCsGAQUFBwMBBggrBgEFBQcDAjAM\nBgNVHRMBAf8EAjAAMB0GA1UdDgQWBBTb9YNKaGfLdhox729+w8F0oyJ/wzAfBgNV\nHSMEGDAWgBQULrMXt1hWy65QCUDmH6+dixTCxjBVBggrBgEFBQcBAQRJMEcwIQYI\nKwYBBQUHMAGGFWh0dHA6Ly9yMy5vLmxlbmNyLm9yZzAiBggrBgEFBQcwAoYWaHR0\ncDovL3IzLmkubGVuY3Iub3JnLzAnBgNVHREEIDAegg4qLmFycXVpLmxqZy5jbIIM\nYXJxdWkubGpnLmNsMBMGA1UdIAQMMAowCAYGZ4EMAQIBMIIBBAYKKwYBBAHWeQIE\nAgSB9QSB8gDwAHYAejKMVNi3LbYg6jjgUh7phBZwMhOFTTvSK8E6V6NS61IAAAGK\nw4/nvAAABAMARzBFAiA0poqhhddZlLXH1/5qbV64qN/oC9VyFAHQtd2xbPPRzQIh\nAI7ZcNkVQGmIEUWa0cbtqFOMCLA+yy2M701dwbLwY1zsAHYAtz77JN+cTbp18jnF\nulj0bF38Qs96nzXEnh0JgSXttJkAAAGKw4/ntAAABAMARzBFAiEA4K/RBWSlU0PR\nbm49lAGjVakivaTHNafysDhP7cezifQCIBkwO7NjQ1UXlg5Vzgmbxrx3gQXYCie0\n0tQLfTrlmw+nMA0GCSqGSIb3DQEBCwUAA4IBAQCYOzphFFVvrXWUxSlp/qmGg45T\npUg81SzW/ETbv+gLNiS3bcJpfr7Q6GGo749GgLu2Q/X5KVwztoQ5opc3biG8YSee\n6fdMWgmHdJhantP7mo1ODDEoMN2rWzF2IEeKLGycEX7BwGByUb6O6Qa6peEM6BQF\nVz8oky6NdpURjW2BHIxfCnkZ+e9NaVxfI+yDUveK++YIltNUbJdz8XtTyXUEfswv\nR4bawaliMu/SeygR8SXN0Qx0LlHliprm00hszy8HpyNdy87fW8sp+UZR3pVjzg1t\neTLnVtZm5qFrouosND1mSRfYEYC4/pNLb3O05dIYX6OWXZh27d+jTTUzUi4y\n-----END CERTIFICATE-----\n-----BEGIN CERTIFICATE-----\nMIIFFjCCAv6gAwIBAgIRAJErCErPDBinU/bWLiWnX1owDQYJKoZIhvcNAQELBQAw\nTzELMAkGA1UEBhMCVVMxKTAnBgNVBAoTIEludGVybmV0IFNlY3VyaXR5IFJlc2Vh\ncmNoIEdyb3VwMRUwEwYDVQQDEwxJU1JHIFJvb3QgWDEwHhcNMjAwOTA0MDAwMDAw\nWhcNMjUwOTE1MTYwMDAwWjAyMQswCQYDVQQGEwJVUzEWMBQGA1UEChMNTGV0J3Mg\nRW5jcnlwdDELMAkGA1UEAxMCUjMwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEK\nAoIBAQC7AhUozPaglNMPEuyNVZLD+ILxmaZ6QoinXSaqtSu5xUyxr45r+XXIo9cP\nR5QUVTVXjJ6oojkZ9YI8QqlObvU7wy7bjcCwXPNZOOftz2nwWgsbvsCUJCWH+jdx\nsxPnHKzhm+/b5DtFUkWWqcFTzjTIUu61ru2P3mBw4qVUq7ZtDpelQDRrK9O8Zutm\nNHz6a4uPVymZ+DAXXbpyb/uBxa3Shlg9F8fnCbvxK/eG3MHacV3URuPMrSXBiLxg\nZ3Vms/EY96Jc5lP/Ooi2R6X/ExjqmAl3P51T+c8B5fWmcBcUr2Ok/5mzk53cU6cG\n/kiFHaFpriV1uxPMUgP17VGhi9sVAgMBAAGjggEIMIIBBDAOBgNVHQ8BAf8EBAMC\nAYYwHQYDVR0lBBYwFAYIKwYBBQUHAwIGCCsGAQUFBwMBMBIGA1UdEwEB/wQIMAYB\nAf8CAQAwHQYDVR0OBBYEFBQusxe3WFbLrlAJQOYfr52LFMLGMB8GA1UdIwQYMBaA\nFHm0WeZ7tuXkAXOACIjIGlj26ZtuMDIGCCsGAQUFBwEBBCYwJDAiBggrBgEFBQcw\nAoYWaHR0cDovL3gxLmkubGVuY3Iub3JnLzAnBgNVHR8EIDAeMBygGqAYhhZodHRw\nOi8veDEuYy5sZW5jci5vcmcvMCIGA1UdIAQbMBkwCAYGZ4EMAQIBMA0GCysGAQQB\ngt8TAQEBMA0GCSqGSIb3DQEBCwUAA4ICAQCFyk5HPqP3hUSFvNVneLKYY611TR6W\nPTNlclQtgaDqw+34IL9fzLdwALduO/ZelN7kIJ+m74uyA+eitRY8kc607TkC53wl\nikfmZW4/RvTZ8M6UK+5UzhK8jCdLuMGYL6KvzXGRSgi3yLgjewQtCPkIVz6D2QQz\nCkcheAmCJ8MqyJu5zlzyZMjAvnnAT45tRAxekrsu94sQ4egdRCnbWSDtY7kh+BIm\nlJNXoB1lBMEKIq4QDUOXoRgffuDghje1WrG9ML+Hbisq/yFOGwXD9RiX8F6sw6W4\navAuvDszue5L3sz85K+EC4Y/wFVDNvZo4TYXao6Z0f+lQKc0t8DQYzk1OXVu8rp2\nyJMC6alLbBfODALZvYH7n7do1AZls4I9d1P4jnkDrQoxB3UqQ9hVl3LEKQ73xF1O\nyK5GhDDX8oVfGKF5u+decIsH4YaTw7mP3GFxJSqv3+0lUFJoi5Lc5da149p90Ids\nhCExroL1+7mryIkXPeFM5TgO9r0rvZaBFOvV2z0gp35Z0+L4WPlbuEjN/lxPFin+\nHlUjr8gRsI3qfJOQFy/9rKIJR0Y/8Omwt/8oTWgy1mdeHmmjk7j1nYsvC9JSQ6Zv\nMldlTTKB3zhThV1+XWYp6rjd5JW1zbVWEkLNxE7GJThEUG3szgBVGP7pSWTUTsqX\nnLRbwHOoq7hHwg==\n-----END CERTIFICATE-----\n" > "./nginx/templates/letsencrypt/arqui.ljg.cl/fullchain1.pem"
+          echo -e "-----BEGIN CERTIFICATE-----\nMIIESTCCAzGgAwIBAgISAwq7JA6h20/dBCUVIhbsfYo3MA0GCSqGSIb3DQEBCwUA\nMDIxCzAJBgNVBAYTAlVTMRYwFAYDVQQKEw1MZXQncyBFbmNyeXB0MQswCQYDVQQD\nEwJSMzAeFw0yMzA5MjMxODQxNDJaFw0yMzEyMjIxODQxNDFaMBkxFzAVBgNVBAMM\nDiouYXJxdWkubGpnLmNsMHYwEAYHKoZIzj0CAQYFK4EEACIDYgAEqpoSDT/4Avl9\ntm12X2NLrtcPcRzanb64PjbujDalX4mmMR5kURBNod2dKS+9RrVkZBPXVQCliRUW\nndnH6V2i9y36nv6V4k+9g/CyCcdq9smicL+LCbF9BuMOzzaKRyTLo4ICHjCCAhow\nDgYDVR0PAQH/BAQDAgeAMB0GA1UdJQQWMBQGCCsGAQUFBwMBBggrBgEFBQcDAjAM\nBgNVHRMBAf8EAjAAMB0GA1UdDgQWBBTb9YNKaGfLdhox729+w8F0oyJ/wzAfBgNV\nHSMEGDAWgBQULrMXt1hWy65QCUDmH6+dixTCxjBVBggrBgEFBQcBAQRJMEcwIQYI\nKwYBBQUHMAGGFWh0dHA6Ly9yMy5vLmxlbmNyLm9yZzAiBggrBgEFBQcwAoYWaHR0\ncDovL3IzLmkubGVuY3Iub3JnLzAnBgNVHREEIDAegg4qLmFycXVpLmxqZy5jbIIM\nYXJxdWkubGpnLmNsMBMGA1UdIAQMMAowCAYGZ4EMAQIBMIIBBAYKKwYBBAHWeQIE\nAgSB9QSB8gDwAHYAejKMVNi3LbYg6jjgUh7phBZwMhOFTTvSK8E6V6NS61IAAAGK\nw4/nvAAABAMARzBFAiA0poqhhddZlLXH1/5qbV64qN/oC9VyFAHQtd2xbPPRzQIh\nAI7ZcNkVQGmIEUWa0cbtqFOMCLA+yy2M701dwbLwY1zsAHYAtz77JN+cTbp18jnF\nulj0bF38Qs96nzXEnh0JgSXttJkAAAGKw4/ntAAABAMARzBFAiEA4K/RBWSlU0PR\nbm49lAGjVakivaTHNafysDhP7cezifQCIBkwO7NjQ1UXlg5Vzgmbxrx3gQXYCie0\n0tQLfTrlmw+nMA0GCSqGSIb3DQEBCwUAA4IBAQCYOzphFFVvrXWUxSlp/qmGg45T\npUg81SzW/ETbv+gLNiS3bcJpfr7Q6GGo749GgLu2Q/X5KVwztoQ5opc3biG8YSee\n6fdMWgmHdJhantP7mo1ODDEoMN2rWzF2IEeKLGycEX7BwGByUb6O6Qa6peEM6BQF\nVz8oky6NdpURjW2BHIxfCnkZ+e9NaVxfI+yDUveK++YIltNUbJdz8XtTyXUEfswv\nR4bawaliMu/SeygR8SXN0Qx0LlHliprm00hszy8HpyNdy87fW8sp+UZR3pVjzg1t\neTLnVtZm5qFrouosND1mSRfYEYC4/pNLb3O05dIYX6OWXZh27d+jTTUzUi4y\n-----END CERTIFICATE-----\n" > "./nginx/templates/letsencrypt/arqui.ljg.cl/cert1.pem"
+          
+          #echo -e "${{ secrets.CHAIN1_ARQUIAPIMQTT }}" > "./nginx/templates/letsencrypt/arqui.ljg.cl/chain1.pem"
+          #echo -e "${{ secrets.PRIVKEY1_ARQUIAPIMQTT }}" > "./nginx/templates/letsencrypt/arqui.ljg.cl/privkey1.pem"
+          #echo -e "${{ secrets.FULLCHAIN1_ARQUIAPIMQTT }}" > "./nginx/templates/letsencrypt/arqui.ljg.cl/privkey1.pem"
+          #echo -e "${{ secrets.CERT1_ARQUIAPIMQTT }}" > "./nginx/templates/letsencrypt/arqui.ljg.cl/cert1.pem"
 
       - name: Save .env
         run: |
