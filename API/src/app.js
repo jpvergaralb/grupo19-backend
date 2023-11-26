@@ -27,4 +27,10 @@ app.use('/predictions', predictionRoutes);
 app.use('/auctions', auctionRoutes);
 app.use(errorHandler);
 
+/* ------------------------------------------------------ */
+const server = http.createServer(app);
+const io = socketIo(server); // Instancia de socket.io
+
+/* ------------------------------------------------------ */
+
 module.exports = app;
