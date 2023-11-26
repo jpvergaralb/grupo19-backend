@@ -25,6 +25,8 @@ jobs:
         id: gettag
         run: |
           git remote set-url origin https://${{ secrets.GITHUB_TOKEN }}@github.com/jpvergaralb/grupo19-backend.git
+          git config --local user.email "jpvergaralb@uc.cl"
+          git config --local user.name "jpvergaralb"
           TAG=$(git describe --tags `git rev-list --tags --max-count=1`)
           echo "Last tag is $TAG"
           echo "::set-output name=last_tag::$TAG"
@@ -33,6 +35,8 @@ jobs:
         id: newtag
         run: |
           git remote set-url origin https://${{ secrets.GITHUB_TOKEN }}@github.com/jpvergaralb/grupo19-backend.git
+          git config --local user.email "jpvergaralb@uc.cl"
+          git config --local user.name "jpvergaralb"
           LAST_TAG=${{ steps.gettag.outputs.last_tag }}
           IFS='.' read -ra VERSION <<< "${LAST_TAG#v}"
           NEW_VERSION="v${VERSION[0]}.${VERSION[1]}.$((${VERSION[2]} + 1))-test"
@@ -41,7 +45,9 @@ jobs:
 
       - name: Create and push new test tag
         run: |
-          git remote set-url origin https://${{ secrets.GITHUB_TOKEN }}@github.com/jpvergaralb/grupo19-backend.git  
+          git remote set-url origin https://${{ secrets.GITHUB_TOKEN }}@github.com/jpvergaralb/grupo19-backend.git
+          git config --local user.email "jpvergaralb@uc.cl"
+          git config --local user.name "jpvergaralb"  
           NEW_TAG=${{ steps.newtag.outputs.new_test_version }}
           git tag $NEW_TAG
           git push origin $NEW_TAG
