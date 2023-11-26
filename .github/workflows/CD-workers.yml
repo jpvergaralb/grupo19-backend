@@ -45,9 +45,9 @@ jobs:
 
       - name: Tag image
         run: |
-          sudo docker tag registry.docker.ljgonzalez.cl/arqui-sis/async-tech/backend/api-worker:latest registry.docker.ljgonzalez.cl/arqui-sis/async-tech/backend/api-worker:github-${TIMESTAMP}
+          sudo docker tag registry.docker.ljgonzalez.cl/arqui-sis/async-tech/backend/api-worker:latest registry.docker.ljgonzalez.cl/arqui-sis/async-tech/backend/api-worker:github-${TIMESTAMP} ;
+          sudo docker tag registry.docker.ljgonzalez.cl/arqui-sis/async-tech/backend/api-worker:latest registry.docker.ljgonzalez.cl/arqui-sis/async-tech/backend/api-worker:github-latest ;
           #sudo docker tag registry.docker.ljgonzalez.cl/arqui-sis/async-tech/backend/api-worker:latest registry.docker.ljgonzalez.cl/arqui-sis/async-tech/backend/api-worker:latest
-          sudo docker tag registry.docker.ljgonzalez.cl/arqui-sis/async-tech/backend/api-worker:latest registry.docker.ljgonzalez.cl/arqui-sis/async-tech/backend/api-worker:github-latest
 
       - name: Push image
         run: |

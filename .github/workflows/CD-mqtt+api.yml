@@ -43,9 +43,9 @@ jobs:
 
       - name: Tag image
         run: |
-          sudo docker tag backend-g19-mqtt registry.docker.ljgonzalez.cl/arqui-sis/async-tech/backend/mqtt:github-${TIMESTAMP}
-          sudo docker tag backend-g19-mqtt registry.docker.ljgonzalez.cl/arqui-sis/async-tech/backend/mqtt:latest
-          sudo docker tag backend-g19-mqtt registry.docker.ljgonzalez.cl/arqui-sis/async-tech/backend/mqtt:github-latest
+          sudo docker tag grupo19-backend-mqtt registry.docker.ljgonzalez.cl/arqui-sis/async-tech/backend/mqtt:github-${TIMESTAMP}
+          sudo docker tag grupo19-backend-mqtt registry.docker.ljgonzalez.cl/arqui-sis/async-tech/backend/mqtt:latest
+          sudo docker tag grupo19-backend-mqtt registry.docker.ljgonzalez.cl/arqui-sis/async-tech/backend/mqtt:github-latest
 
       - name: Push image
         run: |
@@ -88,9 +88,9 @@ jobs:
 
       - name: Tag image
         run: |
-          sudo docker tag backend-g19-api registry.docker.ljgonzalez.cl/arqui-sis/async-tech/backend/main-api:github-${TIMESTAMP}
-          sudo docker tag backend-g19-api registry.docker.ljgonzalez.cl/arqui-sis/async-tech/backend/main-api:github-latest
-          sudo docker tag backend-g19-api registry.docker.ljgonzalez.cl/arqui-sis/async-tech/backend/main-api:latest
+          sudo docker tag grupo19-backend-api registry.docker.ljgonzalez.cl/arqui-sis/async-tech/backend/main-api:github-${TIMESTAMP}
+          sudo docker tag grupo19-backend-api registry.docker.ljgonzalez.cl/arqui-sis/async-tech/backend/main-api:github-latest
+          sudo docker tag grupo19-backend-api registry.docker.ljgonzalez.cl/arqui-sis/async-tech/backend/main-api:latest
 
       - name: Push image
         run: |
