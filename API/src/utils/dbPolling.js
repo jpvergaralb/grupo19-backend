@@ -1,13 +1,13 @@
 const express = require('express');
 const db = require('../../models');
-const { Sequelize, Model, DataTypes } = require('sequelize');
 
 let lastKnownRow = null;
+let myTable = db.ourStocks;
 
 async function pollDatabase(wss) {
   try {
     // Consulta la última fila de la tabla
-    const latestRow = await MySampleTable.findOne({ order: [['createdAt', 'DESC']] });
+    const latestRow = await myTable.findOne({ order: [['createdAt', 'DESC']] });
     
     // Compara la última fila conocida con la fila actual
     if (!lastKnownRow || lastKnownRow.id !== latestRow.id) {
@@ -28,3 +28,5 @@ async function pollDatabase(wss) {
 
 // Intervalo de 1 segundo
 setInterval(pollDatabase, 1000);
+
+module.exports = pollDatabase;
