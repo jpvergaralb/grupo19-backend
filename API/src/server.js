@@ -24,7 +24,12 @@ wsServer.on('connection', (ws) => {
 
 /* ------------------------------------------------------ */
 
-// eslint-disable-next-line
-process.env.NODE_ENV === 'test' ? null : app.listen(port, () => {
-  console.log(`🚀| Servidor corriendo en http://localhost:${port}`);
+// // eslint-disable-next-line
+// process.env.NODE_ENV === 'test' ? null : app.listen(port, () => {
+//   console.log(`🚀| Servidor corriendo en http://localhost:${port}`);
+// });
+
+// Iniciar el servidor HTTP y WebSocket
+server.listen(port, () => {
+  console.log(`Servidor Express y WebSocket corriendo en el puerto ${port}`);
 });
