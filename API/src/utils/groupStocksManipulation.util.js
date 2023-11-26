@@ -1,4 +1,5 @@
 const db = require('../../models');
+const { WebSocketServer } = require('ws');
 
 const OurStocks = db.ourStocks;
 const StocksOwners = db.stocksOwners;
@@ -9,7 +10,7 @@ const StocksOwners = db.stocksOwners;
  * TODO: Poner un toast notification que digan "Han aumentado/disminuido los stocks de <SYMBOL> en <CANTIDAD>"
  * TODO: DECIRLE AL CLIENTE QUE ACTUALICE LA PÁGINA (solución parche)
  */
-const addStocksToTheGroup = async (stock_symbol, amount) => {
+const addStocksToTheGroup = async (stock_symbol, amount, wss=WebSocketServer) => {
   try {
     let creado = false;
     await OurStocks.findOrCreate({
@@ -25,9 +26,34 @@ const addStocksToTheGroup = async (stock_symbol, amount) => {
       const stock = await OurStocks.findOne({ where: { stock_symbol } });
       await OurStocks.update({ quantity: stock.quantity + amount }, { where: { stock_symbol } });
     }
+    
+    // ---------------------------------------------------------------------------------------------------- //
+    // Lógica exitosa, envía un mensaje a través de WebSocket
+    if (wss && wss.clients) {
+      const message = `Stocks de ${stock_symbol} aumentados en ${amount}`;
+      wss.clients.forEach(client => {
+        if (client.readyState === WebSocket.OPEN) {
+          client.send(JSON.stringify({ message }));
+        }
+      });
+    }
+    // ---------------------------------------------------------------------------------------------------- //
+    
   } catch (error) {
     console.log('🚨🚔 | Error creating or updating the stock quantity.');
     console.log(`🚨🚔 | ${error}`);
+    
+    // ---------------------------------------------------------------------------------------------------- //
+    // Opcional: Envía un mensaje de error a través de WebSocket
+    if (wss && wss.clients) {
+      const errorMessage = `Error al aumentar stocks de ${stock_symbol}`;
+      wss.clients.forEach(client => {
+        if (client.readyState === WebSocket.OPEN) {
+          client.send(JSON.stringify({ errorMessage }));
+        }
+      });
+    }
+    // ---------------------------------------------------------------------------------------------------- //
   }
 };
 
