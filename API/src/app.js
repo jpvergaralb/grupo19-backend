@@ -9,6 +9,12 @@ const predictionRoutes = require('./routes/prediction.routes');
 const auctionRoutes = require('./routes/auctions.routes');
 const errorHandler = require('./middlewares/errorhandler.middleware');
 
+/* ------------------------------------------------------ */
+// Añadir módulos de websocket
+const http = require('http');
+const socketIo = require('socket.io');
+/* ------------------------------------------------------ */
+
 const app = express();
 
 app.use(cors());
