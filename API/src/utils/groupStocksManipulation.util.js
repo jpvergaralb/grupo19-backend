@@ -3,6 +3,11 @@ const db = require('../../models');
 const OurStocks = db.ourStocks;
 const StocksOwners = db.stocksOwners;
 
+/* Admin aumentó stocks del grupo
+ * --> Intercambiamos con otro grupo
+ * --> Compra a los ayudantes (broker)
+ * TODO: Poner un toast notification que digan "Han aumentado/disminuido los stocks de <SYMBOL> en <CANTIDAD>"
+ */
 const addStocksToTheGroup = async (stock_symbol, amount) => {
   try {
     let creado = false;
@@ -24,6 +29,12 @@ const addStocksToTheGroup = async (stock_symbol, amount) => {
     console.log(`🚨🚔 | ${error}`);
   }
 };
+
+
+/* Admin disminuyó stocks del grupo
+* --> Un usuario de nuestra aplicacion nos compra acciones de nuetro pool o cuando nosotros subastamos
+* TODO: Poner un toast notification que digan "Han aumentado/disminuido los stocks de <SYMBOL> en <CANTIDAD>"
+* */
 
 const reduceStocksToTheGroup = async (stock_symbol, amount) => {
   try {
@@ -49,6 +60,9 @@ const reduceStocksToTheGroup = async (stock_symbol, amount) => {
   return true;
 };
 
+/* Sólo se ejecuta cuando un usuairo compra acciones.
+* TODO: Usuario <X> ha comprado <CANTIDAD> acciones de <SYMBOL>
+* */
 const addStocksToAUser = async (user_id, stock_symbol, amount) => {
   try {
     let creado = false;
