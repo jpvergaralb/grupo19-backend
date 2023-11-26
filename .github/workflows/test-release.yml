@@ -50,7 +50,8 @@ jobs:
           git config --local user.name "jpvergaralb"  
           NEW_TAG=${{ steps.newtag.outputs.new_test_version }}
           git tag $NEW_TAG
-          git push origin $NEW_TAG
+          #git push origin $NEW_TAG
+          git push --repo https://jpvergaralb:${{ secrets.GITHUB_TOKEN }}@bitbucket.org/jpvergaralb/grupo19-backend.git  origin $NEW_TAG
 
       - name: Create a GitHub Test Release
         uses: actions/create-release@v1
