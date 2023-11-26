@@ -33,8 +33,10 @@ wsServer.on('connection', (connection) => {
   console.log(`${userId} connected.`);
   // --> AQUÍ <--
   
-  setInterval(() => pollDatabase(connection), 10000);
 });
+
+setInterval(() => pollDatabase(wsServer), 1000);
+
 
 /* ------------------------------------------------------ */
 

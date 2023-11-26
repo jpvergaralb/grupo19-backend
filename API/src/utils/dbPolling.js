@@ -27,6 +27,6 @@ async function pollDatabase(wss) {
 }
 
 // Intervalo de 1 segundo
-setInterval(pollDatabase, 1000);
+// setInterval(pollDatabase, 1000);
 
 module.exports = pollDatabase;
