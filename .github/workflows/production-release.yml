@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - production
+      - main
+      - master
 
 jobs:
   create-test-release:
@@ -35,7 +37,7 @@ jobs:
           git remote set-url origin https://${{ secrets.GITHUB_TOKEN }}@github.com/jpvergaralb/grupo19-backend.git
           LAST_TAG=${{ steps.gettag.outputs.last_tag }}
           IFS='.' read -ra VERSION <<< "${LAST_TAG#v}"
-          NEW_VERSION="v${VERSION[0]}.$((${VERSION[1]} + 1)).0-alpha"
+          NEW_VERSION="v${VERSION[0]}.${VERSION[1]}.$((${VERSION[2]} + 1))-alpha"
           echo "New test version is $NEW_VERSION"
           echo "::set-output name=new_test_version::$NEW_VERSION"
 
