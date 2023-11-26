@@ -23,7 +23,8 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.UUIDV4
     },
     proposal_id: {
-      type: DataTypes.UUID
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
     },
     // es el symbol
     stock_id: {

@@ -14,6 +14,7 @@ const {
   simulateOffer,
   saveAnothersGroupProposal,
   simulateProposal,
+  getOfferByAuctionId,
 } = require('../controllers/auction.controller');
 
 auctionRoutes.route('/proposals/own')
@@ -39,6 +40,9 @@ auctionRoutes.route('/offers/own')
 auctionRoutes.route('/offers/others')
   .get(getOtherOffers)
   .post(saveOthersOffer);
+
+auctionRoutes.route('/offers/:auction_id')
+  .get(getOfferByAuctionId);
 
 auctionRoutes.route('/stocks/testing')
   .get(groupStocksTesting);
