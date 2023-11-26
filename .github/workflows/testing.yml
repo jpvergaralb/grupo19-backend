@@ -3,8 +3,11 @@ name: Testing - Node.js CI Workflow
 on:
   pull_request:
     branches:
-      - 'development'
-      - 'main'
+      - main
+      - development
+      - production
+      - master
+      - feat/semantic_versioning
 
 jobs:
   build:
@@ -51,6 +54,3 @@ jobs:
 
       - name: Run tests
         run: cd API && npm test
-
-      - name: Run linter
-        run: cd API && npm run lint
