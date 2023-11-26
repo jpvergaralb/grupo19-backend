@@ -19,7 +19,7 @@ app.use('/users', userRoutes);
 app.use('/validations', validationRoutes);
 app.use('/requests', requestRoutes);
 app.use('/predictions', predictionRoutes);
-app.use('/auctions', checkAdmin, auctionRoutes);
+app.use('/auctions', auctionRoutes);
 app.use(errorHandler);
 
 module.exports = app;
