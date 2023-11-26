@@ -35,7 +35,6 @@ wsServer.on('connection', (connection) => {
   
 });
 
-setInterval(() => pollDatabase(wsServer), 1000);
 
 
 /* ------------------------------------------------------ */
