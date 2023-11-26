@@ -45,7 +45,7 @@ jobs:
       - name: Create a GitHub Test Release
         uses: actions/create-release@v1
         env:
-          GITHUB_TOKEN: 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
+          GITHUB_TOKEN: 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
         with:
           tag_name: ${{ steps.newtag.outputs.new_test_version }}
           release_name: Test Release ${{ steps.newtag.outputs.new_test_version }}
