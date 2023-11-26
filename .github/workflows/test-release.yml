@@ -17,14 +17,14 @@ jobs:
 
       - name: Set up Git
         run: |
-          git remote set-url origin https://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@github.com/jpvergaralb/grupo19-backend.git
-          git config --local user.email "ljgonzalez@uc.cl"
-          git config --local user.name "ljgonzalez1"
+          git remote set-url origin https://${{ secrets.GITHUB_TOKEN }}@github.com/jpvergaralb/grupo19-backend.git
+          git config --local user.email "jpvergaralb@uc.cl"
+          git config --local user.name "jpvergaralb"
 
       - name: Get last tag
         id: gettag
         run: |
-          git remote set-url origin https://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@github.com/jpvergaralb/grupo19-backend.git
+          git remote set-url origin https://${{ secrets.GITHUB_TOKEN }}@github.com/jpvergaralb/grupo19-backend.git
           TAG=$(git describe --tags `git rev-list --tags --max-count=1`)
           echo "Last tag is $TAG"
           echo "::set-output name=last_tag::$TAG"
@@ -32,7 +32,7 @@ jobs:
       - name: Calculate new test tag
         id: newtag
         run: |
-          git remote set-url origin https://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@github.com/jpvergaralb/grupo19-backend.git
+          git remote set-url origin https://${{ secrets.GITHUB_TOKEN }}@github.com/jpvergaralb/grupo19-backend.git
           LAST_TAG=${{ steps.gettag.outputs.last_tag }}
           IFS='.' read -ra VERSION <<< "${LAST_TAG#v}"
           NEW_VERSION="v${VERSION[0]}.${VERSION[1]}.$((${VERSION[2]} + 1))-test"
@@ -41,7 +41,7 @@ jobs:
 
       - name: Create and push new test tag
         run: |
-          git remote set-url origin https://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@github.com/jpvergaralb/grupo19-backend.git  
+          git remote set-url origin https://${{ secrets.GITHUB_TOKEN }}@github.com/jpvergaralb/grupo19-backend.git  
           NEW_TAG=${{ steps.newtag.outputs.new_test_version }}
           git tag $NEW_TAG
           git push origin $NEW_TAG
@@ -49,7 +49,7 @@ jobs:
       - name: Create a GitHub Test Release
         uses: actions/create-release@v1
         env:
-          GITHUB_TOKEN:  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
+          GITHUB_TOKEN:  ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: ${{ steps.newtag.outputs.new_test_version }}
           release_name: Test Release ${{ steps.newtag.outputs.new_test_version }}
