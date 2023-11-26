@@ -223,7 +223,7 @@ jobs:
         run: |
           connect_ssh() { sshpass -p "${EC2PASSWD}" ssh -o StrictHostKeyChecking=no -p ${EC2PORT} ${EC2USER}@${EC2HOST} -Ct " cd /home/ubuntu/grupo19-backend/workers && $@" ; }
           connect_ssh "sudo docker system prune -a -f" ;
-          connect_ssh "sudo docker compose pull" ;
+          connect_ssh "sudo docker compose -f ./docker-compose.yaml pull" ;
           connect_ssh "sudo docker compose -f ./docker-compose.yaml up -d" ;
 
   raising-backup-containers:
