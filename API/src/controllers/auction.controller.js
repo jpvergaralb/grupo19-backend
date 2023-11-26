@@ -1,3 +1,4 @@
+const { v4: uuidv4 } = require('uuid');
 const db = require('../../models');
 const { postMQTT } = require('../utils/postToMQTT.util');
 const { addStocksToTheGroup, reduceStocksToTheGroup, addStocksToAUser } = require('../utils/groupStocksManipulation.util');
@@ -7,6 +8,7 @@ const Proposal = db.proposal;
 const OUR_GROUP_ID = 19;
 const OurStocks = db.ourStocks;
 const StocksOwners = db.stocksOwners;
+const User = db.user;
 
 const getOwnProposals = async (req, res, next) => {
   try {
@@ -135,11 +137,52 @@ const simulateProposal = async (req, res, next) => {
 const createOurOffer = async (req, res, next) => {
   console.log('😪 No te enojes | Creando una offer.');
   try {
-    const newOffer = await Offer.create(req.body);
+    const request = req.body;
+
+    if (!request) {
+      return res.status(400).json({ message: 'Request body is missing' });
+    }
+
+    const {
+      user_id, stock_symbol, quantity,
+    } = request;
+
+    const user = await User.findByPk(user_id);
+    if (!user) {
+      return res.status(404).json({ message: `User ${user_id} not found` });
+    }
+
+    if (user.role !== 'admin') {
+      return res.status(404).json({ message: 'User is not an admin' });
+    }
+
+    const ourStocks = await OurStocks.findOne({ where: { stock_symbol } });
+
+    if (!ourStocks || ourStocks.quantity < quantity) {
+      return res.status(400).json({ message: 'Not enough stocks' });
+    }
+
+    const offerBody = {
+      auction_id: uuidv4(),
+      proposal_id: '',
+      stock_id: stock_symbol,
+      quantity,
+      group_id: 19,
+      type: 'offer',
+    };
+
+    const newOffer = await Offer.create(offerBody);
+    console.log(`Oferta que se enviará al mqtt: ${newOffer}`);
     const response = await postMQTT('auctions/offers', newOffer);
     if (response.status !== 200) {
       return res.status(500).json({ message: 'Error posting to MQTT' });
     }
+
+    const todoBien = await reduceStocksToTheGroup(stock_symbol, quantity);
+    if (!todoBien) {
+      return res.status(500).json({ message: 'Error updating the group stocks' });
+    }
+
     res.status(201).json({ created: newOffer, mqttResponseStatus: response.status });
   } catch (error) {
     next(error);
