@@ -19,6 +19,17 @@ jobs:
         run: |
           echo "TIMESTAMP=$(date +"%Y-%d-%m_%H-%M-%S")" >> $GITHUB_ENV
 
+          cp ./template.env .env
+          echo "IP_INFO_TOKEN=${{ secrets.IP_INFO_TOKEN }}" >> .env
+          echo "CURRENCY_CONVERSION_KEY=${{ secrets.CURRENCY_CONVERSION_KEY }}" >> .env
+          echo "AWS_ACCESS_KEY_S3=${{ secrets.AWS_ACCESS_KEY_S3 }}" >> .env
+          echo "AWS_SECRET_ACCESS_KEY_S3=${{ secrets.AWS_SECRET_ACCESS_KEY_S3 }}" >> .env
+          echo "DB_USERNAME=${{ secrets.DB_USERNAME }}" >> .env
+          echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
+          echo "MQTT_BROKER_USERNAME=${{ secrets.MQTT_BROKER_USERNAME }}" >> .env
+          echo "MQTT_BROKER_PASSWORD=${{ secrets.MQTT_BROKER_PASSWORD }}" >> .env
+          echo "CLOUDFLARE_API_KEY=${{ secrets.CLOUDFLARE_API_KEY }}" >> .env
+
       - name: Install docker
         run: |
           echo "deb [arch=$(dpkg --print-architecture) trusted=true] https://download.docker.com/linux/ubuntu $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
@@ -32,14 +43,15 @@ jobs:
 
       - name: Tag image
         run: |
-          sudo docker tag registry.docker.ljgonzalez.cl/arqui-sis/async-tech/backend/mqtt:latest registry.docker.ljgonzalez.cl/arqui-sis/async-tech/backend/mqtt:latest:github-${TIMESTAMP}
-          sudo docker tag registry.docker.ljgonzalez.cl/arqui-sis/async-tech/backend/mqtt:latest registry.docker.ljgonzalez.cl/arqui-sis/async-tech/backend/mqtt:latest:github-latest
+          sudo docker tag backend-g19-mqtt registry.docker.ljgonzalez.cl/arqui-sis/async-tech/backend/mqtt:github-${TIMESTAMP}
+          sudo docker tag backend-g19-mqtt registry.docker.ljgonzalez.cl/arqui-sis/async-tech/backend/mqtt:latest
+          sudo docker tag backend-g19-mqtt registry.docker.ljgonzalez.cl/arqui-sis/async-tech/backend/mqtt:github-latest
 
       - name: Push image
         run: |
           sudo docker push registry.docker.ljgonzalez.cl/arqui-sis/async-tech/backend/mqtt:latest
-          sudo docker push registry.docker.ljgonzalez.cl/arqui-sis/async-tech/backend/mqtt:latest:github-latest
-          sudo docker push registry.docker.ljgonzalez.cl/arqui-sis/async-tech/backend/mqtt:latest:github-${TIMESTAMP}
+          sudo docker push registry.docker.ljgonzalez.cl/arqui-sis/async-tech/backend/mqtt:github-latest
+          sudo docker push registry.docker.ljgonzalez.cl/arqui-sis/async-tech/backend/mqtt:github-${TIMESTAMP}
 
   build-and-push-main-api:
     runs-on: ubuntu-latest
@@ -51,6 +63,17 @@ jobs:
       - name: Setup environment variables
         run: |
           echo "TIMESTAMP=$(date +"%Y-%d-%m_%H-%M-%S")" >> $GITHUB_ENV
+
+          cp ./template.env .env
+          echo "IP_INFO_TOKEN=${{ secrets.IP_INFO_TOKEN }}" >> .env
+          echo "CURRENCY_CONVERSION_KEY=${{ secrets.CURRENCY_CONVERSION_KEY }}" >> .env
+          echo "AWS_ACCESS_KEY_S3=${{ secrets.AWS_ACCESS_KEY_S3 }}" >> .env
+          echo "AWS_SECRET_ACCESS_KEY_S3=${{ secrets.AWS_SECRET_ACCESS_KEY_S3 }}" >> .env
+          echo "DB_USERNAME=${{ secrets.DB_USERNAME }}" >> .env
+          echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
+          echo "MQTT_BROKER_USERNAME=${{ secrets.MQTT_BROKER_USERNAME }}" >> .env
+          echo "MQTT_BROKER_PASSWORD=${{ secrets.MQTT_BROKER_PASSWORD }}" >> .env
+          echo "CLOUDFLARE_API_KEY=${{ secrets.CLOUDFLARE_API_KEY }}" >> .env
 
       - name: Install docker
         run: |
@@ -65,14 +88,15 @@ jobs:
 
       - name: Tag image
         run: |
-          sudo docker tag registry.docker.ljgonzalez.cl/arqui-sis/async-tech/backend/main-api:latest registry.docker.ljgonzalez.cl/arqui-sis/async-tech/backend/main-api:latest:github-${TIMESTAMP}
-          sudo docker tag registry.docker.ljgonzalez.cl/arqui-sis/async-tech/backend/main-api:latest registry.docker.ljgonzalez.cl/arqui-sis/async-tech/backend/main-api:latest:github-latest
+          sudo docker tag backend-g19-api registry.docker.ljgonzalez.cl/arqui-sis/async-tech/backend/main-api:github-${TIMESTAMP}
+          sudo docker tag backend-g19-api registry.docker.ljgonzalez.cl/arqui-sis/async-tech/backend/main-api:github-latest
+          sudo docker tag backend-g19-api registry.docker.ljgonzalez.cl/arqui-sis/async-tech/backend/main-api:latest
 
       - name: Push image
         run: |
           sudo docker push registry.docker.ljgonzalez.cl/arqui-sis/async-tech/backend/main-api:latest
-          sudo docker push registry.docker.ljgonzalez.cl/arqui-sis/async-tech/backend/main-api:latest:github-latest
-          sudo docker push registry.docker.ljgonzalez.cl/arqui-sis/async-tech/backend/main-api:latest:github-${TIMESTAMP}
+          sudo docker push registry.docker.ljgonzalez.cl/arqui-sis/async-tech/backend/main-api:github-latest
+          sudo docker push registry.docker.ljgonzalez.cl/arqui-sis/async-tech/backend/main-api:github-${TIMESTAMP}
 
   update-repo:
     runs-on: ubuntu-latest
@@ -108,11 +132,44 @@ jobs:
           #connect_ssh "git reset --hard && git checkout main && git pull "
           connect_ssh "git reset --hard && git checkout feat/cd_build_locally && git pull "
 
+  update_ssl-certificates:
+    needs:
+      - update-repo
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Setup environment variables
+        run: |
+          echo "EC2HOST=arqui.ljg.cl" >> $GITHUB_ENV
+          echo "EC2PORT=22" >> $GITHUB_ENV
+          echo "EC2USER=ubuntu" >> $GITHUB_ENV
+          echo "EC2PASSWD=${{ secrets.EC2PASSWD }}" >> $GITHUB_ENV
+          
+          cp ./template.env .env
+          echo "IP_INFO_TOKEN=${{ secrets.IP_INFO_TOKEN }}" >> .env
+          echo "CURRENCY_CONVERSION_KEY=${{ secrets.CURRENCY_CONVERSION_KEY }}" >> .env
+          echo "AWS_ACCESS_KEY_S3=${{ secrets.AWS_ACCESS_KEY_S3 }}" >> .env
+          echo "AWS_SECRET_ACCESS_KEY_S3=${{ secrets.AWS_SECRET_ACCESS_KEY_S3 }}" >> .env
+          echo "DB_USERNAME=${{ secrets.DB_USERNAME }}" >> .env
+          echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
+          echo "MQTT_BROKER_USERNAME=${{ secrets.MQTT_BROKER_USERNAME }}" >> .env
+          echo "MQTT_BROKER_PASSWORD=${{ secrets.MQTT_BROKER_PASSWORD }}" >> .env
+          echo "CLOUDFLARE_API_KEY=${{ secrets.CLOUDFLARE_API_KEY }}" >> .env
+
+      - name: Save .env
+        run: |
+          sshpass -p "${EC2PASSWD}" scp -o StrictHostKeyChecking=no -p ${EC2PORT} ./.env ${EC2USER}@${EC2HOST}:/home/${EC2USER}/backend/
+
+      - name: Save SSL Certificates
+        run: |
+          sshpass -p "${EC2PASSWD}" scp -o StrictHostKeyChecking=no -p ${EC2PORT} ./nginx/templates/letsencrypt/arqui.ljg.cl/* ${EC2USER}@${EC2HOST}:/home/${EC2USER}/backend/nginx/templates/letsencrypt/arqui.ljg.cl/
+
   update-and-reload-containers:
     needs:
       - build-and-push-mqtt
       - build-and-push-main-api
-      - update-repo
+      - update_ssl-certificates
     runs-on: ubuntu-latest
 
     steps:

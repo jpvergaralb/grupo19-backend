@@ -1,27 +1,222 @@
-name: CD API Workers
+name: CD MQTT y Main API
 
 on:
   push:
     branches:
       - "main"
+      - "feat/cd_build_locally"
+  workflow_dispatch:
 
 jobs:
+  build-and-push-api-workers:
+    runs-on: ubuntu-latest
 
-  build:
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+
+      - name: Setup environment variables
+        run: |
+          echo "TIMESTAMP=$(date +"%Y-%d-%m_%H-%M-%S")" >> $GITHUB_ENV
+
+          cp ./template.env /workers/.env
+          cd workers
+          echo "IP_INFO_TOKEN=${{ secrets.IP_INFO_TOKEN }}" >> .env
+          echo "CURRENCY_CONVERSION_KEY=${{ secrets.CURRENCY_CONVERSION_KEY }}" >> .env
+          echo "AWS_ACCESS_KEY_S3=${{ secrets.AWS_ACCESS_KEY_S3 }}" >> .env
+          echo "AWS_SECRET_ACCESS_KEY_S3=${{ secrets.AWS_SECRET_ACCESS_KEY_S3 }}" >> .env
+          echo "DB_USERNAME=${{ secrets.DB_USERNAME }}" >> .env
+          echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
+          echo "MQTT_BROKER_USERNAME=${{ secrets.MQTT_BROKER_USERNAME }}" >> .env
+          echo "MQTT_BROKER_PASSWORD=${{ secrets.MQTT_BROKER_PASSWORD }}" >> .env
+          echo "CLOUDFLARE_API_KEY=${{ secrets.CLOUDFLARE_API_KEY }}" >> .env
+
+      - name: Install docker
+        run: |
+          echo "deb [arch=$(dpkg --print-architecture) trusted=true] https://download.docker.com/linux/ubuntu $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+          sudo apt-get update
+          sudo apt-get install -y ca-certificates curl gnupg docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
+      - name: Build API Workers Image
+        run: |
+          sudo chmod -R a+x ./
+          cd workers
+          sudo docker compose -f ./docker-compose.yaml build api_workers
+
+      - name: Tag image
+        run: |
+          sudo docker tag registry.docker.ljgonzalez.cl/arqui-sis/async-tech/backend/api-worker:latest registry.docker.ljgonzalez.cl/arqui-sis/async-tech/backend/api-worker:github-${TIMESTAMP}
+          #sudo docker tag registry.docker.ljgonzalez.cl/arqui-sis/async-tech/backend/api-worker:latest registry.docker.ljgonzalez.cl/arqui-sis/async-tech/backend/api-worker:latest
+          sudo docker tag registry.docker.ljgonzalez.cl/arqui-sis/async-tech/backend/api-worker:latest registry.docker.ljgonzalez.cl/arqui-sis/async-tech/backend/api-worker:github-latest
+
+      - name: Push image
+        run: |
+          sudo docker push registry.docker.ljgonzalez.cl/arqui-sis/async-tech/backend/api-worker:latest
+          sudo docker push registry.docker.ljgonzalez.cl/arqui-sis/async-tech/backend/api-worker:github-latest
+          sudo docker push registry.docker.ljgonzalez.cl/arqui-sis/async-tech/backend/api-worker:github-${TIMESTAMP}
+
+  build-and-push-celery-workers:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+
+      - name: Setup environment variables
+        run: |
+          echo "TIMESTAMP=$(date +"%Y-%d-%m_%H-%M-%S")" >> $GITHUB_ENV
+
+          cp ./template.env /workers/.env
+          cd workers
+
+          echo "IP_INFO_TOKEN=${{ secrets.IP_INFO_TOKEN }}" >> .env
+          echo "CURRENCY_CONVERSION_KEY=${{ secrets.CURRENCY_CONVERSION_KEY }}" >> .env
+          echo "AWS_ACCESS_KEY_S3=${{ secrets.AWS_ACCESS_KEY_S3 }}" >> .env
+          echo "AWS_SECRET_ACCESS_KEY_S3=${{ secrets.AWS_SECRET_ACCESS_KEY_S3 }}" >> .env
+          echo "DB_USERNAME=${{ secrets.DB_USERNAME }}" >> .env
+          echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
+          echo "MQTT_BROKER_USERNAME=${{ secrets.MQTT_BROKER_USERNAME }}" >> .env
+          echo "MQTT_BROKER_PASSWORD=${{ secrets.MQTT_BROKER_PASSWORD }}" >> .env
+          echo "CLOUDFLARE_API_KEY=${{ secrets.CLOUDFLARE_API_KEY }}" >> .env
+
+      - name: Install docker
+        run: |
+          echo "deb [arch=$(dpkg --print-architecture) trusted=true] https://download.docker.com/linux/ubuntu $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+          sudo apt-get update
+          sudo apt-get install -y ca-certificates curl gnupg docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
+      - name: Build Main Celery Workers Image
+        run: |
+          sudo chmod -R a+x ./
+          cd workers
+          sudo docker compose -f ./docker-compose.production.yaml build celery_workers_2
+
+      - name: Tag image
+        run: |
+          sudo docker tag registry.docker.ljgonzalez.cl/arqui-sis/async-tech/backend/celery-worker:latest registry.docker.ljgonzalez.cl/arqui-sis/async-tech/backend/celery-worker:github-${TIMESTAMP}
+          #sudo docker tag registry.docker.ljgonzalez.cl/arqui-sis/async-tech/backend/celery-worker:latest registry.docker.ljgonzalez.cl/arqui-sis/async-tech/backend/celery-worker:github-latest
+          sudo docker tag registry.docker.ljgonzalez.cl/arqui-sis/async-tech/backend/celery-worker:latest registry.docker.ljgonzalez.cl/arqui-sis/async-tech/backend/celery-worker:latest
+
+      - name: Push image
+        run: |
+          sudo docker push registry.docker.ljgonzalez.cl/arqui-sis/async-tech/backend/celery-worker:latest
+          sudo docker push registry.docker.ljgonzalez.cl/arqui-sis/async-tech/backend/celery-worker:github-latest
+          sudo docker push registry.docker.ljgonzalez.cl/arqui-sis/async-tech/backend/celery-worker:github-${TIMESTAMP}
+
+  update-repo:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Install ssh
+        run: sudo apt-get install openssh-client sshpass -y
+
+      - name: Setup environment variables
+        run: |
+          echo "EC2HOST=arqui-workers.ljg.cl" >> $GITHUB_ENV
+          echo "EC2PORT=22" >> $GITHUB_ENV
+          echo "EC2USER=ubuntu" >> $GITHUB_ENV
+          echo "EC2PASSWD=${{ secrets.EC2PASSWD }}" >> $GITHUB_ENV
+
+      - name: Take containers down
+        id: take-stack-down
+        run: |
+          connect_ssh() { sshpass -p "${EC2PASSWD}" ssh -o StrictHostKeyChecking=no -p ${EC2PORT} ${EC2USER}@${EC2HOST} -Ct " cd /home/ubuntu/grupo19-backend/workers && $@" ; }
+          connect_ssh "sudo docker compose -f ./docker-compose.yaml down"
+
+      - name: FAILURE - Raise containers back up
+        if: failure() && steps.take-stack-down.outcome == 'failure'
+        run: |
+          connect_ssh() { sshpass -p "${EC2PASSWD}" ssh -o StrictHostKeyChecking=no -p ${EC2PORT} ${EC2USER}@${EC2HOST} -Ct " cd /home/ubuntu/grupo19-backend/workers && $@" ; }
+          connect_ssh "sudo docker compose -f ./docker-compose.yaml down -d"
+          exit 1
+
+      - name: Update repo
+        run: |
+          connect_ssh() { sshpass -p "${EC2PASSWD}" ssh -o StrictHostKeyChecking=no -p ${EC2PORT} ${EC2USER}@${EC2HOST} -Ct " cd /home/ubuntu/grupo19-backend && $@" ; }
+          connect_ssh "git fetch"
+          #connect_ssh "git reset --hard && git checkout main && git pull "
+          connect_ssh "git reset --hard && git checkout feat/cd_build_locally && git pull "
+
+  update_ssl-certificates:
+    needs:
+      - update-repo
 
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Install ssh
-      run: sudo apt-get install openssh-client sshpass -y
+      - name: Setup environment variables
+        run: |
+          echo "EC2HOST=arqui-workers.ljg.cl" >> $GITHUB_ENV
+          echo "EC2PORT=22" >> $GITHUB_ENV
+          echo "EC2USER=ubuntu" >> $GITHUB_ENV
+          echo "EC2PASSWD=${{ secrets.EC2PASSWD }}" >> $GITHUB_ENV
+          
+          cp ./template.env .env
+          echo "IP_INFO_TOKEN=${{ secrets.IP_INFO_TOKEN }}" >> .env
+          echo "CURRENCY_CONVERSION_KEY=${{ secrets.CURRENCY_CONVERSION_KEY }}" >> .env
+          echo "AWS_ACCESS_KEY_S3=${{ secrets.AWS_ACCESS_KEY_S3 }}" >> .env
+          echo "AWS_SECRET_ACCESS_KEY_S3=${{ secrets.AWS_SECRET_ACCESS_KEY_S3 }}" >> .env
+          echo "DB_USERNAME=${{ secrets.DB_USERNAME }}" >> .env
+          echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
+          echo "MQTT_BROKER_USERNAME=${{ secrets.MQTT_BROKER_USERNAME }}" >> .env
+          echo "MQTT_BROKER_PASSWORD=${{ secrets.MQTT_BROKER_PASSWORD }}" >> .env
+          echo "CLOUDFLARE_API_KEY=${{ secrets.CLOUDFLARE_API_KEY }}" >> .env
 
-    - name: Setup environment variables
-      run: |
-        echo "EC2HOST=arqui-workers.ljg.cl" >> $GITHUB_ENV
-        echo "EC2PORT=22" >> $GITHUB_ENV
-        echo "EC2USER=ubuntu" >> $GITHUB_ENV
-        echo "EC2PASSWD=${{ secrets.EC2PASSWD }}" >> $GITHUB_ENV
+      - name: Save .env
+        run: |
+          sshpass -p "${EC2PASSWD}" scp -o StrictHostKeyChecking=no -p ${EC2PORT} ./.env ${EC2USER}@${EC2HOST}:/home/${EC2USER}/grupo19-backend/workers/
 
-    - name: Update and reload containers
-      run: sshpass -p "${EC2PASSWD}" ssh -o StrictHostKeyChecking=no -p ${EC2PORT} ${EC2USER}@${EC2HOST} -Ct "cd /home/ubuntu/grupo19-backend/workers && git fetch && git reset --hard && git checkout main && git pull && sudo docker compose down && sudo docker system prune -a -f && sudo docker compose pull && chmod a+x /home/ubuntu/grupo19-backend/workers/src/*.sh && sudo docker compose build --no-cache && sudo docker compose up -d"
+      - name: Save SSL Certificates
+        run: |
+          sshpass -p "${EC2PASSWD}" scp -o StrictHostKeyChecking=no -p ${EC2PORT} ./workers/nginx/templates/letsencrypt/arqui-workers.ljg.cl/* ${EC2USER}@${EC2HOST}:/home/${EC2USER}/grupo19-backend/workers/nginx/templates/letsencrypt/arqui-workers.ljg.cl
+
+  update-and-reload-containers:
+    needs:
+      - build-and-push-api-workers
+      - build-and-push-celery-workers
+      - update_ssl-certificates
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Install ssh
+        run: sudo apt-get install openssh-client sshpass -y
+
+      - name: Setup environment variables
+        run: |
+          echo "EC2HOST=arqui-workers.ljg.cl" >> $GITHUB_ENV
+          echo "EC2PORT=22" >> $GITHUB_ENV
+          echo "EC2USER=ubuntu" >> $GITHUB_ENV
+          echo "EC2PASSWD=${{ secrets.EC2PASSWD }}" >> $GITHUB_ENV
+
+      - name: Update and reload containers
+        run: |
+          connect_ssh() { sshpass -p "${EC2PASSWD}" ssh -o StrictHostKeyChecking=no -p ${EC2PORT} ${EC2USER}@${EC2HOST} -Ct " cd /home/ubuntu/grupo19-backend/workers && $@" ; }
+          connect_ssh "sudo docker system prune -a -f" ;
+          connect_ssh "sudo docker compose pull" ;
+          connect_ssh "sudo docker compose -f ./docker-compose.production.yaml up -d" ;
+
+  backup-containers:
+    needs:
+      - update-and-reload-containers
+    runs-on: ubuntu-latest
+    if: failure()
+    steps:
+      - name: Setup environment variables
+        run: |
+          echo "EC2HOST=arqui-workers.ljg.cl" >> $GITHUB_ENV
+          echo "EC2PORT=22" >> $GITHUB_ENV
+          echo "EC2USER=ubuntu" >> $GITHUB_ENV
+          echo "EC2PASSWD=${{ secrets.EC2PASSWD }}" >> $GITHUB_ENV
+
+      - name: FAILURE - Raise containers back up on old checkout
+        run:
+          sudo apt-get install openssh-client sshpass -y ;
+
+          connect_ssh() { sshpass -p "${EC2PASSWD}" ssh -o StrictHostKeyChecking=no -p ${EC2PORT} ${EC2USER}@${EC2HOST} -Ct " cd /home/ubuntu/grupo19-backend/workers && $@" ; }
+          
+          connect_ssh "git reset --hard && git checkout f5d6b2a6 " ;
+          connect_ssh "sudo docker compose -f ./docker-compose.production.yaml down" ;
+          connect_ssh "sudo docker system prune -a -f" ;
+          connect_ssh "sudo docker compose -f ./docker-compose.production.yaml build --no-cache" ;
+          connect_ssh "sudo docker compose -f ./docker-compose.production.yaml pull" ;
+          connect_ssh "sudo docker compose -f ./docker-compose.production.yaml up -d" ;
