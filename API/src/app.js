@@ -8,6 +8,7 @@ const requestRoutes = require('./routes/request.routes');
 const predictionRoutes = require('./routes/prediction.routes');
 const auctionRoutes = require('./routes/auctions.routes');
 const errorHandler = require('./middlewares/errorhandler.middleware');
+const { checkAdmin } = require('./middlewares/AdminChecker');
 
 const app = express();
 
@@ -18,7 +19,7 @@ app.use('/users', userRoutes);
 app.use('/validations', validationRoutes);
 app.use('/requests', requestRoutes);
 app.use('/predictions', predictionRoutes);
-app.use('/auctions', auctionRoutes);
+app.use('/auctions', checkAdmin, auctionRoutes);
 app.use(errorHandler);
 
 module.exports = app;
