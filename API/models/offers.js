@@ -31,8 +31,9 @@ module.exports = (sequelize, DataTypes) => {
         },
       }
     },
+    // es el symbol
     stock_id: {
-      type: DataTypes.UUID,
+      type: DataTypes.STRING,
     },
     quantity:{
       type: DataTypes.INTEGER

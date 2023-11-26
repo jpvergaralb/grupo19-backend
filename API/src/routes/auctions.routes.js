@@ -17,9 +17,7 @@ const {
 } = require('../controllers/auction.controller');
 
 auctionRoutes.route('/proposals/own')
-  .post(saveProposal);
-
-auctionRoutes.route('/proposals/own')
+  .post(saveProposal)
   .get(getOwnProposals);
 
 auctionRoutes.route('/proposals/others')

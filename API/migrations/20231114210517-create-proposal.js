@@ -16,12 +16,13 @@ module.exports = {
         type: Sequelize.UUID,
         allowNull: false,
       },
+      // es el symbol
       stock_id: {
-        type: Sequelize.UUID,
+        type: Sequelize.STRING,
         allowNull: false,
       },
       quantity: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.FLOAT,
         allowNull: false,
       },
       group_id: {

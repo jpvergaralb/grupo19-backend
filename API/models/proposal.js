@@ -25,8 +25,9 @@ module.exports = (sequelize, DataTypes) => {
     proposal_id: {
       type: DataTypes.UUID
     },
+    // es el symbol
     stock_id: {
-      type: DataTypes.UUID
+      type: DataTypes.STRING
     },
     quantity:{
       type: DataTypes.INTEGER

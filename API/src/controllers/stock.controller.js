@@ -72,6 +72,7 @@ const postStock = async (req, res) => {
 
     const stocks = JSON.parse(data.stocks);
     const results = [];
+    console.log(stocks)
 
     // eslint-disable-next-line no-restricted-syntax
     for (const stock of stocks) {

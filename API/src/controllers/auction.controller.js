@@ -10,9 +10,11 @@ const StocksOwners = db.stocksOwners;
 
 const getOwnProposals = async (req, res, next) => {
   try {
+    console.log('😊😊😊😊😊😊 | Recibi un get a mqtt/auctions/proposals')
     const proposals = await Proposal.findAll({
       where: {
         group_id: OUR_GROUP_ID,
+        type: 'proposal',
       },
     });
     res.status(200).json(proposals);
@@ -28,6 +30,7 @@ const getReceivedProposals = async (req, res, next) => {
         group_id: {
           [db.Sequelize.Op.ne]: OUR_GROUP_ID,
         },
+        type: 'proposal',
       },
     });
     res.status(200).json(proposals);
@@ -38,9 +41,9 @@ const getReceivedProposals = async (req, res, next) => {
 
 const saveProposal = async (req, res, next) => {
   try {
-    const newProposal = await Proposal.create(req.body);
-    const response = await postMQTT('auctions/proposals', newProposal);
-    res.status(201).json({ created: newProposal, mqttResponseStatus: response.status });
+    const proposal = await Proposal.create(req.body);
+    const response = await postMQTT('auctions/proposals', proposal);
+    res.status(201).json({ created: proposal, mqttResponseStatus: response.status });
   } catch (error) {
     next(error);
   }
@@ -50,11 +53,12 @@ const saveAnothersGroupProposal = async (req, res, next) => {
   const { group_id, auction_id } = req.body;
   const { type } = req.body;
   const { proposal_id } = req.body;
-  console.log(`😊😊😊😊😊😊 | Recibi una proposal del grupo ${group_id} a mqtt/auctions/proposals`);
+  console.log(`😊😊😊😊😊😊 | Recibi una proposal del grupo ${group_id}`);
   try {
     if (group_id === OUR_GROUP_ID) {
       return res.status(200).json({ message: 'Es nuestra oferta, no la guardo.' });
-    }
+    } 
+
     const offer = await Offer.findOne({
       where: {
         auction_id,
@@ -64,10 +68,11 @@ const saveAnothersGroupProposal = async (req, res, next) => {
       return res.status(404).json({ message: 'No existe la oferta' });
     }
 
+
     if (type === 'proposal') {
       const newProposal = await Proposal.create(req.body);
       console.log(`Recibi el posteo a mqtt/auctions/proposal del grupo ${group_id}}`);
-      res.status(201).json(newProposal);
+      return res.status(201).json(newProposal);
     }
 
     if (type === 'acceptance') {
@@ -77,6 +82,7 @@ const saveAnothersGroupProposal = async (req, res, next) => {
         },
       });
       if (!newProposal) {
+
         return res.status(404).json({ message: 'No existe la proposal' });
       }
       newProposal.type = type;
@@ -95,7 +101,7 @@ const saveAnothersGroupProposal = async (req, res, next) => {
           await proposal.save();
         }
       });
-      res.status(201).json({ updatedProposal: newProposal, type });
+      return res.status(201).json({ updatedProposal: newProposal, type });
     }
 
     if (type === 'rejection') {
@@ -109,7 +115,7 @@ const saveAnothersGroupProposal = async (req, res, next) => {
       }
       newProposal.type = type;
       await newProposal.save();
-      res.status(201).json({ updatedProposal: newProposal, type });
+      return res.status(201).json({ updatedProposal: newProposal, type });
     } else {
       return res.status(400).json({ message: 'Invalid type' });
     }
