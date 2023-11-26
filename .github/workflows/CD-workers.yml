@@ -1,4 +1,4 @@
-name: CD MQTT y Main API
+name: CD Workers API
 
 on:
   push:
