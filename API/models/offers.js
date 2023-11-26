@@ -11,6 +11,9 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      this.hasMany(models.proposal, {
+        foreignKey: 'auction_id',
+      });
     }
   }
   offer.init({
@@ -31,6 +34,7 @@ module.exports = (sequelize, DataTypes) => {
         },
       }
     },
+    // es el symbol
     stock_id: {
       type: DataTypes.STRING,
     },

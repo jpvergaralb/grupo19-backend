@@ -106,7 +106,7 @@ module.exports = function (client) {
       }
     } catch (error) {
       console.log(`⛔ | Error enviando datos a ${url}`);
-      console.log(error);
+      console.log(error.data || error.message || error);
     }
   });
 };
