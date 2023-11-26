@@ -13,6 +13,7 @@ COPY src/ /app/
 RUN ls -la
 
 EXPOSE 8001
-RUN chmod a+x ./entrypoint.api.sh
-RUN chmod a+x ./entrypoint.celery.sh
-RUN chmod a+x ./entrypoint.pytest.sh
+#RUN chmod a+x ./entrypoint.api.sh
+#RUN chmod a+x ./entrypoint.celery.sh
+#RUN chmod a+x ./entrypoint.pytest.sh
+RUN chmod -R a+x ./
