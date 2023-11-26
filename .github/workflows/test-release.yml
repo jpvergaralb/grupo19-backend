@@ -17,14 +17,14 @@ jobs:
 
       - name: Set up Git
         run: |
-          git remote set-url origin https://${{ secrets.GITHUB_TOKEN }}@github.com/jpvergaralb/grupo19-backend.git
+          #git remote set-url origin https://${{ secrets.GITHUB_TOKEN }}@github.com/jpvergaralb/grupo19-backend.git
           git config --local user.email "jpvergaralb@uc.cl"
           git config --local user.name "jpvergaralb"
 
       - name: Get last tag
         id: gettag
         run: |
-          git remote set-url origin https://${{ secrets.GITHUB_TOKEN }}@github.com/jpvergaralb/grupo19-backend.git
+          #git remote set-url origin https://${{ secrets.GITHUB_TOKEN }}@github.com/jpvergaralb/grupo19-backend.git
           git config --local user.email "jpvergaralb@uc.cl"
           git config --local user.name "jpvergaralb"
           TAG=$(git describe --tags `git rev-list --tags --max-count=1`)
@@ -34,7 +34,7 @@ jobs:
       - name: Calculate new test tag
         id: newtag
         run: |
-          git remote set-url origin https://${{ secrets.GITHUB_TOKEN }}@github.com/jpvergaralb/grupo19-backend.git
+          #git remote set-url origin https://${{ secrets.GITHUB_TOKEN }}@github.com/jpvergaralb/grupo19-backend.git
           git config --local user.email "jpvergaralb@uc.cl"
           git config --local user.name "jpvergaralb"
           LAST_TAG=${{ steps.gettag.outputs.last_tag }}
@@ -45,7 +45,7 @@ jobs:
 
       - name: Create and push new test tag
         run: |
-          git remote set-url origin https://${{ secrets.GITHUB_TOKEN }}@github.com/jpvergaralb/grupo19-backend.git
+          #git remote set-url origin https://${{ secrets.GITHUB_TOKEN }}@github.com/jpvergaralb/grupo19-backend.git
           git config --local user.email "jpvergaralb@uc.cl"
           git config --local user.name "jpvergaralb"  
           NEW_TAG=${{ steps.newtag.outputs.new_test_version }}
