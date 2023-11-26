@@ -17,7 +17,7 @@ module.exports = {
         allowNull: false,
       },
       stock_id: {
-        type: Sequelize.UUID,
+        type: Sequelize.STRING,
         allowNull: false,
       },
       quantity: {

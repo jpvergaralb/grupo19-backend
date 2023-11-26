@@ -32,7 +32,7 @@ module.exports = (sequelize, DataTypes) => {
       }
     },
     stock_id: {
-      type: DataTypes.UUID,
+      type: DataTypes.STRING,
     },
     quantity:{
       type: DataTypes.INTEGER
