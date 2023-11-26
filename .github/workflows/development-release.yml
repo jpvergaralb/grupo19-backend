@@ -3,7 +3,7 @@ name: Create Test Release
 on:
   push:
     branches:
-      - feat/semantic_versioning
+      - development
 
 jobs:
   create-test-release:
