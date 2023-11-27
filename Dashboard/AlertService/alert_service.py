@@ -37,7 +37,7 @@ while True:
         states[url].append(do_poll(url))
 
         print(f"Estado actual para {url}: {states[url]}", flush=True)
-                print(f"Esperando para 'en línea': {pattern_up}", flush=True)
+        print(f"Esperando para 'en línea': {pattern_up}", flush=True)
 
         if states[url] == pattern_up:
             print(f"'{url}' se encuentra en línea nuevamente", flush=True)
