@@ -36,6 +36,8 @@ while True:
         states[url].pop(0)
         states[url].append(do_poll(url))
 
+        print(url, states[url])
+
         if states[url] == pattern_up:
             make_alert(url, f"'{url}' se encuentra en línea nuevamente")
 
