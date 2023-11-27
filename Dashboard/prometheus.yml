@@ -14,11 +14,25 @@ scrape_configs:
     scrape_interval: 10s
     static_configs:
       - targets:
-          - https://api.arqui.ljg.cl/stocks
-          - https://mqtt.arqui.ljg.cl/
-          - https://api.arqui-workers.ljg.cl/
-          - https://dashboard.arqui-workers.ljg.cl/
-          - https://grupo19-front.fjcf2001.me/
+          - 1.1.1.1
+          - google.com
+          - api.arqui.ljg.cl
+          - mqtt.arqui.ljg.cl
+          - api.arqui-workers.ljg.cl
+          - dashboard.arqui-workers.ljg.cl
+          - grupo19-front.fjcf2001.me
+          - 127.0.0.1
+          - ljg.cl
+          - nginx:80
+          - nginx:443
+          - api:64563
+          - mqtt:64564
+          - db:15432
+          - cloudflare-ddns
+          - prometheus:9090
+          - blackbox_exporter:9115
+          - grafana:3000
+          - node_exporter:9100
     relabel_configs:
       - source_labels: [__address__]
         target_label: __param_target
@@ -30,4 +44,3 @@ scrape_configs:
   - job_name: 'node-exporter'
     static_configs:
       - targets: ['node_exporter:9100']
-
