@@ -5,13 +5,13 @@ FROM python:3.11
 WORKDIR /app
 
 # Copiar los archivos del proyecto al contenedor
-COPY requirements.txt .
+COPY ./AlertService/requirements.txt .
 
 # Instalar las dependencias
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copiar el script de Python al contenedor
-COPY alert_service.py .
+COPY ./AlertService/alert_service.py .
 
 # Comando para ejecutar el script cuando el contenedor inicie
 CMD ["python", "./alert_service.py"]
