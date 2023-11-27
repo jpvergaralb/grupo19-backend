@@ -160,5 +160,11 @@ services:
     volumes:
       - '/:/host:ro,rslave'
 
+  alert_service:
+    build:
+      context: ./Dashboard
+      dockerfile: Dockerfile
+    restart: unless-stopped
+
 volumes:
   postgres_data4615316514653:
