@@ -1,15 +1,15 @@
 # ------------------------------------------------------------
-# api.arqui.ljg.cl
+# dashboard.arqui.ljg.cl
 # ------------------------------------------------------------
 
 # Load balancing
-upstream backend_api {
-    server api:64563;
+upstream dashboard {
+    server grafana:3000;
 }
 
 server {
     listen 80;
-    server_name api.arqui.ljg.cl;
+    server_name dashboard.arqui.ljg.cl;
 
     include /etc/nginx/templates/include/https-redirect.conf;
 }
@@ -22,12 +22,12 @@ map $http_upgrade $connection_upgrade {
 
 server {
     listen 443 ssl;
-    server_name api.arqui.ljg.cl;
+    server_name dashboard.arqui.ljg.cl;
 
     include /etc/nginx/templates/include/wildcard-ssl.conf;
 
     location / {
-        proxy_pass http://backend_api;
+        proxy_pass http://dashboard;
         include /etc/nginx/templates/include/proxy.conf;
         include /etc/nginx/templates/include/websocket.conf;
     }
