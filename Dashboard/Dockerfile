@@ -14,4 +14,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY ./AlertService/alert_service.py .
 
 # Comando para ejecutar el script cuando el contenedor inicie
-CMD ["python", "./alert_service.py"]
+CMD ["python", "-u", "./alert_service.py"]

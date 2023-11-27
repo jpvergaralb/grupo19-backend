@@ -36,13 +36,15 @@ while True:
         states[url].pop(0)
         states[url].append(do_poll(url))
 
-        print(url, states[url])
+        print(url, states[url], flush=True)
 
         if states[url] == pattern_up:
+            print(f"'{url}' se encuentra en línea nuevamente", flush=True)
             make_alert(url, f"'{url}' se encuentra en línea nuevamente")
 
         elif states[url] == pattern_down:
             make_alert(url, f"'{url}' NO RESPONDE")
+            print(f"'{url}' NO RESPONDE", flush=True)
 
         time.sleep(1)
 
