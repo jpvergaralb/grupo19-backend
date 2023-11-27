@@ -32,11 +32,12 @@ pattern_up = ["down"] * 6 + ["up"] * 5
 states = {url: ["down"] * 8 for url in urls}
 
 while True:
-    for url in urls:
+    for url in urls[0:1]:
         states[url].pop(0)
         states[url].append(do_poll(url))
 
-        print(url, states[url], flush=True)
+        print(f"Estado actual para {url}: {states[url]}", flush=True)
+                print(f"Esperando para 'en línea': {pattern_up}", flush=True)
 
         if states[url] == pattern_up:
             print(f"'{url}' se encuentra en línea nuevamente", flush=True)
@@ -48,4 +49,4 @@ while True:
 
         time.sleep(1)
 
-    time.sleep(1)
+    time.sleep(2)
