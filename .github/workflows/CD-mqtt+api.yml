@@ -3,7 +3,8 @@ name: CD MQTT y Main API
 on:
   push:
     branches:
-      - rama_desde_la_que_se_se_gatillo_el_workflow
+      - "main"
+      - development
   workflow_dispatch:
 
 jobs:
