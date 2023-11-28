@@ -1,7 +1,7 @@
 version: "3.8"
 
 x-celery-worker-defaults: &celery-worker-defaults
-  command: /bin/bash -c "/app/entrypoint.celery.sh"
+  command: /bin/bash -c "/bin/bash /app/entrypoint.celery.sh"
   build:
     context: .
     dockerfile: Dockerfile
@@ -33,7 +33,7 @@ x-python-defaults: &python-defaults
 services:
   api_workers:
     container_name: api_workers
-    command: /bin/bash -c "/app/entrypoint.api.sh"
+    command: /bin/bash -c "/bin/bash /app/entrypoint.api.sh"
     <<: *python-defaults
     expose:
       - 8001
