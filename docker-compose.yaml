@@ -61,7 +61,7 @@ services:
   db:
     image: postgres:12.8
     volumes:
-      - postgres_data4615316514653:/var/lib/postgresql/data
+      - postgres_data46153165146534652:/var/lib/postgresql/data
     environment:
       POSTGRES_DB: ${DB_NAME:-postgres}
       POSTGRES_USER: ${DB_USERNAME}
