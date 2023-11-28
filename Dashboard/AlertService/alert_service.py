@@ -26,10 +26,10 @@ urls = [
     "https://dashboard.arqui.ljg.cl/"
 ]
 
-pattern_down = ["up"] * 6 + ["down"] * 5
-pattern_up = ["down"] * 6 + ["up"] * 5
+pattern_down = ["up"] * 6 + ["down"] * 4
+pattern_up = ["down"] * 6 + ["up"] * 4
 
-states = {url: ["down"] * 8 for url in urls}
+states = {url: ["down"] * 10 for url in urls}
 
 while True:
     for url in urls[0:1]:
