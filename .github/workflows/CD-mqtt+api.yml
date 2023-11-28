@@ -47,10 +47,12 @@ jobs:
 
     - name: limpieza docker
       run: |
+        source ./fx.sh
         do_ssh_stuff sudo docker system prune -fa
 
     - name: levantar contenedores
       run: |
+        source ./fx.sh
         do_ssh_stuff sudo docker compose -f 'docker-compose.yaml' pull
         do_ssh_stuff sudo docker compose -f 'docker-compose.yaml' build
         do_ssh_stuff sudo docker compose -f 'docker-compose.yaml' up -d
@@ -81,7 +83,6 @@ jobs:
 
           BRANCH_NAME=$(echo ${GITHUB_REF#refs/heads/})
           
-          source ./fx.sh
           do_ssh_stuff git reset --hard
           do_ssh_stuff git fetch
           do_ssh_stuff git checkout f5d6b2a6
