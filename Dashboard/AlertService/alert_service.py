@@ -32,7 +32,7 @@ pattern_up = ["down"] * 6 + ["up"] * 4
 states = {url: ["down"] * 10 for url in urls}
 
 while True:
-    for url in urls[0:1]:
+    for url in urls:
         states[url].pop(0)
         states[url].append(do_poll(url))
 
@@ -49,4 +49,4 @@ while True:
 
         time.sleep(1)
 
-    time.sleep(2)
+    time.sleep(30)
