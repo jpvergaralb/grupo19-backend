@@ -7,8 +7,10 @@ const {
   getRequestsByGroupId,
   getRequestsBySymbol,
   getRequestsBySeller,
-  createRequestToWebpay,
-  commitRequestToWebpay,
+  createRequestToWebpayAsUser,
+  commitRequestToWebpayAsUser,
+  createRequestToWebpayAsAdmin,
+  commitRequestToWebpayAsAdmin,
 } = require('../controllers/request.controller');
 
 const requestRoutes = express.Router();
@@ -30,9 +32,15 @@ requestRoutes.route('/seller/:seller')
   .get(getRequestsBySeller);
 
 requestRoutes.route('/webpay/create')
-  .post(createRequestToWebpay);
+  .post(createRequestToWebpayAsUser);
 
 requestRoutes.route('/webpay/commit')
-  .post(commitRequestToWebpay);
+  .post(commitRequestToWebpayAsUser);
+
+requestRoutes.route('/webpay/admin/create')
+  .post(createRequestToWebpayAsAdmin);
+
+requestRoutes.route('/webpay/admin/commit')
+  .post(commitRequestToWebpayAsAdmin);
 
 module.exports = requestRoutes;

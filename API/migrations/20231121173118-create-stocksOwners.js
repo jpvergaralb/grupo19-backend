@@ -2,26 +2,12 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('transactions', {
-      id: {
-        allowNull: false,
-        defaultValue: Sequelize.UUIDV4,
-        primaryKey: true,
-        type: Sequelize.UUID,
-      },
+    await queryInterface.createTable('stocksOwners', {
       user_id: {
         type: Sequelize.UUID,
         allowNull: false,
         references: {
           model: 'users',
-          key: 'id',
-        },
-      },
-      request_id: {
-        type: Sequelize.UUID,
-        allowNull: false,
-        references: {
-          model: 'requests',
           key: 'id',
         },
       },
@@ -31,19 +17,8 @@ module.exports = {
       },
       quantity: {
         type: Sequelize.FLOAT,
+        defaultValue: 0,
         allowNull: false,
-      },
-      amount: {
-        type: Sequelize.FLOAT,
-        allowNull: false,
-      },
-      status: {
-        type: Sequelize.STRING,
-        defaultValue: 'pending',
-        allowNull: false,
-      },
-      token: {
-        type: Sequelize.STRING,
       },
       createdAt: {
         allowNull: false,
@@ -56,6 +31,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('validations');
+    await queryInterface.dropTable('stocksOwners');
   },
 };

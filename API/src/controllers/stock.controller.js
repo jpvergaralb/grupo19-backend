@@ -1,6 +1,7 @@
 const db = require('../../models');
 
 const Stock = db.stock;
+const OurStocks = db.ourStocks;
 
 const getStocks = async (req, res) => {
   console.log('📠| GET request recibida a /stocks');
@@ -122,9 +123,53 @@ const getCompaniesSymbol = async (req, res) => {
   }
 };
 
+const getOurStocksByName = async (req, res) => {
+  console.log('📠| GET request recibida a /stocks/ourStocks/:name');
+
+  try {
+    const { name } = req.params;
+    if (!name) {
+      return res.status(400).json({ message: 'Name field is missing' });
+    }
+
+    const stock = await OurStocks.findOne({ where: { stock_symbol: name } });
+
+    let quantity = 0;
+
+    if (stock) {
+      quantity = stock.quantity;
+    }
+
+    res.status(200).json({ message: 'Success', quantity });
+  } catch (error) {
+    res.status(500).json({ error });
+  }
+  console.log('📞| Fin del mensaje a /stocks/ourStocks/:name');
+};
+
+const getAllOurStocks = async (req, res) => {
+  console.log('📠| GET request recibida a /stocks/ourStocks');
+
+  try {
+    const stocks = await OurStocks.findAll();
+
+    if (stocks.length > 0) {
+      res.status(200).json({ stocks });
+    } else {
+      console.log('No stocks found');
+      res.status(404).json({ message: 'No stocks found' });
+    }
+  } catch (error) {
+    res.status(500).json({ error });
+  }
+  console.log('📞| Fin del mensaje a /stocks/ourStocks');
+};
+
 module.exports = {
   getStocks,
   postStock,
   getStocksByName,
   getCompaniesSymbol,
+  getOurStocksByName,
+  getAllOurStocks,
 };

@@ -125,7 +125,17 @@ module.exports = (sequelize, DataTypes) => {
                 msg: "Cash must be a positive number"
             }
         }
-    }
+    },
+    role: {
+        type: DataTypes.STRING,
+        defaultValue: 'user',
+        validate: {
+            isIn: {
+                args: [['user', 'admin']],
+                msg: "Role must be either 'user' or 'admin'"
+            }
+        }
+    },
 }, {
     sequelize,
     modelName: 'user',

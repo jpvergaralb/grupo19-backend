@@ -1,0 +1,33 @@
+name: Lint - Node.js CI Workflow
+
+on:
+  pull_request:
+    branches:
+      - main
+      - development
+      - production
+      - master
+      - feat/semantic_versioning
+  push:
+    branches:
+      - development
+      - feat/semantic_versioning
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Setup Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: '16.x'
+
+    - name: Install dependencies
+      run: cd API && npm install
+
+    - name: Run linter
+      run: cd API && npm run lint

@@ -5,6 +5,8 @@ const {
   postStock,
   getStocksByName,
   getCompaniesSymbol,
+  getAllOurStocks,
+  getOurStocksByName,
 } = require('../controllers/stock.controller');
 
 const stockRoutes = express.Router();
@@ -18,5 +20,11 @@ stockRoutes.route('/companies')
 
 stockRoutes.route('/:name')
   .get(getStocksByName);
+
+stockRoutes.route('/ourStocks/all')
+  .get(getAllOurStocks);
+
+stockRoutes.route('/ourStocks/:name')
+  .get(getOurStocksByName);
 
 module.exports = stockRoutes;
