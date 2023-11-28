@@ -47,7 +47,7 @@ while True:
 
     for url in urls:
         if states[url] == pattern_starting:
-            make_alert(url, f"Algo se reinició posiblemente de forma manual\n...o crasheó el contenedor de alertas y se reinició solito.\n🤷")
+            make_alert(url, f"Algo se reinició posiblemente de forma manual, ¿un deploy tal vez?\n...o crasheó el contenedor de alertas y se reinició solito.\n🤷")
             print(f"'{url}' REINICIO", flush=True)
             states = {url: ["up"] * 5 + ["down"] * 5 for url in urls}
             continue_flag = True
