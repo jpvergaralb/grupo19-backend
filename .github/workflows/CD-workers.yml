@@ -57,10 +57,6 @@ jobs:
           do_ssh_stuff sudo docker compose -f 'docker-compose.yaml' build
           do_ssh_stuff sudo docker compose -f 'docker-compose.yaml' up -d
 
-      - name: testear-falla
-        run: |
-          exit 1
-
   en-caso-de-que-algo-falle:
     needs: checkout-and-build-remotely
     if: ${{ needs.checkout-and-build-remotely.result == 'failure'}}
