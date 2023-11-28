@@ -8,7 +8,7 @@ const requestRoutes = require('./routes/request.routes');
 const predictionRoutes = require('./routes/prediction.routes');
 const auctionRoutes = require('./routes/auctions.routes');
 const errorHandler = require('./middlewares/errorhandler.middleware');
-const { checkAdmin } = require('./middlewares/AdminChecker');
+// const { checkAdmin } = require('./middlewares/AdminChecker');
 
 const app = express();
 

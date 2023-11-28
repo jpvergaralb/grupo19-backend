@@ -1,18 +1,21 @@
 const { v4: uuidv4 } = require('uuid');
 const db = require('../../models');
 const { postMQTT } = require('../utils/postToMQTT.util');
-const { addStocksToTheGroup, reduceStocksToTheGroup, addStocksToAUser } = require('../utils/groupStocksManipulation.util');
+// const {
+// addStocksToTheGroup, reduceStocksToTheGroup, addStocksToAUser
+// } = require('../utils/groupStocksManipulation.util');
+const { addStocksToTheGroup, reduceStocksToTheGroup } = require('../utils/groupStocksManipulation.util');
 
 const Offer = db.offer;
 const Proposal = db.proposal;
 const OUR_GROUP_ID = 19;
 const OurStocks = db.ourStocks;
-const StocksOwners = db.stocksOwners;
+// const StocksOwners = db.stocksOwners;
 const User = db.user;
 
 const getOwnProposals = async (req, res, next) => {
   try {
-    console.log('😊😊😊😊😊😊 | Recibi un get a mqtt/auctions/proposals')
+    console.log('😊😊😊😊😊😊 | Recibi un get a mqtt/auctions/proposals');
     const proposals = await Proposal.findAll({
       where: {
         group_id: OUR_GROUP_ID,
@@ -25,7 +28,7 @@ const getOwnProposals = async (req, res, next) => {
 };
 
 const getReceivedProposals = async (req, res, next) => {
-  console.log('😊😊😊😊😊😊 | Recibi un get a mqtt/auctions/proposals')
+  console.log('😊😊😊😊😊😊 | Recibi un get a mqtt/auctions/proposals');
   try {
     const proposals = await Proposal.findAll({
       where: {
@@ -37,20 +40,22 @@ const getReceivedProposals = async (req, res, next) => {
     });
 
     const associatedOffers = [];
-    
+
+    /* eslint-disable  no-restricted-syntax */
     for (const proposal of proposals) {
+      /* eslint-disable no-await-in-loop */
       const offer = await Offer.findOne({
         where: {
           auction_id: proposal.auction_id,
           group_id: OUR_GROUP_ID,
         },
       });
-      
+
       if (offer) {
-        console.log(`trying to find...`);
+        console.log('trying to find...');
         const proposalOfferPair = {
-          offer: offer,
-          proposal: proposal
+          offer,
+          proposal,
         };
         associatedOffers.push(proposalOfferPair);
       }
@@ -61,18 +66,16 @@ const getReceivedProposals = async (req, res, next) => {
   }
 };
 
-
-
 // Esto esta bien
 // A partir de una offer ajena generamos una proposal
 const saveProposal = async (req, res, next) => {
   const transaction = await db.sequelize.transaction();
   try {
-    console.log('😊😊😊😊😊😊 | Recibi una proposal')
-    console.log(req.body)
+    console.log('😊😊😊😊😊😊 | Recibi una proposal');
+    console.log(req.body);
     const { quantity, stock_id } = req.body.data || req.body;
     const stock = await OurStocks.findOne({ where: { stock_symbol: stock_id } }, { transaction });
-    console.log(stock)
+    console.log(stock);
     if (stock.quantity < quantity) {
       await transaction.rollback();
       return res.status(400).json({ message: 'There are not enough stocks.' });
@@ -101,7 +104,7 @@ const saveAnothersGroupProposal = async (req, res, next) => {
   try {
     if (group_id === OUR_GROUP_ID) {
       return res.status(200).json({ message: 'Es nuestra oferta, no la guardo.' });
-    } 
+    }
     const stock = await OurStocks.findOne({ where: { stock_symbol: stock_id } });
     const offer = await Offer.findOne({
       where: {
@@ -169,9 +172,8 @@ const saveAnothersGroupProposal = async (req, res, next) => {
       ourStock.quantity += newProposal.quantity;
       await ourStock.save();
       return res.status(201).json({ updatedProposal: newProposal, type });
-    } else {
-      return res.status(400).json({ message: 'Invalid type' });
     }
+    return res.status(400).json({ message: 'Invalid type' });
   } catch (error) {
     next(error);
   }
@@ -199,7 +201,7 @@ const respondToAnothersGroupProposal = async (req, res, next) => {
       });
 
       await addStocksToTheGroup(newProposal.stock_id, newProposal.quantity);
-      
+
       const allProposals = await Proposal.findAll({
         where: {
           auction_id,
@@ -216,7 +218,7 @@ const respondToAnothersGroupProposal = async (req, res, next) => {
       await offer.destroy();
       return res.status(201).json({ updatedProposal: newProposal, type });
     }
-    
+
     const proposal = await Proposal.findOne({
       where: {
         proposal_id,
@@ -225,11 +227,11 @@ const respondToAnothersGroupProposal = async (req, res, next) => {
     proposal.type = type;
     await proposal.save();
 
-    res.status(200).send("all good")
+    res.status(200).send('all good');
   } catch (error) {
-    next(error)
+    next(error);
   }
-}
+};
 
 const simulateProposal = async (req, res, next) => {
   console.log('😪 No te enojes | Simulando una proposal.');
@@ -378,10 +380,9 @@ const groupStocksTesting = async (req, res, next) => {
     res.status(200).json({ msg: 'Creado con exito' });
   } catch (error) {
     next(error);
-    res.status(500).json({msg: 'Error testing group stocks' });
-
+    res.status(500).json({ msg: 'Error testing group stocks' });
   }
-};  
+};
 
 module.exports = {
   saveProposal,

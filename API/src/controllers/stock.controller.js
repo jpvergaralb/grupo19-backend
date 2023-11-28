@@ -161,7 +161,7 @@ const getAllOurStocks = async (req, res) => {
     }
   } catch (error) {
     res.status(500).json({ error });
-  } 
+  }
   console.log('📞| Fin del mensaje a /stocks/ourStocks');
 };
 
