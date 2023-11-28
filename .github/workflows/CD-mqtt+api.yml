@@ -59,7 +59,7 @@ jobs:
 
   en-caso-de-que-algo-falle:
     needs: checkout-and-build-remotely
-    if: ${{ needs.checkout-and-build-remotely.result == 'failure'}}
+    if: failure()
 
     runs-on: ubuntu-latest
 
