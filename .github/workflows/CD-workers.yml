@@ -8,21 +8,86 @@ on:
 
 jobs:
 
-  build:
+  checkout-and-build-remotely:
 
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Install ssh
-      run: sudo apt-get install openssh-client sshpass -y
+      - uses: actions/checkout@v3
+      - name: Install ssh
+        run: sudo apt-get install openssh-client sshpass -y
 
-    - name: Setup environment variables
-      run: |
-        echo "EC2HOST=arqui-workers.ljg.cl" >> $GITHUB_ENV
-        echo "EC2PORT=22" >> $GITHUB_ENV
-        echo "EC2USER=ubuntu" >> $GITHUB_ENV
-        echo "EC2PASSWD=${{ secrets.EC2PASSWD }}" >> $GITHUB_ENV
+      - name: Setup environment variables
+        run: |
+          echo "EC2HOST=arqui-workers.ljg.cl" >> $GITHUB_ENV
+          echo "EC2PORT=22" >> $GITHUB_ENV
+          echo "EC2USER=ubuntu" >> $GITHUB_ENV
+          echo "EC2PASSWD=${{ secrets.EC2PASSWD }}" >> $GITHUB_ENV
 
-    - name: Update and reload containers
-      run: sshpass -p "${EC2PASSWD}" ssh -o StrictHostKeyChecking=no -p ${EC2PORT} ${EC2USER}@${EC2HOST} -Ct "cd /home/ubuntu/grupo19-backend/workers && git fetch && git reset --hard && git checkout main && git pull && sudo docker compose down && sudo docker system prune -a -f && sudo docker compose pull && chmod a+x /home/ubuntu/grupo19-backend/workers/src/*.sh && sudo docker compose build --no-cache && sudo docker compose up -d"
+      - name: Guardar fx
+        run: |
+          echo 'do_ssh_stuff() { sshpass -p "${EC2PASSWD}" ssh -o StrictHostKeyChecking=no -p ${EC2PORT} ${EC2USER}@${EC2HOST} -Ct "cd /home/ubuntu/grupo19-backend/workers && $@"; }' > fx.sh
+          chmod a+x fx.sh
+
+      - name: botar contenedores viejos
+        run: |
+          source ./fx.sh
+          do_ssh_stuff sudo docker compose -f 'docker-compose.yaml' down
+
+      - name: actualizar repos
+        run: |
+          BRANCH_NAME=$(echo ${GITHUB_REF#refs/heads/})
+          
+          source ./fx.sh
+          do_ssh_stuff git reset --hard
+          do_ssh_stuff git fetch
+          do_ssh_stuff git checkout ${BRANCH_NAME}
+          do_ssh_stuff git pull
+
+      - name: limpieza docker
+        run: |
+          do_ssh_stuff sudo docker system prune -fa
+
+      - name: levantar contenedores
+        run: |
+          do_ssh_stuff chmod a+x /home/ubuntu/grupo19-backend/workers/src/*
+          do_ssh_stuff sudo docker compose -f 'docker-compose.yaml' pull
+          do_ssh_stuff sudo docker compose -f 'docker-compose.yaml' build
+          do_ssh_stuff sudo docker compose -f 'docker-compose.yaml' up -d
+
+  en-caso-de-que-algo-falle:
+    needs: checkout-and-build-remotely
+    if: ${{ needs.checkout-and-build-remotely.result == 'failure'}}
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install ssh
+        run: sudo apt-get install openssh-client sshpass -y
+
+      - name: Setup environment variables
+        run: |
+          echo "EC2HOST=arqui-workers.ljg.cl" >> $GITHUB_ENV
+          echo "EC2PORT=22" >> $GITHUB_ENV
+          echo "EC2USER=ubuntu" >> $GITHUB_ENV
+          echo "EC2PASSWD=${{ secrets.EC2PASSWD }}" >> $GITHUB_ENV
+
+      - name: Guardar fx
+        run: |
+          do_ssh_stuff() { sshpass -p "${EC2PASSWD}" ssh -o StrictHostKeyChecking=no -p ${EC2PORT} ${EC2USER}@${EC2HOST} -Ct "cd /home/ubuntu/grupo19-backend/workers && $@"; }
+          
+          do_ssh_stuff sudo docker compose -f 'docker-compose.yaml' down
+
+          BRANCH_NAME=$(echo ${GITHUB_REF#refs/heads/})
+
+          source ./fx.sh
+          do_ssh_stuff git reset --hard
+          do_ssh_stuff git fetch
+          do_ssh_stuff git checkout f5d6b2a6
+          do_ssh_stuff git pull
+          
+          do_ssh_stuff chmod a+x /home/ubuntu/grupo19-backend/workers/src/*
+          do_ssh_stuff sudo docker compose -f 'docker-compose.yaml' pull
+          do_ssh_stuff sudo docker compose -f 'docker-compose.yaml' build
+          do_ssh_stuff sudo docker compose -f 'docker-compose.yaml' up -d
