@@ -15,7 +15,12 @@ def make_alert(service_name, message_data):
 
 def do_poll(poll_url):
     valid_status_codes = {100, 101, 102, 103, 200, 201, 202, 203, 204, 205, 206, 207, 208, 209, 226, 300, 301, 302, 303, 304, 305, 307, 308, 401, 402, 403, 405}
-    response = requests.get(poll_url)
+    try:
+        response = requests.get(poll_url)
+
+    except exception as e:
+        return "down"
+
     return "up" if response.status_code in valid_status_codes else "down"
 
 urls = [
@@ -33,11 +38,23 @@ pattern_starting = ["starting"] * 10
 
 states = {url: ["starting"] * 10 for url in urls}
 
+continue_flag = False
+
 while True:
+    if continue_flag:
+        continue_flag = False
+        continue
+
     for url in urls:
         if states[url] == pattern_starting:
-            make_alert(url, f"'{url}' se reinició posiblemente de forma manual\n...o crasheó el contenedor de alertas y se reinició solito.\n🤷")
+            make_alert(url, f"Algo se reinició posiblemente de forma manual\n...o crasheó el contenedor de alertas y se reinició solito.\n🤷")
             print(f"'{url}' REINICIO", flush=True)
+            states = {url: ["up"] * 5 + ["down"] * 5 for url in urls}
+            continue_flag = True
+
+        if continue_flag:
+            continue_flag = False
+            break
 
         states[url].pop(0)
         states[url].append(do_poll(url))
