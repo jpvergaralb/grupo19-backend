@@ -35,6 +35,10 @@ states = {url: ["starting"] * 10 for url in urls}
 
 while True:
     for url in urls:
+        if states[url] == pattern_starting:
+            make_alert(url, f"'{url}' se reinició posiblemente de forma manual\n...o crasheó el contenedor de alertas y se reinició solito.\n🤷")
+            print(f"'{url}' REINICIO", flush=True)
+
         states[url].pop(0)
         states[url].append(do_poll(url))
 
@@ -48,10 +52,6 @@ while True:
         elif states[url] == pattern_down:
             make_alert(url, f"'{url}' NO RESPONDE")
             print(f"'{url}' NO RESPONDE", flush=True)
-
-        elif states[url] == pattern_starting:
-                make_alert(url, f"'{url}' se reinició posiblemente de forma manual\n...o crasheó el contenedor de alertas y se reinició solito.")
-                print(f"'{url}' REINICIO", flush=True)
 
         time.sleep(1)
 
